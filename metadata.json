@@ -1,0 +1,6 @@
+{
+  "name": "Zarca - Comercio Local Seguro en Venezuela",
+  "description": "Plataforma de comercio local seguro con roles de Comprador y Vendedor verificado con KYC en Venezuela.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
