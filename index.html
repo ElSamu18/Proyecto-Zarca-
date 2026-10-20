@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,13 +9,2154 @@
     <meta property="og:description" content="Plataforma de comercio local seguro con roles de Comprador y Vendedor verificado con KYC en Venezuela." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+              mono: ['"Space Mono"', 'monospace'],
+            },
+            colors: {
+              zarca: {
+                50: '#ecfdf5',
+                100: '#d1fae5',
+                200: '#a7f3d0',
+                500: '#10b981',
+                600: '#059669',
+                700: '#047857',
+                800: '#065f46',
+                900: '#064e3b',
+              },
+              navy: {
+                800: '#1e293b',
+                900: '#0f172a',
+                950: '#020617',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      @keyframes scanline {
+        0% { transform: translateY(-100%); }
+        100% { transform: translateY(100%); }
+      }
+      .scan-beam {
+        animation: scanline 2.2s ease-in-out infinite alternate;
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="min-h-screen flex flex-col antialiased selection:bg-emerald-600 selection:text-white bg-slate-50">
+
+    <!-- Toast Notification -->
+    <div id="toastNotification" class="fixed top-20 right-4 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 bg-slate-900 text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-2xl border border-slate-800 flex items-center gap-2 pointer-events-none">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+      <span id="toastMessage">Notificación</span>
+    </div>
+
+    <!-- Top Announcement Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      <div class="bg-slate-950 text-slate-300 text-[11px] sm:text-xs px-4 py-1.5 flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center gap-2 truncate">
+          <span class="font-extrabold text-white tracking-wide">ZARCA VENEZUELA</span>
+          <span class="text-slate-600 hidden sm:inline" aria-hidden="true">·</span>
+          <span class="truncate hidden sm:inline">Comercio Local Seguro con Identidad KYC</span>
+        </div>
+        <div class="flex items-center gap-3 text-slate-400 shrink-0">
+          <span class="flex items-center gap-1.5 text-[11px] sm:text-xs text-emerald-400 font-medium">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>Chat Interno Seguro (Sin WhatsApp)</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Main Navigation Bar (Clean, centered and mobile-optimized) -->
+      <div class="max-w-7xl mx-auto px-2.5 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-4">
+        
+        <!-- MEJORA 2: Ícono SVG Moderno (Escudo y Letra 'Z' en #059669) -->
+        <a href="#" onclick="switchRole('buyer')" class="flex items-center gap-1.5 sm:gap-2 text-slate-900 no-underline shrink-0 group">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center p-1 shadow-xs group-hover:scale-105 transition-transform">
+            <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Escudo de Seguridad -->
+              <path d="M18 4L6 8.5V17.5C6 24.5 11.1 30.8 18 32.5C24.9 30.8 30 24.5 30 17.5V8.5L18 4Z" fill="#ecfdf5" stroke="#059669" stroke-width="2" stroke-linejoin="round"/>
+              <!-- Escudo interno con gradiente sutil -->
+              <path d="M18 6.5L8.5 10.1V17.5C8.5 23.2 12.5 28.5 18 29.9C23.5 28.5 27.5 23.2 27.5 17.5V10.1L18 6.5Z" fill="#d1fae5" fill-opacity="0.4"/>
+              <!-- Letra Z Vectorizada Moderna en #059669 -->
+              <path d="M12.5 13H23.5L13.5 23H24.5" stroke="#059669" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <!-- Detalle de seguridad central -->
+              <circle cx="18" cy="18" r="1.5" fill="#047857"/>
+            </svg>
+          </div>
+          <div>
+            <span class="text-base sm:text-xl font-extrabold tracking-tight text-slate-950 block leading-none">Zarca</span>
+            <span class="text-[9px] uppercase font-bold text-emerald-700 tracking-wider hidden sm:block mt-0.5">Comercio Seguro</span>
+          </div>
+        </a>
+
+        <!-- Subaccount Selector (Comprador vs Vendedor) -->
+        <div class="flex items-center justify-center shrink min-w-0 max-w-[170px] sm:max-w-xs">
+          <div class="flex items-center bg-slate-100 p-0.5 sm:p-1 rounded-xl border border-slate-200/90 w-full shadow-inner">
+            <button
+              id="btnModeBuyer"
+              onclick="switchRole('buyer')"
+              class="flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60"
+            >
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+              <span class="hidden sm:inline">Comprador</span>
+              <span class="sm:hidden">Comprar</span>
+            </button>
+            <button
+              id="btnModeSeller"
+              onclick="switchRole('seller')"
+              class="flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900"
+            >
+              <i data-lucide="store" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i>
+              <span class="hidden sm:inline">Vendedor</span>
+              <span class="sm:hidden">Vender</span>
+              <span id="headerSellerBadge" class="hidden">
+                <i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Side: Mensajes, Ajustes de Perfil (⚙️) y Perfil -->
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+          
+          <!-- Botón de Mensajes Internos con badge -->
+          <button
+            onclick="openConversationsListModal()"
+            class="p-1.5 sm:px-2.5 sm:py-2 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors relative cursor-pointer flex items-center gap-1.5 border border-slate-200"
+            title="Mis Mensajes Internos"
+          >
+            <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
+            <span class="text-xs font-bold hidden md:inline">Mensajes</span>
+            <span id="unreadMessagesBadge" class="bg-emerald-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
+          </button>
+
+          <!-- MEJORA 4: Botón de Ajustes (⚙️) que abre modal 'Ajustes de Perfil' -->
+          <button
+            onclick="openProfileSettingsModal()"
+            class="p-1.5 sm:p-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer border border-slate-200 flex items-center justify-center"
+            title="Ajustes de Perfil (Nombre, Cédula, Teléfono)"
+            aria-label="Ajustes de Perfil"
+          >
+            <i data-lucide="settings" class="w-4 h-4 text-slate-700"></i>
+          </button>
+
+          <!-- User Info & Avatar -->
+          <div id="userHeaderProfile" class="flex items-center gap-1 sm:gap-2 pl-1 sm:pl-2 border-l border-slate-200">
+            <div class="text-right hidden lg:block">
+              <span id="headerUserName" class="text-xs font-bold text-slate-900 block truncate max-w-[120px]">Usuario Zarca</span>
+              <span id="headerUserPhone" class="text-[10px] text-slate-500 font-mono block">Venezuela (+58)</span>
+            </div>
+            <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold shadow-xs">
+              <span id="headerUserInitial">Z</span>
+            </div>
+            <button
+              onclick="handleLogout()"
+              class="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer hidden sm:block"
+              title="Cerrar sesión / Reiniciar perfil"
+              aria-label="Cerrar sesión"
+            >
+              <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Context Status Bar -->
+    <div class="bg-white border-b border-slate-200 py-2 px-4 sm:px-6">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+        <div class="flex flex-wrap items-center gap-2 text-slate-600">
+          <span id="contextRoleTitle" class="font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-600"></i>
+            Subcuenta Comprador
+          </span>
+          <span aria-hidden="true" class="hidden sm:inline">·</span>
+          <span id="contextRoleSubtitle" class="text-slate-500">
+            Catálogo seguro con chat interno y reputación de vendedores
+          </span>
+        </div>
+
+        <div id="quickVerifyBtnContainer">
+          <button
+            onclick="openKycModal()"
+            class="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1.5 cursor-pointer bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 transition-colors"
+          >
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>Verificarme como Vendedor</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+      <!-- ========================================== -->
+      <!-- VIEW 1: MODO COMPRADOR (FEED & CATALOGO)   -->
+      <!-- ========================================== -->
+      <section id="viewBuyer" class="space-y-6">
+        <!-- Search and Filter Bar -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs space-y-3.5">
+          <div class="flex flex-col sm:flex-row items-center gap-3">
+            <!-- Search Textbox -->
+            <div class="relative flex-1 w-full">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+              <input
+                type="text"
+                id="searchInput"
+                oninput="renderCatalog()"
+                placeholder="Buscar productos en Venezuela (ej: café, zapatos, teléfono)..."
+                class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+              />
+            </div>
+
+            <!-- City Filter -->
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <div class="flex items-center gap-1.5 px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl w-full sm:w-48">
+                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                <select
+                  id="cityFilter"
+                  onchange="renderCatalog()"
+                  class="bg-transparent text-xs font-semibold text-slate-800 w-full focus:outline-none cursor-pointer"
+                >
+                  <option value="Todos">Toda Venezuela</option>
+                  <option value="Caracas">Caracas</option>
+                  <option value="Valencia">Valencia</option>
+                  <option value="Maracaibo">Maracaibo</option>
+                  <option value="Barquisimeto">Barquisimeto</option>
+                  <option value="Lechería">Lechería</option>
+                  <option value="Maracay">Maracay</option>
+                  <option value="Mérida">Mérida</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Tags & Verified Check -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-slate-100">
+            <div class="flex items-center gap-1.5 overflow-x-auto py-1 max-w-full no-scrollbar" id="categoryTabs">
+              <!-- Dynamically rendered category buttons -->
+            </div>
+
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer select-none shrink-0">
+              <input
+                type="checkbox"
+                id="verifiedOnlyCheckbox"
+                onchange="renderCatalog()"
+                class="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+              />
+              <span class="flex items-center gap-1">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+                Solo Vendedores Verificados
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Feed Counter Header -->
+        <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+          <span>
+            Mostrando <strong id="catalogCount" class="text-slate-900 font-mono font-bold">0</strong> publicaciones activas
+          </span>
+          <button
+            onclick="resetFilters()"
+            class="flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-medium cursor-pointer"
+          >
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            <span>Restablecer filtros</span>
+          </button>
+        </div>
+
+        <!-- Product Cards Grid with Reputation ⭐ -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <!-- Dynamically populated product cards -->
+        </div>
+
+        <!-- MEJORA 3: Empty State Amigable del Catálogo (Exact requested copy) -->
+        <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-slate-200/90 p-10 sm:p-14 text-center max-w-lg mx-auto shadow-xs">
+          <!-- Friendly SVG Illustration -->
+          <div class="w-20 h-20 mx-auto mb-4 rounded-3xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
+            <svg class="w-10 h-10" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="14" width="32" height="26" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+              <path d="M16 14V11C16 8.79086 17.7909 7 20 7H28C30.2091 7 32 8.79086 32 11V14" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="24" cy="27" r="3.5" fill="#10b981"/>
+              <path d="M24 33V35" stroke="#047857" stroke-width="2" stroke-linecap="round"/>
+              <path d="M37 20L41 18" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 22L11 20" stroke="#34d399" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mb-2 leading-snug">
+            El catálogo local está limpio. ¡Sé el primero en publicar un producto en tu zona!
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 mb-6 max-w-sm mx-auto leading-relaxed">
+            Publica tus artículos con foto real optimizada, fija tu precio manual en dólares y recibe compradores por chat interno seguro.
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onclick="handlePublishOrVerifyCTA()"
+              class="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm hover:shadow-md"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>Publicar mi Primer Producto</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 2: MODO VENDEDOR (PANEL DE GESTION)   -->
+      <!-- ========================================== -->
+      <section id="viewSeller" class="hidden space-y-6">
+        <!-- Seller Verified Banner -->
+        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white rounded-3xl p-6 shadow-md border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+              <i data-lucide="shield-check" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h2 class="text-lg font-bold text-white tracking-tight">Panel de Vendedor</h2>
+                <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+                  KYC Aprobado
+                </span>
+              </div>
+              <p class="text-xs text-slate-300 max-w-xl leading-relaxed">
+                Negocio: <strong id="sellerBannerBusiness" class="text-white">Mi Negocio</strong> ·
+                Cédula: <strong id="sellerBannerCedula" class="text-emerald-400 font-mono">V-12345678</strong> ·
+                Teléfono: <span id="sellerBannerPhone" class="font-mono text-slate-200">+58 412-123-4567</span>
+              </p>
+              <p class="text-[10px] text-slate-400 font-mono mt-0.5">
+                Perfil de vendedor persistente en localStorage · Compresión de fotos en canvas activa
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 w-full md:w-auto">
+            <button
+              onclick="openPublishModal()"
+              class="flex-1 md:flex-initial py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>Publicar Nuevo Producto</span>
+            </button>
+            <button
+              onclick="openProfileSettingsModal()"
+              class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+              title="Modificar perfil de vendedor"
+            >
+              <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Ajustes</span>
+            </button>
+            <button
+              onclick="switchRole('buyer')"
+              class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer border border-slate-700"
+            >
+              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+              <span>Ver Catálogo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- MINI-DASHBOARD DE REPUTACIÓN Y MÉTRICAS DEL VENDEDOR -->
+        <div class="bg-white rounded-3xl border border-slate-200/90 p-5 shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Métricas y Reputación del Vendedor</h3>
+              <p class="text-xs text-slate-500">Historial verificado de comercio y confianza en Zarca Venezuela</p>
+            </div>
+            <span class="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+              <i data-lucide="award" class="w-3.5 h-3.5"></i>
+              Comercio Confiable
+            </span>
+          </div>
+
+          <!-- The Exact 3 Requested Reputation Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- Metric 1: Nivel: Vendedor Verificado -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                <i data-lucide="shield-check" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">Estado de Verificación</span>
+                <strong class="text-sm font-bold text-slate-900 block">Nivel: Vendedor Verificado</strong>
+                <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1 mt-0.5">
+                  <i data-lucide="check" class="w-3 h-3"></i>
+                  Cédula & Prueba de Vida OK
+                </span>
+              </div>
+            </div>
+
+            <!-- Metric 2: ⭐ 4.8 de Calificación -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <i data-lucide="star" class="w-6 h-6 fill-current"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">Calificación de Clientes</span>
+                <strong class="text-sm font-bold text-slate-900 block">⭐ 4.8 de Calificación</strong>
+                <span class="text-[11px] text-slate-500 block mt-0.5">Basado en opiniones verificadas</span>
+              </div>
+            </div>
+
+            <!-- Metric 3: 24 Ventas Concretadas -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                <i data-lucide="check-check" class="w-6 h-6"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-semibold text-slate-500 block uppercase tracking-wider">Entregas Exitosas</span>
+                <strong class="text-sm font-bold text-slate-900 block">24 Ventas concretadas</strong>
+                <span class="text-[11px] text-slate-500 block mt-0.5">Sin reclamos ni disputas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Publications Management Table -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs">
+          <div class="p-4 sm:px-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Mis Publicaciones en Venta</h3>
+              <p class="text-xs text-slate-500">Gestiona precios manuales en USD ($), activa o pausa tus artículos</p>
+            </div>
+            <button
+              onclick="openPublishModal()"
+              class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
+            >
+              <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+              <span>Nueva publicación</span>
+            </button>
+          </div>
+
+          <div id="sellerProductsList" class="divide-y divide-slate-100">
+            <!-- Dynamically populated seller rows or friendly empty state -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 sm:px-6 mt-12">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-slate-900">Zarca Venezuela</span>
+          <span aria-hidden="true">·</span>
+          <span>Comercio local seguro con chat interno y reputación</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span>Precios transparentes en dólares (USD)</span>
+          <span aria-hidden="true">·</span>
+          <span class="flex items-center gap-1 text-emerald-700 font-semibold">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            Validación biométrica KYC & Almacenamiento Optimizado
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MEJORA 1 & 5: MODAL DE CHAT INTERNO        -->
+    <!-- CON HISTORIAL LIMITADO A 50 MENSAJES       -->
+    <!-- ========================================== -->
+    <div id="modalChat" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full h-[640px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
+        <!-- Chat Header -->
+        <div class="p-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div id="chatSellerAvatar" class="w-10 h-10 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-sm">
+                V
+              </div>
+              <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-slate-900"></div>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h4 id="chatSellerName" class="text-sm font-bold text-white truncate max-w-[180px]">Vendedor Verificado</h4>
+                <span class="inline-flex text-emerald-400" title="Vendedor Verificado con KYC">
+                  <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                </span>
+              </div>
+              <p id="chatSellerReputation" class="text-[11px] text-amber-400 font-semibold">
+                ⭐ 4.8 (24 ventas concretadas)
+              </p>
+            </div>
+          </div>
+          <button onclick="closeChatModal()" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer" aria-label="Cerrar chat">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Product Quick Summary Banner -->
+        <div class="bg-slate-100/90 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2.5 truncate">
+            <img id="chatProductThumb" src="" alt="" class="w-10 h-10 rounded-lg object-cover border border-slate-200 shrink-0 bg-slate-200" />
+            <div class="truncate">
+              <span id="chatProductTitle" class="font-bold text-slate-900 block truncate">Título del Producto</span>
+              <span id="chatProductLocation" class="text-slate-500 text-[11px]">Caracas · Chacao</span>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span id="chatProductPrice" class="font-bold text-emerald-700 font-mono text-sm block">$0.00</span>
+            <span class="text-[10px] text-slate-500">Precio USD</span>
+          </div>
+        </div>
+
+        <!-- Messages Area (persisted in localStorage, slice(-50)) -->
+        <div id="chatMessagesList" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
+          <!-- Dynamically populated from localStorage -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div id="chatTypingIndicator" class="hidden px-4 py-1.5 bg-slate-50">
+          <div class="inline-flex items-center gap-1.5 text-xs text-slate-500 bg-white border border-slate-200 rounded-2xl px-3 py-1.5 shadow-xs">
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+            <span class="text-[10px] text-slate-400 font-medium">el vendedor está respondiendo...</span>
+          </div>
+        </div>
+
+        <!-- Quick Prompts Chips -->
+        <div class="px-3 py-2 bg-white border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto text-[11px] no-scrollbar">
+          <button onclick="sendQuickPrompt('¿Está disponible para entrega inmediata?')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 rounded-lg whitespace-nowrap cursor-pointer transition-colors border border-slate-200">
+            ¿Disponible de inmediato?
+          </button>
+          <button onclick="sendQuickPrompt('¿Haces entrega personal en punto seguro?')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 rounded-lg whitespace-nowrap cursor-pointer transition-colors border border-slate-200">
+            ¿Punto de entrega?
+          </button>
+          <button onclick="sendQuickPrompt('¿Qué métodos de pago aceptas?')" class="px-2.5 py-1 bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 rounded-lg whitespace-nowrap cursor-pointer transition-colors border border-slate-200">
+            ¿Métodos de pago?
+          </button>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <form onsubmit="handleSendChatMessage(event)" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2">
+          <input
+            type="text"
+            id="chatInputText"
+            placeholder="Escribe un mensaje seguro dentro de Zarca..."
+            class="flex-1 px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
+          />
+          <button
+            type="submit"
+            class="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-colors cursor-pointer shrink-0 shadow-xs"
+            aria-label="Enviar mensaje"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL LISTA DE CONVERSACIONES (MENSAJES)   -->
+    <!-- ========================================== -->
+    <div id="modalConversationsList" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col overflow-hidden border border-slate-200">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
+              <i data-lucide="message-square" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Mis Conversaciones de Seguridad</h3>
+              <p class="text-[11px] text-slate-500">Historial interno seguro guardado en localStorage</p>
+            </div>
+          </div>
+          <button onclick="closeConversationsListModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div id="conversationsListContainer" class="flex-1 overflow-y-auto divide-y divide-slate-100 p-2">
+          <!-- Dynamically populated from localStorage -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MEJORA 4: MODAL AJUSTES DE PERFIL (⚙️)      -->
+    <!-- (SOBREESCRIBE NOMBRE, CÉDULA Y TELÉFONO)    -->
+    <!-- ========================================== -->
+    <div id="modalProfileSettings" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-sm">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Ajustes de Perfil</h3>
+              <p class="text-[11px] text-slate-400">Actualiza tus datos de vendedor en localStorage</p>
+            </div>
+          </div>
+          <button onclick="closeProfileSettingsModal()" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form onsubmit="handleSaveProfileSettings(event)" class="p-6 space-y-4">
+          <!-- Business Name -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Nombre de la Tienda / Vendedor
+            </label>
+            <input
+              type="text"
+              id="settingsBusinessName"
+              required
+              placeholder="Ej: Inversiones Ávila C.A. / Tech Store"
+              class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+            />
+          </div>
+
+          <!-- Cédula de Identidad -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Cédula de Identidad de Venezuela
+            </label>
+            <div class="flex rounded-xl border border-slate-300 bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:bg-white transition-all">
+              <select id="settingsCedulaType" class="px-3 py-2.5 bg-slate-100 text-slate-800 text-xs font-bold border-r border-slate-300 focus:outline-none cursor-pointer">
+                <option value="V">V - Venezolano</option>
+                <option value="E">E - Extranjero</option>
+              </select>
+              <input
+                type="text"
+                id="settingsCedulaNumber"
+                required
+                placeholder="24567890"
+                maxlength="9"
+                class="flex-1 px-3.5 py-2.5 text-sm bg-transparent focus:outline-none font-mono font-medium"
+              />
+            </div>
+          </div>
+
+          <!-- Teléfono -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Teléfono de Contacto
+            </label>
+            <div class="flex rounded-xl border border-slate-300 bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:bg-white transition-all">
+              <span class="inline-flex items-center px-3.5 bg-slate-100 text-slate-700 text-xs font-bold border-r border-slate-200">
+                🇻🇪 +58
+              </span>
+              <input
+                type="tel"
+                id="settingsPhone"
+                required
+                placeholder="412 123 4567"
+                class="flex-1 px-3.5 py-2.5 text-sm bg-transparent focus:outline-none font-mono"
+              />
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Los cambios se guardan al instante en tu localStorage.</p>
+          </div>
+
+          <div class="pt-2 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onclick="closeProfileSettingsModal()"
+              class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer shadow-sm flex items-center gap-1.5"
+            >
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Guardar Ajustes</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL KYC VERIFICACIÓN INICIAL             -->
+    <!-- ========================================== -->
+    <div id="modalKyc" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 my-8">
+        <div class="bg-slate-950 text-white px-6 py-5 border-b border-slate-800">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold tracking-tight">Verificación KYC de Vendedor</h3>
+                <p class="text-[11px] text-slate-400">Seguridad y reputación en Zarca Venezuela</p>
+              </div>
+            </div>
+            <button onclick="closeKycModal()" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">
+              <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <!-- Stepper -->
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <div id="stepTab1" class="flex flex-col gap-1 text-emerald-400 font-semibold">
+              <div class="h-1.5 rounded-full bg-emerald-500"></div>
+              <span>1. Datos Negocio</span>
+            </div>
+            <div id="stepTab2" class="flex flex-col gap-1 text-slate-500">
+              <div id="stepBar2" class="h-1.5 rounded-full bg-slate-800"></div>
+              <span>2. Prueba Facial</span>
+            </div>
+            <div id="stepTab3" class="flex flex-col gap-1 text-slate-500">
+              <div id="stepBar3" class="h-1.5 rounded-full bg-slate-800"></div>
+              <span>3. Aprobación</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Step 1 Form: Cédula, Nombre del Negocio, Teléfono -->
+          <div id="kycStep1">
+            <form onsubmit="handleKycStep1Submit(event)" class="space-y-4">
+              <div class="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-4 flex items-start gap-3">
+                <i data-lucide="shield-check" class="w-5 h-5 text-emerald-700 shrink-0 mt-0.5"></i>
+                <div class="text-xs text-emerald-950 leading-relaxed">
+                  <strong class="block font-bold">Verificación de Vendedor Seguro</strong>
+                  Ingresa tu Cédula, Nombre de tu Negocio y Teléfono. Al verificarte, tus publicaciones recibirán el sello oficial y tus datos quedarán guardados en localStorage para acceso permanente.
+                </div>
+              </div>
+
+              <!-- Cédula de Identidad -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Cédula de Identidad de Venezuela
+                </label>
+                <div class="flex rounded-xl border border-slate-300 bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:bg-white transition-all">
+                  <select id="kycCedulaType" class="px-3 py-2.5 bg-slate-100 text-slate-800 text-xs font-bold border-r border-slate-300 focus:outline-none cursor-pointer">
+                    <option value="V">V - Venezolano</option>
+                    <option value="E">E - Extranjero</option>
+                  </select>
+                  <input
+                    type="text"
+                    id="kycCedulaNumber"
+                    required
+                    placeholder="Ej: 24567890"
+                    maxlength="9"
+                    class="flex-1 px-3.5 py-2.5 text-sm bg-transparent focus:outline-none font-mono font-medium"
+                  />
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Ingrese dígitos sin puntos ni comas.</p>
+              </div>
+
+              <!-- Nombre del Negocio -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Nombre del Negocio o Tienda
+                </label>
+                <input
+                  type="text"
+                  id="kycBusinessName"
+                  required
+                  placeholder="Ej: Inversiones Chacao C.A. / Tech Store Vzla"
+                  class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+                />
+              </div>
+
+              <!-- Teléfono -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Teléfono de Contacto
+                </label>
+                <div class="flex rounded-xl border border-slate-300 bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:bg-white transition-all">
+                  <span class="inline-flex items-center px-3.5 bg-slate-100 text-slate-700 text-xs font-bold border-r border-slate-200">
+                    🇻🇪 +58
+                  </span>
+                  <input
+                    type="tel"
+                    id="kycPhone"
+                    required
+                    placeholder="412 123 4567"
+                    class="flex-1 px-3.5 py-2.5 text-sm bg-transparent focus:outline-none font-mono"
+                  />
+                </div>
+              </div>
+
+              <div class="pt-2">
+                <button
+                  type="submit"
+                  class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+                >
+                  <span>Continuar a Prueba Facial de Vida</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Step 2: Facial Life-Check Simulation -->
+          <div id="kycStep2" class="hidden text-center space-y-4">
+            <div>
+              <h4 class="text-sm font-bold text-slate-900">Validación Biométrica Facial</h4>
+              <p class="text-xs text-slate-500 mt-0.5">Mire al centro del óvalo para confirmar prueba de vida</p>
+            </div>
+
+            <!-- Oval Scanner Frame -->
+            <div class="relative mx-auto w-60 h-60 rounded-3xl bg-slate-950 overflow-hidden border-2 border-emerald-500/50 flex items-center justify-center shadow-inner">
+              <div class="w-full h-full flex flex-col items-center justify-center p-4 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 relative">
+                <div class="w-32 h-40 border-2 border-dashed border-emerald-400/60 rounded-[50%] flex items-center justify-center relative">
+                  <div class="w-20 h-24 rounded-[50%] bg-emerald-500/10 flex items-center justify-center">
+                    <i data-lucide="scan" class="w-10 h-10 text-emerald-400 animate-pulse"></i>
+                  </div>
+                  <div class="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent scan-beam"></div>
+                </div>
+              </div>
+
+              <div class="absolute inset-0 border-[6px] border-slate-950/80 pointer-events-none rounded-3xl">
+                <div class="w-40 h-52 mx-auto mt-3 border-2 border-emerald-400/80 rounded-[50%] shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+              </div>
+
+              <div class="absolute bottom-3 inset-x-4 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-xl py-1.5 px-3 text-[11px] font-mono text-emerald-400 flex items-center justify-center gap-1.5">
+                <i data-lucide="refresh-cw" class="w-3 h-3 animate-spin"></i>
+                <span id="biometricPhaseText">Centrando rostro...</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="space-y-1.5 max-w-xs mx-auto">
+              <div class="flex items-center justify-between text-xs text-slate-600">
+                <span>Progreso de validación</span>
+                <span id="biometricPercentText" class="font-mono font-bold text-emerald-600">30%</span>
+              </div>
+              <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                <div id="biometricProgressBar" class="h-full bg-emerald-500 transition-all duration-500 ease-out" style="width: 30%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Success Certificate -->
+          <div id="kycStep3" class="hidden text-center space-y-5 py-2">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-3xl mx-auto flex items-center justify-center shadow-lg shadow-emerald-600/10">
+              <i data-lucide="check-circle-2" class="w-10 h-10"></i>
+            </div>
+
+            <div>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-xs font-bold border border-emerald-200 mb-2">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                IDENTIDAD Y NEGOCIO VERIFICADOS
+              </span>
+              <h4 id="kycSuccessTitle" class="text-xl font-extrabold text-slate-900">¡Felicidades!</h4>
+              <p class="text-xs text-slate-600 max-w-sm mx-auto mt-1">
+                Tu perfil de vendedor en Zarca está validado y guardado en tu navegador. Tus publicaciones contarán con insignia oficial y chat seguro.
+              </p>
+            </div>
+
+            <!-- Certificate Card -->
+            <div class="bg-slate-900 text-slate-200 rounded-2xl p-4 text-left border border-slate-800 space-y-2.5 font-sans">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div class="flex items-center gap-1.5 text-emerald-400 text-xs font-bold">
+                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  <span>CERTIFICADO DE CONFIANZA ZARCA</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-mono">ESTADO: ACTIVO</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Negocio:</span>
+                  <strong id="certBusiness" class="text-white">Negocio</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Cédula:</span>
+                  <strong id="certCedula" class="text-white font-mono">V-00000000</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Teléfono:</span>
+                  <span id="certPhone" class="text-emerald-400 font-mono">+58 000-000-0000</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block text-[10px]">Persistencia:</span>
+                  <span class="text-emerald-300 font-mono text-[11px]">localStorage OK</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <button
+                onclick="finishKycAndOpenDashboard()"
+                class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md"
+              >
+                <span>Acceder a Mi Panel de Vendedor</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MEJORA 1: MODAL PUBLICAR NUEVO PRODUCTO    -->
+    <!-- CON COMPRESIÓN DE IMÁGENES EN CANVAS (600px 70%) -->
+    <!-- ========================================== -->
+    <div id="modalPublish" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200 my-8">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-sm">
+              +
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Crear Nueva Publicación</h3>
+              <p class="text-xs text-slate-500">Compresión automática en canvas antes de guardar en localStorage</p>
+            </div>
+          </div>
+          <button onclick="closePublishModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <form onsubmit="handlePublishProductSubmit(event)" class="p-6 space-y-4">
+          <!-- Title -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Título del Producto o Artículo
+            </label>
+            <input
+              type="text"
+              id="newProdTitle"
+              required
+              placeholder="Ej: Smartphone 5G 256GB / Café Gourmet Los Andes / Zapatos..."
+              class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <!-- Manual Price USD -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Precio Manual en Dólares (USD $)
+            </label>
+            <div class="relative max-w-xs">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">$</span>
+              <input
+                type="number"
+                step="0.5"
+                min="0.5"
+                id="newProdPriceUsd"
+                required
+                placeholder="25.00"
+                class="w-full pl-8 pr-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono font-bold"
+              />
+            </div>
+            <p class="text-[11px] text-slate-500 mt-1">Precio manual fijado por el vendedor (sin automatizaciones).</p>
+          </div>
+
+          <!-- Category and Location -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Categoría</label>
+              <select id="newProdCategory" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="Tecnología">Tecnología</option>
+                <option value="Alimentos">Alimentos</option>
+                <option value="Moda">Moda</option>
+                <option value="Energía">Energía</option>
+                <option value="Hogar">Hogar</option>
+                <option value="Vehículos">Vehículos</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Ciudad</label>
+              <select id="newProdCity" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <option value="Caracas">Caracas</option>
+                <option value="Valencia">Valencia</option>
+                <option value="Maracaibo">Maracaibo</option>
+                <option value="Barquisimeto">Barquisimeto</option>
+                <option value="Lechería">Lechería</option>
+                <option value="Maracay">Maracay</option>
+                <option value="Mérida">Mérida</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Zona / Sector</label>
+              <input
+                type="text"
+                id="newProdZone"
+                required
+                placeholder="Ej: Chacao / El Viñedo"
+                class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              Descripción y condiciones de entrega
+            </label>
+            <textarea
+              id="newProdDescription"
+              rows="3"
+              required
+              placeholder="Detalla estado del producto, garantía, método de entrega personal o envío..."
+              class="w-full px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            ></textarea>
+          </div>
+
+          <!-- MEJORA 1: SUBIDA Y COMPRESIÓN DE FOTO CON CANVAS (MAX 600px, 70% JPEG) -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Fotografía Real del Producto (Galería del Teléfono o PC)
+            </label>
+            
+            <div class="border-2 border-dashed border-slate-300 hover:border-emerald-500 bg-slate-50 rounded-2xl p-4 text-center transition-all cursor-pointer relative" onclick="document.getElementById('newProdFileInput').click()">
+              <input
+                type="file"
+                id="newProdFileInput"
+                accept="image/*"
+                onchange="handleProductImageFile(event)"
+                class="hidden"
+              />
+
+              <!-- Default Prompt -->
+              <div id="imageUploadPrompt" class="space-y-1.5">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center">
+                  <i data-lucide="upload" class="w-5 h-5"></i>
+                </div>
+                <p class="text-xs font-bold text-slate-800">Toca aquí para seleccionar una foto de tu galería</p>
+                <p class="text-[11px] text-slate-500">Se comprimirá automáticamente a máx. 600px y 70% calidad para proteger la memoria de tu navegador.</p>
+              </div>
+
+              <!-- Live Compressed Preview -->
+              <div id="imageUploadPreviewContainer" class="hidden">
+                <img id="imageUploadPreview" src="" alt="Vista previa optimizada" class="w-36 h-28 object-cover rounded-xl mx-auto shadow-md border border-slate-200" />
+                <p class="text-xs font-semibold text-emerald-700 mt-2 flex items-center justify-center gap-1">
+                  <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i>
+                  <span id="compressionStatusText">Foto comprimida con éxito</span>
+                </p>
+                <span class="text-[11px] text-slate-400 block">Toca para cambiar la foto</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              onclick="closePublishModal()"
+              class="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2 transition-colors cursor-pointer shadow-sm"
+            >
+              <i data-lucide="plus-circle" class="w-4 h-4"></i>
+              <span>Publicar en Zarca Venezuela</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+      const CATEGORIES = ['Todos', 'Tecnología', 'Alimentos', 'Moda', 'Energía', 'Hogar', 'Vehículos'];
+
+      // ----------------------------------------------------
+      // MEJORA 6: LIMPIEZA INICIAL
+      // El catálogo inicia con el array completamente vacío ([]),
+      // o restaurado desde localStorage si el usuario ya publicó.
+      // ----------------------------------------------------
+      function getStoredProducts() {
+        try {
+          const raw = localStorage.getItem('zarca_products');
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) {
+          console.error('Error al leer productos de localStorage', e);
+          return [];
+        }
+      }
+
+      function saveStoredProducts(prods) {
+        try {
+          localStorage.setItem('zarca_products', JSON.stringify(prods));
+        } catch (e) {
+          console.error('Error al guardar productos en localStorage', e);
+          showToast('Atención: Almacenamiento local lleno.');
+        }
+      }
+
+      // GLOBAL STATE
+      let products = getStoredProducts(); // Array inicial limpio ([]) o persistido por el usuario
+      let activeRole = 'buyer'; // 'buyer' | 'seller'
+      let selectedCategory = 'Todos';
+      let uploadedBase64Image = null;
+
+      // Current seller profile restored from localStorage
+      let currentSeller = null;
+
+      // Active conversation currently displayed in the chat modal
+      let activeChatConversation = null;
+
+      // ----------------------------------------------------
+      // MEJORA 1: COMPRESIÓN DE IMÁGENES CON CANVAS TEMPORAL
+      // Redimensiona a un máximo de 600px de ancho y 70% calidad JPEG
+      // ----------------------------------------------------
+      function compressImageWithCanvas(file, maxWidth = 600, quality = 0.70) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = () => reject(new Error('Error al leer el archivo con FileReader'));
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('Error al decodificar la imagen'));
+            img.onload = () => {
+              let width = img.width;
+              let height = img.height;
+
+              // Redimensionar proporcionalmente a máx 600px de ancho
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+
+              // Crear canvas temporal
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                resolve(e.target.result);
+                return;
+              }
+
+              // Fondo blanco para proteger transparencias PNG convertidas a JPEG
+              ctx.fillStyle = '#FFFFFF';
+              ctx.fillRect(0, 0, width, height);
+
+              // Dibujar imagen reescalada
+              ctx.drawImage(img, 0, 0, width, height);
+
+              // Exportar comprimida al 70% en formato JPEG
+              const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+              resolve(compressedDataUrl);
+            };
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // Intercept file upload, compress and assign base64
+      async function handleProductImageFile(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          alert('Por favor selecciona un archivo de imagen válido');
+          return;
+        }
+
+        const previewStatus = document.getElementById('compressionStatusText');
+        if (previewStatus) previewStatus.textContent = 'Comprimiendo imagen con Canvas...';
+
+        try {
+          // MEJORA 1: Intercepta y comprime a máx 600px con 70% calidad
+          const compressed = await compressImageWithCanvas(file, 600, 0.70);
+          uploadedBase64Image = compressed;
+
+          const previewImg = document.getElementById('imageUploadPreview');
+          previewImg.src = uploadedBase64Image;
+
+          document.getElementById('imageUploadPrompt').classList.add('hidden');
+          document.getElementById('imageUploadPreviewContainer').classList.remove('hidden');
+
+          if (previewStatus) previewStatus.textContent = 'Foto comprimida a 600px (70% JPEG)';
+          showToast('Foto optimizada y lista para publicar.');
+        } catch (err) {
+          console.error('Error al comprimir imagen:', err);
+          showToast('Error al optimizar imagen. Intenta con otra foto.');
+        }
+      }
+
+      // ----------------------------------------------------
+      // MEJORA 5: CHAT INTERNO OPTIMIZADO (SLICE -50)
+      // ----------------------------------------------------
+      function getStoredChats() {
+        try {
+          const raw = localStorage.getItem('zarca_chat_conversations');
+          return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+          console.error('Error al leer chats de localStorage', e);
+          return {};
+        }
+      }
+
+      function saveStoredChats(chatsObj) {
+        try {
+          localStorage.setItem('zarca_chat_conversations', JSON.stringify(chatsObj));
+          updateUnreadMessagesBadge();
+        } catch (e) {
+          console.error('Error al guardar chats en localStorage', e);
+        }
+      }
+
+      function updateUnreadMessagesBadge() {
+        const chats = getStoredChats();
+        const total = Object.keys(chats).length;
+        const badge = document.getElementById('unreadMessagesBadge');
+        if (badge) {
+          badge.textContent = total.toString();
+        }
+      }
+
+      function openInternalChat(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        activeChatConversation = {
+          productId: product.id,
+          productTitle: product.title,
+          productPrice: product.priceUsd,
+          productImage: product.image,
+          sellerName: product.sellerName || 'Vendedor Verificado',
+          sellerPhone: product.sellerPhone || '4121234567',
+          sellerRating: product.sellerRating || 4.8,
+          salesCount: product.salesCount || 24,
+          city: product.city,
+          zone: product.zone,
+        };
+
+        // Header info
+        document.getElementById('chatSellerName').textContent = activeChatConversation.sellerName;
+        document.getElementById('chatSellerReputation').textContent = `⭐ ${activeChatConversation.sellerRating.toFixed(1)} (${activeChatConversation.salesCount} ventas concretadas)`;
+        document.getElementById('chatSellerAvatar').textContent = activeChatConversation.sellerName.charAt(0).toUpperCase();
+
+        // Product banner
+        document.getElementById('chatProductThumb').src = activeChatConversation.productImage;
+        document.getElementById('chatProductTitle').textContent = activeChatConversation.productTitle;
+        document.getElementById('chatProductLocation').textContent = `${activeChatConversation.city} · ${activeChatConversation.zone}`;
+        document.getElementById('chatProductPrice').textContent = `$${activeChatConversation.productPrice.toFixed(2)}`;
+
+        // Load conversation from localStorage or initialize with welcome message
+        const chats = getStoredChats();
+        if (!chats[productId]) {
+          chats[productId] = {
+            productId: product.id,
+            productTitle: product.title,
+            productPrice: product.priceUsd,
+            productImage: product.image,
+            sellerName: activeChatConversation.sellerName,
+            messages: [
+              {
+                id: 'msg-' + Date.now(),
+                sender: 'seller',
+                text: `¡Hola! Gracias por tu interés en "${product.title}". El artículo está disponible en ${product.city} (${product.zone}). ¿Qué dudas tienes?`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              }
+            ]
+          };
+          saveStoredChats(chats);
+        }
+
+        renderChatMessages(chats[productId].messages);
+
+        document.getElementById('modalChat').classList.remove('hidden');
+        document.getElementById('chatInputText').focus();
+        lucide.createIcons();
+      }
+
+      function closeChatModal() {
+        document.getElementById('modalChat').classList.add('hidden');
+        activeChatConversation = null;
+      }
+
+      function renderChatMessages(messages) {
+        const container = document.getElementById('chatMessagesList');
+        if (!container) return;
+
+        container.innerHTML = messages.map(m => {
+          const isBuyer = m.sender === 'buyer';
+          return `
+            <div class="flex flex-col ${isBuyer ? 'items-end' : 'items-start'}">
+              <div class="max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm ${
+                isBuyer
+                  ? 'bg-emerald-600 text-white rounded-br-xs'
+                  : 'bg-white text-slate-800 border border-slate-200/90 rounded-bl-xs shadow-2xs'
+              }">
+                <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(m.text)}</p>
+                <span class="text-[10px] mt-1 block text-right font-mono ${isBuyer ? 'text-emerald-100' : 'text-slate-400'}">
+                  ${m.time} ${isBuyer ? '✓✓' : ''}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Auto-scroll to bottom
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function handleSendChatMessage(event) {
+        if (event) event.preventDefault();
+        const input = document.getElementById('chatInputText');
+        const text = input.value.trim();
+        if (!text || !activeChatConversation) return;
+
+        const chats = getStoredChats();
+        const pId = activeChatConversation.productId;
+        if (!chats[pId]) {
+          chats[pId] = {
+            productId: activeChatConversation.productId,
+            productTitle: activeChatConversation.productTitle,
+            productPrice: activeChatConversation.productPrice,
+            productImage: activeChatConversation.productImage,
+            sellerName: activeChatConversation.sellerName,
+            messages: []
+          };
+        }
+
+        const buyerMsg = {
+          id: 'msg-' + Date.now(),
+          sender: 'buyer',
+          text: text,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        // MEJORA 5: Agregar mensaje y limitar estrictamente a los últimos 50 con .slice(-50)
+        chats[pId].messages.push(buyerMsg);
+        chats[pId].messages = chats[pId].messages.slice(-50);
+        saveStoredChats(chats);
+
+        renderChatMessages(chats[pId].messages);
+        input.value = '';
+
+        // Show simulated typing and realistic seller answer
+        const typing = document.getElementById('chatTypingIndicator');
+        typing.classList.remove('hidden');
+
+        setTimeout(() => {
+          typing.classList.add('hidden');
+          const sellerAnswers = [
+            `Excelente. Podemos coordinar la entrega personal de "${activeChatConversation.productTitle}" en una zona céntrica y segura de ${activeChatConversation.city}. Puedes revisar el producto con total calma antes de pagar.`,
+            `¡Claro que sí! Aceptamos pago en efectivo en divisas ($), Pago Móvil a la tasa acordada o transferencia bancaria al momento de la entrega personal.`,
+            `El producto cuenta con garantía de satisfacción. Si lo deseas, podemos acordar encontrarnos hoy mismo.`
+          ];
+          const randomReply = sellerAnswers[Math.floor(Math.random() * sellerAnswers.length)];
+
+          const sellerMsg = {
+            id: 'msg-' + Date.now(),
+            sender: 'seller',
+            text: randomReply,
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          };
+
+          // MEJORA 5: Limitar también con .slice(-50)
+          const updatedChats = getStoredChats();
+          if (updatedChats[pId]) {
+            updatedChats[pId].messages.push(sellerMsg);
+            updatedChats[pId].messages = updatedChats[pId].messages.slice(-50);
+            saveStoredChats(updatedChats);
+            renderChatMessages(updatedChats[pId].messages);
+          }
+        }, 1200);
+      }
+
+      function sendQuickPrompt(promptText) {
+        document.getElementById('chatInputText').value = promptText;
+        handleSendChatMessage();
+      }
+
+      // View list of all internal conversations saved in localStorage
+      function openConversationsListModal() {
+        const chats = getStoredChats();
+        const keys = Object.keys(chats);
+        const container = document.getElementById('conversationsListContainer');
+
+        if (keys.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 text-center">
+              <i data-lucide="message-square" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+              <h4 class="text-sm font-bold text-slate-800">No tienes conversaciones aún</h4>
+              <p class="text-xs text-slate-500 mb-3">Toca 'Contactar' en cualquier producto para iniciar un chat seguro con el vendedor.</p>
+              <button onclick="closeConversationsListModal()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">
+                Explorar Catálogo
+              </button>
+            </div>
+          `;
+        } else {
+          container.innerHTML = keys.map(k => {
+            const c = chats[k];
+            const lastMsg = c.messages[c.messages.length - 1];
+            return `
+              <div
+                onclick="closeConversationsListModal(); openInternalChat('${c.productId}')"
+                class="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 rounded-2xl cursor-pointer transition-colors"
+              >
+                <div class="flex items-center gap-3 min-w-0">
+                  <img src="${c.productImage}" class="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-100" />
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-1.5">
+                      <h4 class="text-xs font-bold text-slate-900 truncate">${c.sellerName}</h4>
+                      <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                    </div>
+                    <p class="text-[11px] text-slate-500 font-medium truncate">${c.productTitle}</p>
+                    <p class="text-[11px] text-slate-400 truncate mt-0.5">${lastMsg ? escapeHtml(lastMsg.text) : 'Conversación iniciada'}</p>
+                  </div>
+                </div>
+                <div class="text-right shrink-0">
+                  <span class="text-xs font-bold text-emerald-700 font-mono block">$${c.productPrice.toFixed(2)}</span>
+                  <span class="text-[10px] text-slate-400 block">${lastMsg ? lastMsg.time : ''}</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        document.getElementById('modalConversationsList').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function closeConversationsListModal() {
+        document.getElementById('modalConversationsList').classList.add('hidden');
+      }
+
+      // ----------------------------------------------------
+      // MEJORA 4: BOTÓN DE AJUSTES Y MODAL DE PERFIL (⚙️)
+      // Sobreescribe Nombre, Cédula y Teléfono en localStorage
+      // ----------------------------------------------------
+      function openProfileSettingsModal() {
+        // Pre-fill with currentSeller data if available
+        if (currentSeller) {
+          document.getElementById('settingsBusinessName').value = currentSeller.businessName || '';
+          const ced = currentSeller.cedula || 'V-';
+          const type = ced.startsWith('E') ? 'E' : 'V';
+          const num = ced.replace(/^[VEve]-?/, '');
+          document.getElementById('settingsCedulaType').value = type;
+          document.getElementById('settingsCedulaNumber').value = num;
+          document.getElementById('settingsPhone').value = currentSeller.phone || '';
+        } else {
+          document.getElementById('settingsBusinessName').value = 'Mi Negocio Zarca';
+          document.getElementById('settingsCedulaType').value = 'V';
+          document.getElementById('settingsCedulaNumber').value = '';
+          document.getElementById('settingsPhone').value = '';
+        }
+
+        document.getElementById('modalProfileSettings').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function closeProfileSettingsModal() {
+        document.getElementById('modalProfileSettings').classList.add('hidden');
+      }
+
+      function handleSaveProfileSettings(event) {
+        event.preventDefault();
+        const bName = document.getElementById('settingsBusinessName').value.trim();
+        const cType = document.getElementById('settingsCedulaType').value;
+        const cNum = document.getElementById('settingsCedulaNumber').value.trim();
+        const phone = document.getElementById('settingsPhone').value.trim();
+
+        if (!bName || !cNum || !phone) {
+          alert('Por favor completa todos los campos requeridos.');
+          return;
+        }
+
+        const fullCedula = `${cType}-${cNum}`;
+
+        // Create or update current seller
+        currentSeller = {
+          businessName: bName,
+          cedula: fullCedula,
+          phone: phone,
+          isKycVerified: true,
+          verifiedAt: (currentSeller && currentSeller.verifiedAt) || new Date().toISOString()
+        };
+
+        // Overwrite in localStorage
+        saveSellerSessionToLocalStorage(currentSeller);
+
+        // Update Header UI
+        document.getElementById('headerUserName').textContent = currentSeller.businessName;
+        document.getElementById('headerUserPhone').textContent = '+58 ' + currentSeller.phone;
+        document.getElementById('headerUserInitial').textContent = currentSeller.businessName.charAt(0).toUpperCase();
+
+        // Update Seller Banner
+        const sbBiz = document.getElementById('sellerBannerBusiness');
+        const sbCed = document.getElementById('sellerBannerCedula');
+        const sbPho = document.getElementById('sellerBannerPhone');
+        if (sbBiz) sbBiz.textContent = currentSeller.businessName;
+        if (sbCed) sbCed.textContent = currentSeller.cedula;
+        if (sbPho) sbPho.textContent = '+58 ' + currentSeller.phone;
+
+        document.getElementById('headerSellerBadge').classList.remove('hidden');
+        document.getElementById('quickVerifyBtnContainer').innerHTML = `
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>Vendedor Verificado</span>
+          </div>
+        `;
+
+        closeProfileSettingsModal();
+        lucide.createIcons();
+        showToast('Perfil actualizado correctamente en localStorage.');
+      }
+
+      // ----------------------------------------------------
+      // PERSISTENCIA DEL PERFIL EN LOCALSTORAGE
+      // ----------------------------------------------------
+      function checkLocalStorageSession() {
+        try {
+          const stored = localStorage.getItem('zarca_seller');
+          if (stored) {
+            const data = JSON.parse(stored);
+            if (data && data.isKycVerified) {
+              currentSeller = data;
+
+              // Update Header
+              document.getElementById('headerUserName').textContent = data.businessName || 'Vendedor Verificado';
+              document.getElementById('headerUserPhone').textContent = '+58 ' + data.phone;
+              document.getElementById('headerUserInitial').textContent = (data.businessName || 'V').charAt(0).toUpperCase();
+
+              // Update Seller Banner
+              const sbBiz = document.getElementById('sellerBannerBusiness');
+              const sbCed = document.getElementById('sellerBannerCedula');
+              const sbPho = document.getElementById('sellerBannerPhone');
+              if (sbBiz) sbBiz.textContent = data.businessName;
+              if (sbCed) sbCed.textContent = data.cedula;
+              if (sbPho) sbPho.textContent = '+58 ' + data.phone;
+
+              document.getElementById('headerSellerBadge').classList.remove('hidden');
+              document.getElementById('quickVerifyBtnContainer').innerHTML = `
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
+                  <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                  <span>Vendedor Verificado</span>
+                </div>
+              `;
+
+              // Maintain Seller Dashboard active on reload without asking KYC again
+              switchRole('seller');
+              showToast('Sesión de Vendedor restaurada desde localStorage.');
+              return true;
+            }
+          }
+        } catch (e) {
+          console.error('Error al leer localStorage:', e);
+        }
+        return false;
+      }
+
+      function saveSellerSessionToLocalStorage(sellerData) {
+        try {
+          localStorage.setItem('zarca_seller', JSON.stringify(sellerData));
+        } catch (e) {
+          console.error('Error al guardar en localStorage:', e);
+        }
+      }
+
+      function handleLogout() {
+        try {
+          localStorage.removeItem('zarca_seller');
+        } catch (e) {}
+        currentSeller = null;
+        document.getElementById('headerUserName').textContent = 'Usuario Zarca';
+        document.getElementById('headerUserPhone').textContent = 'Venezuela (+58)';
+        document.getElementById('headerUserInitial').textContent = 'Z';
+        document.getElementById('headerSellerBadge').classList.add('hidden');
+        document.getElementById('quickVerifyBtnContainer').innerHTML = `
+          <button
+            onclick="openKycModal()"
+            class="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1.5 cursor-pointer bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 transition-colors"
+          >
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>Verificarme como Vendedor</span>
+          </button>
+        `;
+        lucide.createIcons();
+        switchRole('buyer');
+        showToast('Datos de sesión restablecidos.');
+      }
+
+      // ----------------------------------------------------
+      // SUBACCOUNT ROLE SWITCHER
+      // ----------------------------------------------------
+      function switchRole(role) {
+        const btnBuyer = document.getElementById('btnModeBuyer');
+        const btnSeller = document.getElementById('btnModeSeller');
+        const viewBuyer = document.getElementById('viewBuyer');
+        const viewSeller = document.getElementById('viewSeller');
+        const title = document.getElementById('contextRoleTitle');
+        const subtitle = document.getElementById('contextRoleSubtitle');
+
+        if (role === 'seller') {
+          // If not verified in localStorage, open KYC modal immediately
+          if (!currentSeller || !currentSeller.isKycVerified) {
+            openKycModal();
+            return;
+          }
+
+          activeRole = 'seller';
+          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
+          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-emerald-600 text-white shadow-sm';
+
+          viewBuyer.classList.add('hidden');
+          viewSeller.classList.remove('hidden');
+
+          const sbBiz = document.getElementById('sellerBannerBusiness');
+          const sbCed = document.getElementById('sellerBannerCedula');
+          const sbPho = document.getElementById('sellerBannerPhone');
+          if (sbBiz && currentSeller.businessName) sbBiz.textContent = currentSeller.businessName;
+          if (sbCed && currentSeller.cedula) sbCed.textContent = currentSeller.cedula;
+          if (sbPho && currentSeller.phone) sbPho.textContent = '+58 ' + currentSeller.phone;
+
+          title.innerHTML = `
+            <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i>
+            <span>Subcuenta Vendedor Verificado (${currentSeller.businessName})</span>
+          `;
+          subtitle.textContent = 'Gestión y publicación de inventario local en Venezuela';
+
+          renderSellerDashboard();
+        } else {
+          activeRole = 'buyer';
+          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60';
+          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
+
+          viewBuyer.classList.remove('hidden');
+          viewSeller.classList.add('hidden');
+
+          title.innerHTML = `
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-600"></i>
+            <span>Subcuenta Comprador</span>
+          `;
+          subtitle.textContent = 'Catálogo seguro con chat interno y reputación de vendedores';
+
+          renderCatalog();
+        }
+
+        lucide.createIcons();
+      }
+
+      function handlePublishOrVerifyCTA() {
+        if (!currentSeller || !currentSeller.isKycVerified) {
+          openKycModal();
+        } else {
+          switchRole('seller');
+          openPublishModal();
+        }
+      }
+
+      // ----------------------------------------------------
+      // KYC MODAL FLOW
+      // ----------------------------------------------------
+      let pendingKycData = null;
+
+      function openKycModal() {
+        document.getElementById('modalKyc').classList.remove('hidden');
+        document.getElementById('kycStep1').classList.remove('hidden');
+        document.getElementById('kycStep2').classList.add('hidden');
+        document.getElementById('kycStep3').classList.add('hidden');
+
+        document.getElementById('stepTab1').className = 'flex flex-col gap-1 text-emerald-400 font-semibold';
+        document.getElementById('stepTab2').className = 'flex flex-col gap-1 text-slate-500';
+        document.getElementById('stepTab3').className = 'flex flex-col gap-1 text-slate-500';
+        document.getElementById('stepBar2').className = 'h-1.5 rounded-full bg-slate-800';
+        document.getElementById('stepBar3').className = 'h-1.5 rounded-full bg-slate-800';
+
+        lucide.createIcons();
+      }
+
+      function closeKycModal() {
+        document.getElementById('modalKyc').classList.add('hidden');
+      }
+
+      function handleKycStep1Submit(event) {
+        event.preventDefault();
+        const cedulaType = document.getElementById('kycCedulaType').value;
+        const cedulaNumber = document.getElementById('kycCedulaNumber').value.trim();
+        const businessName = document.getElementById('kycBusinessName').value.trim();
+        const phone = document.getElementById('kycPhone').value.trim();
+
+        if (!cedulaNumber || !businessName || !phone) {
+          alert('Por favor complete todos los datos');
+          return;
+        }
+
+        pendingKycData = {
+          cedula: `${cedulaType}-${cedulaNumber}`,
+          businessName: businessName,
+          phone: phone,
+          isKycVerified: true,
+          verifiedAt: new Date().toISOString()
+        };
+
+        // Go to Step 2: Facial Life-Check
+        document.getElementById('kycStep1').classList.add('hidden');
+        document.getElementById('kycStep2').classList.remove('hidden');
+        document.getElementById('stepTab2').className = 'flex flex-col gap-1 text-emerald-400 font-semibold';
+        document.getElementById('stepBar2').className = 'h-1.5 rounded-full bg-emerald-500';
+
+        lucide.createIcons();
+        startBiometricSimulation();
+      }
+
+      function startBiometricSimulation() {
+        const text = document.getElementById('biometricPhaseText');
+        const bar = document.getElementById('biometricProgressBar');
+        const percent = document.getElementById('biometricPercentText');
+
+        text.textContent = 'Enfocando rostro...';
+        bar.style.width = '35%';
+        percent.textContent = '35%';
+
+        setTimeout(() => {
+          text.textContent = 'Verificando prueba de vida...';
+          bar.style.width = '70%';
+          percent.textContent = '70%';
+        }, 1800);
+
+        setTimeout(() => {
+          text.textContent = '¡Rostro y Cédula validados!';
+          bar.style.width = '100%';
+          percent.textContent = '100%';
+
+          // Save to localStorage
+          currentSeller = pendingKycData;
+          saveSellerSessionToLocalStorage(currentSeller);
+
+          // Update header
+          document.getElementById('headerUserName').textContent = currentSeller.businessName;
+          document.getElementById('headerUserPhone').textContent = '+58 ' + currentSeller.phone;
+          document.getElementById('headerUserInitial').textContent = currentSeller.businessName.charAt(0).toUpperCase();
+
+          // Update certificate
+          document.getElementById('certBusiness').textContent = currentSeller.businessName;
+          document.getElementById('certCedula').textContent = currentSeller.cedula;
+          document.getElementById('certPhone').textContent = '+58 ' + currentSeller.phone;
+          document.getElementById('kycSuccessTitle').textContent = `¡Felicidades, ${currentSeller.businessName}!`;
+
+          // Go to Step 3
+          document.getElementById('kycStep2').classList.add('hidden');
+          document.getElementById('kycStep3').classList.remove('hidden');
+          document.getElementById('stepTab3').className = 'flex flex-col gap-1 text-emerald-400 font-semibold';
+          document.getElementById('stepBar3').className = 'h-1.5 rounded-full bg-emerald-500';
+
+          lucide.createIcons();
+        }, 3600);
+      }
+
+      function finishKycAndOpenDashboard() {
+        closeKycModal();
+        switchRole('seller');
+        showToast('¡Verificación KYC completada y guardada en localStorage!');
+      }
+
+      // ----------------------------------------------------
+      // MODAL PUBLICAR PRODUCTO
+      // ----------------------------------------------------
+      function openPublishModal() {
+        if (!currentSeller || !currentSeller.isKycVerified) {
+          openKycModal();
+          return;
+        }
+
+        document.getElementById('modalPublish').classList.remove('hidden');
+        uploadedBase64Image = null;
+        document.getElementById('imageUploadPreviewContainer').classList.add('hidden');
+        document.getElementById('imageUploadPrompt').classList.remove('hidden');
+        document.getElementById('newProdTitle').value = '';
+        document.getElementById('newProdPriceUsd').value = '';
+        document.getElementById('newProdDescription').value = '';
+        document.getElementById('newProdZone').value = 'Chacao';
+        lucide.createIcons();
+      }
+
+      function closePublishModal() {
+        document.getElementById('modalPublish').classList.add('hidden');
+      }
+
+      function handlePublishProductSubmit(event) {
+        event.preventDefault();
+        const title = document.getElementById('newProdTitle').value.trim();
+        const priceUsd = parseFloat(document.getElementById('newProdPriceUsd').value);
+        const category = document.getElementById('newProdCategory').value;
+        const city = document.getElementById('newProdCity').value;
+        const zone = document.getElementById('newProdZone').value.trim();
+        const description = document.getElementById('newProdDescription').value.trim();
+
+        if (!title || isNaN(priceUsd) || !zone || !description) {
+          alert('Por favor completa todos los campos del producto.');
+          return;
+        }
+
+        if (!uploadedBase64Image) {
+          alert('Por favor selecciona una foto real para tu producto.');
+          return;
+        }
+
+        const newProduct = {
+          id: 'prod-' + Date.now(),
+          title: title,
+          description: description,
+          priceUsd: priceUsd,
+          category: category,
+          image: uploadedBase64Image,
+          city: city,
+          zone: zone,
+          sellerName: currentSeller ? currentSeller.businessName : 'Vendedor Verificado',
+          sellerPhone: currentSeller ? currentSeller.phone : '4121234567',
+          sellerRating: 5.0,
+          salesCount: 1,
+          isSellerVerified: true,
+          isActive: true,
+          views: 1,
+          createdAt: new Date().toISOString()
+        };
+
+        // Add to products array and save in localStorage
+        products.unshift(newProduct);
+        saveStoredProducts(products);
+
+        closePublishModal();
+        showToast('¡Producto publicado con éxito en Zarca Venezuela!');
+
+        renderSellerDashboard();
+        renderCatalog();
+      }
+
+      // ----------------------------------------------------
+      // CATALOG & DASHBOARD RENDERING
+      // ----------------------------------------------------
+      function renderCategoryTabs() {
+        const container = document.getElementById('categoryTabs');
+        if (!container) return;
+
+        container.innerHTML = CATEGORIES.map(cat => {
+          const isSelected = selectedCategory === cat;
+          return `
+            <button
+              onclick="setCategory('${cat}')"
+              class="px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                isSelected
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }"
+            >
+              ${cat}
+            </button>
+          `;
+        }).join('');
+      }
+
+      function setCategory(cat) {
+        selectedCategory = cat;
+        renderCategoryTabs();
+        renderCatalog();
+      }
+
+      function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('cityFilter').value = 'Todos';
+        document.getElementById('verifiedOnlyCheckbox').checked = false;
+        selectedCategory = 'Todos';
+        renderCategoryTabs();
+        renderCatalog();
+      }
+
+      function renderCatalog() {
+        const searchVal = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+        const cityVal = document.getElementById('cityFilter')?.value || 'Todos';
+        const verifiedOnly = document.getElementById('verifiedOnlyCheckbox')?.checked || false;
+
+        const filtered = products.filter(p => {
+          if (!p.isActive) return false;
+          if (selectedCategory !== 'Todos' && p.category !== selectedCategory) return false;
+          if (cityVal !== 'Todos' && p.city !== cityVal) return false;
+          if (verifiedOnly && !p.isSellerVerified) return false;
+
+          if (searchVal) {
+            const matchTitle = p.title.toLowerCase().includes(searchVal);
+            const matchDesc = p.description.toLowerCase().includes(searchVal);
+            const matchZone = p.zone.toLowerCase().includes(searchVal);
+            if (!matchTitle && !matchDesc && !matchZone) return false;
+          }
+
+          return true;
+        });
+
+        const countEl = document.getElementById('catalogCount');
+        if (countEl) countEl.textContent = filtered.length;
+
+        const grid = document.getElementById('productGrid');
+        const emptyState = document.getElementById('emptyCatalogState');
+
+        // MEJORA 3 & 6: Mostrar estado vacío amigable si no hay productos
+        if (filtered.length === 0) {
+          grid.innerHTML = '';
+          emptyState.classList.remove('hidden');
+          lucide.createIcons();
+          return;
+        }
+
+        emptyState.classList.add('hidden');
+
+        grid.innerHTML = filtered.map(p => {
+          const usdFormatted = `$${p.priceUsd.toFixed(2)}`;
+          const rating = p.sellerRating ? p.sellerRating.toFixed(1) : '4.8';
+          const sales = p.salesCount || 24;
+
+          return `
+            <article class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-lg transition-all flex flex-col group">
+              <!-- Product Image -->
+              <div class="relative aspect-4/3 bg-slate-100 overflow-hidden">
+                <img
+                  src="${p.image}"
+                  alt="${escapeHtml(p.title)}"
+                  loading="lazy"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                
+                ${p.isSellerVerified ? `
+                  <div class="absolute bottom-2.5 left-2.5 bg-slate-900/90 backdrop-blur-md text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 shadow-sm border border-slate-700/60">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <span>Vendedor Verificado</span>
+                  </div>
+                ` : ''}
+              </div>
+
+              <!-- Content Body -->
+              <div class="p-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+                    <span class="font-semibold text-slate-700">${escapeHtml(p.category)}</span>
+                    <span class="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
+                      <i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i>
+                      ${escapeHtml(p.city)}, ${escapeHtml(p.zone)}
+                    </span>
+                  </div>
+
+                  <!-- Title -->
+                  <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 line-clamp-2 leading-snug transition-colors">
+                    ${escapeHtml(p.title)}
+                  </h3>
+
+                  <!-- Reputación del vendedor -->
+                  <div class="flex items-center gap-1.5 mt-2 text-xs">
+                    <span class="font-bold text-slate-900 flex items-center gap-1">
+                      ⭐ ${rating}
+                    </span>
+                    <span class="text-slate-500 font-medium">(${sales} ventas)</span>
+                  </div>
+                </div>
+
+                <!-- Price and Internal Chat Button -->
+                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <div>
+                    <div class="text-lg font-extrabold text-slate-900 font-mono tracking-tight">
+                      ${usdFormatted}
+                    </div>
+                    <span class="text-[10px] text-slate-400">Precio manual USD</span>
+                  </div>
+
+                  <!-- BOTÓN CONTACTAR -> ABRE CHAT INTERNO -->
+                  <button
+                    onclick="openInternalChat('${p.id}')"
+                    class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow-md shrink-0"
+                    title="Chatear de forma segura dentro de Zarca"
+                  >
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>Contactar</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        lucide.createIcons();
+      }
+
+      function renderSellerDashboard() {
+        if (!currentSeller) return;
+
+        // Filter products created by this seller
+        const myProds = products.filter(p => p.sellerPhone === currentSeller.phone || p.sellerName === currentSeller.businessName);
+
+        const container = document.getElementById('sellerProductsList');
+        if (!container) return;
+
+        // MEJORA 3: Empty State Amigable en Tus Publicaciones
+        if (myProds.length === 0) {
+          container.innerHTML = `
+            <div class="p-10 text-center max-w-md mx-auto">
+              <div class="w-16 h-16 rounded-3xl bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-inner">
+                <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m7.5 4.27 9 5.15"/>
+                  <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                  <path d="m3.3 7 8.7 5 8.7-5"/>
+                  <path d="M12 22V12"/>
+                </svg>
+              </div>
+              <h4 class="text-sm font-bold text-slate-900 mb-1">El catálogo local está limpio. ¡Sé el primero en publicar un producto en tu zona!</h4>
+              <p class="text-xs text-slate-500 mb-4">Tus publicaciones se mostrarán de inmediato en el catálogo de compradores con chat interno y reputación.</p>
+              <button onclick="openPublishModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-sm">
+                Publicar Ahora
+              </button>
+            </div>
+          `;
+          lucide.createIcons();
+          return;
+        }
+
+        container.innerHTML = myProds.map(p => {
+          return `
+            <div class="p-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors">
+              <div class="flex items-center gap-3.5 flex-1 min-w-0">
+                <img src="${p.image}" alt="${escapeHtml(p.title)}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 text-xs text-slate-500 mb-0.5">
+                    <span class="font-semibold text-slate-700">${escapeHtml(p.category)}</span>
+                    <span aria-hidden="true">·</span>
+                    <span>${escapeHtml(p.city)}, ${escapeHtml(p.zone)}</span>
+                  </div>
+                  <h4 class="text-sm font-bold text-slate-900 truncate">${escapeHtml(p.title)}</h4>
+                  <div class="flex items-center gap-4 text-xs text-slate-500 mt-1">
+                    <span class="flex items-center gap-1">
+                      <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i>
+                      ${p.views || 1} visitas
+                    </span>
+                    <span class="flex items-center gap-1 text-emerald-700 font-medium">
+                      <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+                      Chat Interno Activo
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="shrink-0 text-left sm:text-right">
+                <div class="text-sm font-extrabold text-slate-900 font-mono">$${p.priceUsd.toFixed(2)}</div>
+                <span class="text-[10px] text-slate-400">Precio USD</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex items-center gap-2 shrink-0">
+                <button
+                  onclick="toggleProductActive('${p.id}')"
+                  class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                    p.isActive ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                  }"
+                >
+                  <i data-lucide="power" class="w-3.5 h-3.5"></i>
+                  <span>${p.isActive ? 'Activo' : 'Pausado'}</span>
+                </button>
+                <button
+                  onclick="deleteProduct('${p.id}')"
+                  class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+                  title="Eliminar publicación"
+                >
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        lucide.createIcons();
+      }
+
+      function toggleProductActive(id) {
+        products = products.map(p => {
+          if (p.id === id) {
+            const next = !p.isActive;
+            showToast(next ? 'Publicación reactivada' : 'Publicación pausada');
+            return { ...p, isActive: next };
+          }
+          return p;
+        });
+        saveStoredProducts(products);
+        renderSellerDashboard();
+        renderCatalog();
+      }
+
+      function deleteProduct(id) {
+        products = products.filter(p => p.id !== id);
+        saveStoredProducts(products);
+        renderSellerDashboard();
+        renderCatalog();
+        showToast('Publicación eliminada correctamente.');
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // ----------------------------------------------------
+      // TOAST UTILITY
+      // ----------------------------------------------------
+      function showToast(msg) {
+        const toast = document.getElementById('toastNotification');
+        const text = document.getElementById('toastMessage');
+        text.textContent = msg;
+        toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-[-150%]', 'opacity-0');
+        }, 3000);
+      }
+
+      // ----------------------------------------------------
+      // INITIALIZATION
+      // ----------------------------------------------------
+      document.addEventListener('DOMContentLoaded', () => {
+        renderCategoryTabs();
+        renderCatalog();
+        updateUnreadMessagesBadge();
+
+        // Check if seller session exists in localStorage
+        const hasSession = checkLocalStorageSession();
+        if (!hasSession) {
+          switchRole('buyer');
+        }
+
+        lucide.createIcons();
+      });
+    </script>
   </body>
 </html>
-
