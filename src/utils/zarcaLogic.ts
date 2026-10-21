@@ -196,6 +196,41 @@ export function filterProducts(products: ZarcaProduct[], filters: ProductFilters
 }
 
 /**
+ * Official Venezuelan Cities for Zarca Marketplace
+ */
+export const VENEZUELAN_CITIES = [
+  'San Fernando de Apure',
+  'Caracas',
+  'Valencia',
+  'Maracaibo',
+  'Barquisimeto',
+  'Maracay',
+  'Puerto Ordaz',
+  'Mérida',
+  'San Cristóbal',
+  'Barcelona',
+  'Margarita',
+] as const;
+
+export type VenezuelanCity = typeof VENEZUELAN_CITIES[number];
+
+/**
+ * Checks if current user is the owner of the product to prevent self-messaging
+ */
+export function isSelfMessagingBlocked(currentUserUid: string | null | undefined, sellerUid: string | null | undefined): boolean {
+  if (!currentUserUid || !sellerUid) return false;
+  return currentUserUid.trim() === sellerUid.trim();
+}
+
+/**
+ * Generates deterministic conversation ID for buyer, seller and product
+ */
+export function generateConversationId(buyerUid: string, sellerUid: string, productId: string): string {
+  const sortedUsers = [buyerUid, sellerUid].sort().join('__');
+  return `${sortedUsers}__prod_${productId}`;
+}
+
+/**
  * Generate safe WhatsApp direct contact link with pre-filled message
  */
 export function generateWhatsAppContactLink(
@@ -208,3 +243,4 @@ export function generateWhatsAppContactLink(
   const message = `Hola ${sellerName}, vi tu publicación de "${productTitle}" ($${priceUsd}) en Zarca Venezuela. Me interesa coordinar entrega segura. ¿Está disponible?`;
   return `https://wa.me/${cleanDigits}?text=${encodeURIComponent(message)}`;
 }
+

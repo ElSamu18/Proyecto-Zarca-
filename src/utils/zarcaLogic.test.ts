@@ -103,3 +103,23 @@ test('Product filtering properly matches search and category', () => {
   const searchInactive = filterProducts(mockProducts, { query: 'deportivos' });
   assert.equal(searchInactive.length, 0);
 });
+
+test('Venezuelan cities list has required cities', async () => {
+  const { VENEZUELAN_CITIES } = await import('./zarcaLogic.ts');
+  assert.equal(VENEZUELAN_CITIES.length, 11);
+  assert.ok(VENEZUELAN_CITIES.includes('San Fernando de Apure'));
+  assert.ok(VENEZUELAN_CITIES.includes('Caracas'));
+  assert.ok(VENEZUELAN_CITIES.includes('Margarita'));
+});
+
+test('Self messaging blocking detects own products', async () => {
+  const { isSelfMessagingBlocked, generateConversationId } = await import('./zarcaLogic.ts');
+  assert.equal(isSelfMessagingBlocked('user123', 'user123'), true);
+  assert.equal(isSelfMessagingBlocked('user123', 'seller456'), false);
+  assert.equal(isSelfMessagingBlocked(null, 'seller456'), false);
+
+  const convId1 = generateConversationId('buyerA', 'sellerB', 'prod1');
+  const convId2 = generateConversationId('sellerB', 'buyerA', 'prod1');
+  assert.equal(convId1, convId2); // deterministic sorted order
+});
+
