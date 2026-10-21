@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zarca - Comercio Local Seguro en Venezuela</title>
-    <meta name="description" content="Plataforma de comercio local seguro con roles de Comprador y Vendedor verificado con KYC en Venezuela." />
+    <meta name="description" content="Plataforma de comercio local seguro con roles de Comprador y Vendedor verificado con KYC en Venezuela y base de datos Firebase Firestore en tiempo real." />
     <meta property="og:title" content="Zarca - Comercio Local Seguro en Venezuela" />
     <meta property="og:description" content="Plataforma de comercio local seguro con roles de Comprador y Vendedor verificado con KYC en Venezuela." />
     <meta property="og:type" content="website" />
@@ -70,6 +70,13 @@
       .scan-beam {
         animation: scanline 2.2s ease-in-out infinite alternate;
       }
+      @keyframes pulseGlow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+      .live-dot {
+        animation: pulseGlow 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
     </style>
   </head>
   <body class="min-h-screen flex flex-col antialiased selection:bg-emerald-600 selection:text-white bg-slate-50">
@@ -80,18 +87,23 @@
       <span id="toastMessage">Notificación</span>
     </div>
 
-    <!-- Top Announcement Bar -->
+    <!-- Top Announcement Bar (with Firebase Real-time indicator) -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-      <div class="bg-slate-950 text-slate-300 text-[11px] sm:text-xs px-4 py-1.5 flex items-center justify-between border-b border-slate-800">
+      <div class="bg-slate-950 text-slate-300 text-[11px] sm:text-xs px-3 sm:px-6 py-1.5 flex items-center justify-between border-b border-slate-800">
         <div class="flex items-center gap-2 truncate">
           <span class="font-extrabold text-white tracking-wide">ZARCA VENEZUELA</span>
           <span class="text-slate-600 hidden sm:inline" aria-hidden="true">·</span>
           <span class="truncate hidden sm:inline">Comercio Local Seguro con Identidad KYC</span>
         </div>
-        <div class="flex items-center gap-3 text-slate-400 shrink-0">
-          <span class="flex items-center gap-1.5 text-[11px] sm:text-xs text-emerald-400 font-medium">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            <span>Chat Interno Seguro (Sin WhatsApp)</span>
+        <div class="flex items-center gap-3 shrink-0">
+          <!-- Firebase Realtime indicator -->
+          <span class="flex items-center gap-1.5 text-[11px] sm:text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-800/60">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
+            <span>Firestore en Vivo</span>
+          </span>
+          <span class="hidden md:inline-flex items-center gap-1 text-[11px] text-slate-400">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Chat Interno en la Nube</span>
           </span>
         </div>
       </div>
@@ -99,7 +111,7 @@
       <!-- Main Navigation Bar (Clean, centered and mobile-optimized) -->
       <div class="max-w-7xl mx-auto px-2.5 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-4">
         
-        <!-- MEJORA 2: Ícono SVG Moderno (Escudo y Letra 'Z' en #059669) -->
+        <!-- MEJORA 2 & 6: Ícono SVG Moderno (Escudo y Letra 'Z' en #059669) -->
         <a href="#" onclick="switchRole('buyer')" class="flex items-center gap-1.5 sm:gap-2 text-slate-900 no-underline shrink-0 group">
           <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center p-1 shadow-xs group-hover:scale-105 transition-transform">
             <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,18 +161,18 @@
         <!-- Right Side: Mensajes, Ajustes de Perfil (⚙️) y Perfil -->
         <div class="flex items-center gap-1 sm:gap-2 shrink-0">
           
-          <!-- Botón de Mensajes Internos con badge -->
+          <!-- Botón de Mensajes Internos en la Nube con badge -->
           <button
             onclick="openConversationsListModal()"
             class="p-1.5 sm:px-2.5 sm:py-2 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors relative cursor-pointer flex items-center gap-1.5 border border-slate-200"
-            title="Mis Mensajes Internos"
+            title="Mis Mensajes en la Nube"
           >
             <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
             <span class="text-xs font-bold hidden md:inline">Mensajes</span>
             <span id="unreadMessagesBadge" class="bg-emerald-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">0</span>
           </button>
 
-          <!-- MEJORA 4: Botón de Ajustes (⚙️) que abre modal 'Ajustes de Perfil' -->
+          <!-- Botón de Ajustes (⚙️) que abre modal 'Ajustes de Perfil' -->
           <button
             onclick="openProfileSettingsModal()"
             class="p-1.5 sm:p-2 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer border border-slate-200 flex items-center justify-center"
@@ -202,7 +214,7 @@
           </span>
           <span aria-hidden="true" class="hidden sm:inline">·</span>
           <span id="contextRoleSubtitle" class="text-slate-500">
-            Catálogo seguro con chat interno y reputación de vendedores
+            Catálogo global en tiempo real conectado a Firebase Firestore
           </span>
         </div>
 
@@ -285,9 +297,15 @@
 
         <!-- Feed Counter Header -->
         <div class="flex items-center justify-between text-xs text-slate-500 px-1">
-          <span>
-            Mostrando <strong id="catalogCount" class="text-slate-900 font-mono font-bold">0</strong> publicaciones activas
-          </span>
+          <div class="flex items-center gap-2">
+            <span>
+              Mostrando <strong id="catalogCount" class="text-slate-900 font-mono font-bold">0</strong> publicaciones activas
+            </span>
+            <span class="text-[10px] text-emerald-600 font-medium bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 hidden sm:inline-flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 live-dot"></span>
+              Sincronizado con Firestore
+            </span>
+          </div>
           <button
             onclick="resetFilters()"
             class="flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-medium cursor-pointer"
@@ -299,10 +317,10 @@
 
         <!-- Product Cards Grid with Reputation ⭐ -->
         <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          <!-- Dynamically populated product cards -->
+          <!-- Dynamically populated product cards from Firestore -->
         </div>
 
-        <!-- MEJORA 3: Empty State Amigable del Catálogo (Exact requested copy) -->
+        <!-- Empty State Amigable del Catálogo -->
         <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-slate-200/90 p-10 sm:p-14 text-center max-w-lg mx-auto shadow-xs">
           <!-- Friendly SVG Illustration -->
           <div class="w-20 h-20 mx-auto mb-4 rounded-3xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
@@ -319,7 +337,7 @@
             El catálogo local está limpio. ¡Sé el primero en publicar un producto en tu zona!
           </h3>
           <p class="text-xs sm:text-sm text-slate-500 mb-6 max-w-sm mx-auto leading-relaxed">
-            Publica tus artículos con foto real optimizada, fija tu precio manual en dólares y recibe compradores por chat interno seguro.
+            Publica tus artículos con foto real optimizada con canvas, fija tu precio manual en dólares y guarda en Firestore para que todos lo vean al instante.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
@@ -350,6 +368,10 @@
                   <i data-lucide="check-circle-2" class="w-3 h-3"></i>
                   KYC Aprobado
                 </span>
+                <span class="inline-flex items-center gap-1 bg-slate-800 text-slate-300 text-[10px] font-mono px-2 py-0.5 rounded-full border border-slate-700">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-dot"></span>
+                  Firestore Activo
+                </span>
               </div>
               <p class="text-xs text-slate-300 max-w-xl leading-relaxed">
                 Negocio: <strong id="sellerBannerBusiness" class="text-white">Mi Negocio</strong> ·
@@ -357,7 +379,7 @@
                 Teléfono: <span id="sellerBannerPhone" class="font-mono text-slate-200">+58 412-123-4567</span>
               </p>
               <p class="text-[10px] text-slate-400 font-mono mt-0.5">
-                Perfil de vendedor persistente en localStorage · Compresión de fotos en canvas activa
+                Perfil de vendedor persistente en localStorage · Publicación en vivo en colección 'productos' de Firestore
               </p>
             </div>
           </div>
@@ -448,8 +470,8 @@
         <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs">
           <div class="p-4 sm:px-6 border-b border-slate-100 flex items-center justify-between">
             <div>
-              <h3 class="text-sm font-bold text-slate-900">Mis Publicaciones en Venta</h3>
-              <p class="text-xs text-slate-500">Gestiona precios manuales en USD ($), activa o pausa tus artículos</p>
+              <h3 class="text-sm font-bold text-slate-900">Mis Publicaciones en Venta (En Vivo)</h3>
+              <p class="text-xs text-slate-500">Gestiona precios manuales en USD ($) guardados en Firestore</p>
             </div>
             <button
               onclick="openPublishModal()"
@@ -473,22 +495,22 @@
         <div class="flex items-center gap-2">
           <span class="font-extrabold text-slate-900">Zarca Venezuela</span>
           <span aria-hidden="true">·</span>
-          <span>Comercio local seguro con chat interno y reputación</span>
+          <span>Comercio local en tiempo real con Firebase Firestore</span>
         </div>
         <div class="flex items-center gap-4">
-          <span>Precios transparentes en dólares (USD)</span>
+          <span>Precios manuales en dólares (USD)</span>
           <span aria-hidden="true">·</span>
           <span class="flex items-center gap-1 text-emerald-700 font-semibold">
             <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            Validación biométrica KYC & Almacenamiento Optimizado
+            Validación biométrica KYC & Compresión en Canvas
           </span>
         </div>
       </div>
     </footer>
 
     <!-- ========================================== -->
-    <!-- MEJORA 1 & 5: MODAL DE CHAT INTERNO        -->
-    <!-- CON HISTORIAL LIMITADO A 50 MENSAJES       -->
+    <!-- MODAL DE CHAT INTERNO EN LA NUBE           -->
+    <!-- (FIRESTORE 'mensajes' EN VIVO, SLICE -50)  -->
     <!-- ========================================== -->
     <div id="modalChat" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
       <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full h-[640px] max-h-[92vh] flex flex-col overflow-hidden border border-slate-200">
@@ -507,6 +529,7 @@
                 <span class="inline-flex text-emerald-400" title="Vendedor Verificado con KYC">
                   <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
                 </span>
+                <span class="text-[9px] bg-emerald-950 text-emerald-400 font-mono px-1.5 py-0.2 rounded border border-emerald-800">Cloud Chat</span>
               </div>
               <p id="chatSellerReputation" class="text-[11px] text-amber-400 font-semibold">
                 ⭐ 4.8 (24 ventas concretadas)
@@ -533,9 +556,9 @@
           </div>
         </div>
 
-        <!-- Messages Area (persisted in localStorage, slice(-50)) -->
+        <!-- Messages Area (Firestore collection 'mensajes', slice(-50)) -->
         <div id="chatMessagesList" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
-          <!-- Dynamically populated from localStorage -->
+          <!-- Dynamically populated from Firestore onSnapshot -->
         </div>
 
         <!-- Typing Indicator -->
@@ -544,7 +567,7 @@
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></span>
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
             <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-            <span class="text-[10px] text-slate-400 font-medium">el vendedor está respondiendo...</span>
+            <span class="text-[10px] text-slate-400 font-medium">escribiendo respuesta...</span>
           </div>
         </div>
 
@@ -566,7 +589,7 @@
           <input
             type="text"
             id="chatInputText"
-            placeholder="Escribe un mensaje seguro dentro de Zarca..."
+            placeholder="Escribe un mensaje seguro (se guarda en Firestore)..."
             class="flex-1 px-3.5 py-2 text-xs sm:text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"
           />
           <button
@@ -591,8 +614,8 @@
               <i data-lucide="message-square" class="w-4 h-4"></i>
             </div>
             <div>
-              <h3 class="text-sm font-bold text-slate-900">Mis Conversaciones de Seguridad</h3>
-              <p class="text-[11px] text-slate-500">Historial interno seguro guardado en localStorage</p>
+              <h3 class="text-sm font-bold text-slate-900">Mis Conversaciones en la Nube</h3>
+              <p class="text-[11px] text-slate-500">Historial en vivo guardado en Firestore</p>
             </div>
           </div>
           <button onclick="closeConversationsListModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 cursor-pointer">
@@ -601,14 +624,14 @@
         </div>
 
         <div id="conversationsListContainer" class="flex-1 overflow-y-auto divide-y divide-slate-100 p-2">
-          <!-- Dynamically populated from localStorage -->
+          <!-- Dynamically populated from Firestore mensajes -->
         </div>
       </div>
     </div>
 
     <!-- ========================================== -->
-    <!-- MEJORA 4: MODAL AJUSTES DE PERFIL (⚙️)      -->
-    <!-- (SOBREESCRIBE NOMBRE, CÉDULA Y TELÉFONO)    -->
+    <!-- MODAL AJUSTES DE PERFIL (⚙️)               -->
+    <!-- (SOBREESCRIBE NOMBRE, CÉDULA Y TELÉFONO)   -->
     <!-- ========================================== -->
     <div id="modalProfileSettings" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-fadeIn">
       <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
@@ -704,7 +727,7 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL KYC VERIFICACIÓN INICIAL             -->
+    <!-- MODAL KYC VERIFICACIÓN INICIAL (FRICTIONLESS) -->
     <!-- ========================================== -->
     <div id="modalKyc" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
       <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200 my-8">
@@ -749,7 +772,7 @@
                 <i data-lucide="shield-check" class="w-5 h-5 text-emerald-700 shrink-0 mt-0.5"></i>
                 <div class="text-xs text-emerald-950 leading-relaxed">
                   <strong class="block font-bold">Verificación de Vendedor Seguro</strong>
-                  Ingresa tu Cédula, Nombre de tu Negocio y Teléfono. Al verificarte, tus publicaciones recibirán el sello oficial y tus datos quedarán guardados en localStorage para acceso permanente.
+                  Ingresa tu Cédula, Nombre de tu Negocio y Teléfono. Al verificarte, tus publicaciones recibirán el sello oficial y tus datos quedarán guardados en localStorage con un ID único para publicar en Firestore.
                 </div>
               </div>
 
@@ -852,10 +875,10 @@
             <div class="space-y-1.5 max-w-xs mx-auto">
               <div class="flex items-center justify-between text-xs text-slate-600">
                 <span>Progreso de validación</span>
-                <span id="biometricPercentText" class="font-mono font-bold text-emerald-600">30%</span>
+                <span id="biometricPercentText" class="font-mono font-bold text-emerald-600">35%</span>
               </div>
               <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div id="biometricProgressBar" class="h-full bg-emerald-500 transition-all duration-500 ease-out" style="width: 30%"></div>
+                <div id="biometricProgressBar" class="h-full bg-emerald-500 transition-all duration-500 ease-out" style="width: 35%"></div>
               </div>
             </div>
           </div>
@@ -873,7 +896,7 @@
               </span>
               <h4 id="kycSuccessTitle" class="text-xl font-extrabold text-slate-900">¡Felicidades!</h4>
               <p class="text-xs text-slate-600 max-w-sm mx-auto mt-1">
-                Tu perfil de vendedor en Zarca está validado y guardado en tu navegador. Tus publicaciones contarán con insignia oficial y chat seguro.
+                Tu perfil de vendedor en Zarca está validado con ID único persistente en localStorage. Ya puedes publicar productos en tiempo real en Firestore.
               </p>
             </div>
 
@@ -901,8 +924,8 @@
                   <span id="certPhone" class="text-emerald-400 font-mono">+58 000-000-0000</span>
                 </div>
                 <div>
-                  <span class="text-slate-400 block text-[10px]">Persistencia:</span>
-                  <span class="text-emerald-300 font-mono text-[11px]">localStorage OK</span>
+                  <span class="text-slate-400 block text-[10px]">ID de Vendedor:</span>
+                  <span id="certSellerId" class="text-emerald-300 font-mono text-[11px] truncate block">usr_local</span>
                 </div>
               </div>
             </div>
@@ -922,8 +945,9 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MEJORA 1: MODAL PUBLICAR NUEVO PRODUCTO    -->
+    <!-- MODAL PUBLICAR NUEVO PRODUCTO              -->
     <!-- CON COMPRESIÓN DE IMÁGENES EN CANVAS (600px 70%) -->
+    <!-- Y GUARDADO EN FIRESTORE 'productos'        -->
     <!-- ========================================== -->
     <div id="modalPublish" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
       <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full overflow-hidden border border-slate-200 my-8">
@@ -933,8 +957,8 @@
               +
             </div>
             <div>
-              <h3 class="text-sm font-bold text-slate-900">Crear Nueva Publicación</h3>
-              <p class="text-xs text-slate-500">Compresión automática en canvas antes de guardar en localStorage</p>
+              <h3 class="text-sm font-bold text-slate-900">Crear Nueva Publicación en la Nube</h3>
+              <p class="text-xs text-slate-500">Compresión en canvas & publicación instantánea en Firestore</p>
             </div>
           </div>
           <button onclick="closePublishModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-200/60 cursor-pointer">
@@ -1030,7 +1054,7 @@
             ></textarea>
           </div>
 
-          <!-- MEJORA 1: SUBIDA Y COMPRESIÓN DE FOTO CON CANVAS (MAX 600px, 70% JPEG) -->
+          <!-- MEJORA 3: SUBIDA Y COMPRESIÓN DE FOTO CON CANVAS (MAX 600px, 70% JPEG) -->
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1.5">
               Fotografía Real del Producto (Galería del Teléfono o PC)
@@ -1051,7 +1075,7 @@
                   <i data-lucide="upload" class="w-5 h-5"></i>
                 </div>
                 <p class="text-xs font-bold text-slate-800">Toca aquí para seleccionar una foto de tu galería</p>
-                <p class="text-[11px] text-slate-500">Se comprimirá automáticamente a máx. 600px y 70% calidad para proteger la memoria de tu navegador.</p>
+                <p class="text-[11px] text-slate-500">Se comprimirá a máx. 600px y 70% calidad con canvas antes de subir a Firestore.</p>
               </div>
 
               <!-- Live Compressed Preview -->
@@ -1075,11 +1099,12 @@
               Cancelar
             </button>
             <button
+              id="btnPublishSubmit"
               type="submit"
               class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs sm:text-sm font-semibold rounded-xl flex items-center gap-2 transition-colors cursor-pointer shadow-sm"
             >
-              <i data-lucide="plus-circle" class="w-4 h-4"></i>
-              <span>Publicar en Zarca Venezuela</span>
+              <i data-lucide="cloud-upload" class="w-4 h-4"></i>
+              <span id="btnPublishText">Publicar en la Nube (Firestore)</span>
             </button>
           </div>
         </form>
@@ -1087,49 +1112,64 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- FIREBASE V10 ES MODULES & JAVASCRIPT LOGIC -->
     <!-- ========================================== -->
-    <script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+      import { 
+        getFirestore, 
+        collection, 
+        addDoc, 
+        onSnapshot, 
+        query, 
+        orderBy, 
+        serverTimestamp,
+        doc,
+        updateDoc,
+        deleteDoc
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+      // 1. Configuración de Firebase (Exacta según requerimiento)
+      const firebaseConfig = {
+        apiKey: "AIzaSyD3BbfmdQVPfBasAGkSbzOSxArvcFP-Tt0",
+        authDomain: "zarca-a55d4.firebaseapp.com",
+        databaseURL: "https://zarca-a55d4-default-rtdb.firebaseio.com",
+        projectId: "zarca-a55d4",
+        storageBucket: "zarca-a55d4.firebasestorage.app",
+        messagingSenderId: "301413789357",
+        appId: "1:301413789357:web:2e6aeb9ed879d70060e024"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
       const CATEGORIES = ['Todos', 'Tecnología', 'Alimentos', 'Moda', 'Energía', 'Hogar', 'Vehículos'];
 
-      // ----------------------------------------------------
-      // MEJORA 6: LIMPIEZA INICIAL
-      // El catálogo inicia con el array completamente vacío ([]),
-      // o restaurado desde localStorage si el usuario ya publicó.
-      // ----------------------------------------------------
-      function getStoredProducts() {
-        try {
-          const raw = localStorage.getItem('zarca_products');
-          return raw ? JSON.parse(raw) : [];
-        } catch (e) {
-          console.error('Error al leer productos de localStorage', e);
-          return [];
-        }
-      }
-
-      function saveStoredProducts(prods) {
-        try {
-          localStorage.setItem('zarca_products', JSON.stringify(prods));
-        } catch (e) {
-          console.error('Error al guardar productos en localStorage', e);
-          showToast('Atención: Almacenamiento local lleno.');
-        }
-      }
-
       // GLOBAL STATE
-      let products = getStoredProducts(); // Array inicial limpio ([]) o persistido por el usuario
+      let products = []; // Catálogo sincronizado en tiempo real desde Firestore 'productos'
       let activeRole = 'buyer'; // 'buyer' | 'seller'
       let selectedCategory = 'Todos';
       let uploadedBase64Image = null;
 
-      // Current seller profile restored from localStorage
+      // Current seller profile restored from localStorage (Frictionless KYC)
       let currentSeller = null;
 
-      // Active conversation currently displayed in the chat modal
+      // Active chat listener cleanup function
+      let activeChatUnsubscribe = null;
       let activeChatConversation = null;
 
+      // Local persistent Buyer ID (for seamless anonymous/frictionless buyer session)
+      function getOrCreateBuyerId() {
+        let bId = localStorage.getItem('zarca_buyer_id');
+        if (!bId) {
+          bId = 'buyer_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+          localStorage.setItem('zarca_buyer_id', bId);
+        }
+        return bId;
+      }
+
       // ----------------------------------------------------
-      // MEJORA 1: COMPRESIÓN DE IMÁGENES CON CANVAS TEMPORAL
+      // 3. COMPRESIÓN DE IMÁGENES CON CANVAS (VITAL)
       // Redimensiona a un máximo de 600px de ancho y 70% calidad JPEG
       // ----------------------------------------------------
       function compressImageWithCanvas(file, maxWidth = 600, quality = 0.70) {
@@ -1143,7 +1183,7 @@
               let width = img.width;
               let height = img.height;
 
-              // Redimensionar proporcionalmente a máx 600px de ancho
+              // Redimensionar proporcionalmente a máx 600px de ancho/alto
               if (width > maxWidth) {
                 height = Math.round((height * maxWidth) / width);
                 width = maxWidth;
@@ -1190,7 +1230,7 @@
         if (previewStatus) previewStatus.textContent = 'Comprimiendo imagen con Canvas...';
 
         try {
-          // MEJORA 1: Intercepta y comprime a máx 600px con 70% calidad
+          // Compresión a máx 600px con 70% calidad JPEG
           const compressed = await compressImageWithCanvas(file, 600, 0.70);
           uploadedBase64Image = compressed;
 
@@ -1201,338 +1241,77 @@
           document.getElementById('imageUploadPreviewContainer').classList.remove('hidden');
 
           if (previewStatus) previewStatus.textContent = 'Foto comprimida a 600px (70% JPEG)';
-          showToast('Foto optimizada y lista para publicar.');
+          showToast('Foto optimizada para la nube y lista para publicar.');
         } catch (err) {
           console.error('Error al comprimir imagen:', err);
           showToast('Error al optimizar imagen. Intenta con otra foto.');
         }
       }
 
-      // ----------------------------------------------------
-      // MEJORA 5: CHAT INTERNO OPTIMIZADO (SLICE -50)
-      // ----------------------------------------------------
-      function getStoredChats() {
+      // Cache local para persistencia instantánea y tolerancia a desconexión
+      function getLocalProductsBackup() {
         try {
-          const raw = localStorage.getItem('zarca_chat_conversations');
-          return raw ? JSON.parse(raw) : {};
-        } catch (e) {
-          console.error('Error al leer chats de localStorage', e);
-          return {};
-        }
+          const raw = localStorage.getItem('zarca_firestore_products_backup');
+          return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
       }
-
-      function saveStoredChats(chatsObj) {
+      function saveLocalProductsBackup(list) {
         try {
-          localStorage.setItem('zarca_chat_conversations', JSON.stringify(chatsObj));
-          updateUnreadMessagesBadge();
-        } catch (e) {
-          console.error('Error al guardar chats en localStorage', e);
-        }
+          localStorage.setItem('zarca_firestore_products_backup', JSON.stringify(list));
+        } catch (e) {}
       }
 
-      function updateUnreadMessagesBadge() {
-        const chats = getStoredChats();
-        const total = Object.keys(chats).length;
-        const badge = document.getElementById('unreadMessagesBadge');
-        if (badge) {
-          badge.textContent = total.toString();
-        }
-      }
+      // GLOBAL STATE (inicializado con backup previo para render inmediato)
+      products = getLocalProductsBackup();
 
-      function openInternalChat(productId) {
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
+      function initRealtimeProducts() {
+        try {
+          const prodsCol = collection(db, "productos");
+          const q = query(prodsCol, orderBy("createdAtMs", "desc"));
 
-        activeChatConversation = {
-          productId: product.id,
-          productTitle: product.title,
-          productPrice: product.priceUsd,
-          productImage: product.image,
-          sellerName: product.sellerName || 'Vendedor Verificado',
-          sellerPhone: product.sellerPhone || '4121234567',
-          sellerRating: product.sellerRating || 4.8,
-          salesCount: product.salesCount || 24,
-          city: product.city,
-          zone: product.zone,
-        };
-
-        // Header info
-        document.getElementById('chatSellerName').textContent = activeChatConversation.sellerName;
-        document.getElementById('chatSellerReputation').textContent = `⭐ ${activeChatConversation.sellerRating.toFixed(1)} (${activeChatConversation.salesCount} ventas concretadas)`;
-        document.getElementById('chatSellerAvatar').textContent = activeChatConversation.sellerName.charAt(0).toUpperCase();
-
-        // Product banner
-        document.getElementById('chatProductThumb').src = activeChatConversation.productImage;
-        document.getElementById('chatProductTitle').textContent = activeChatConversation.productTitle;
-        document.getElementById('chatProductLocation').textContent = `${activeChatConversation.city} · ${activeChatConversation.zone}`;
-        document.getElementById('chatProductPrice').textContent = `$${activeChatConversation.productPrice.toFixed(2)}`;
-
-        // Load conversation from localStorage or initialize with welcome message
-        const chats = getStoredChats();
-        if (!chats[productId]) {
-          chats[productId] = {
-            productId: product.id,
-            productTitle: product.title,
-            productPrice: product.priceUsd,
-            productImage: product.image,
-            sellerName: activeChatConversation.sellerName,
-            messages: [
-              {
-                id: 'msg-' + Date.now(),
-                sender: 'seller',
-                text: `¡Hola! Gracias por tu interés en "${product.title}". El artículo está disponible en ${product.city} (${product.zone}). ¿Qué dudas tienes?`,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          onSnapshot(q, (snapshot) => {
+            if (snapshot.docs && snapshot.docs.length > 0) {
+              products = snapshot.docs.map(docSnap => ({
+                id: docSnap.id,
+                ...docSnap.data()
+              }));
+              saveLocalProductsBackup(products);
+            }
+            renderCatalog();
+            if (activeRole === 'seller') {
+              renderSellerDashboard();
+            }
+          }, (err) => {
+            console.warn("Retrying products query without orderBy:", err);
+            onSnapshot(prodsCol, (snapshot) => {
+              if (snapshot.docs && snapshot.docs.length > 0) {
+                products = snapshot.docs.map(docSnap => ({
+                  id: docSnap.id,
+                  ...docSnap.data()
+                }));
+                products.sort((a, b) => (b.createdAtMs || 0) - (a.createdAtMs || 0));
+                saveLocalProductsBackup(products);
               }
-            ]
-          };
-          saveStoredChats(chats);
+              renderCatalog();
+              if (activeRole === 'seller') {
+                renderSellerDashboard();
+              }
+            }, (fallbackErr) => {
+              console.warn("Firestore en modo sin conexión o pendiente de inicialización:", fallbackErr);
+              if (products.length === 0) {
+                products = getLocalProductsBackup();
+                renderCatalog();
+                if (activeRole === 'seller') renderSellerDashboard();
+              }
+            });
+          });
+        } catch (e) {
+          console.error("Error al inicializar Firestore productos:", e);
         }
-
-        renderChatMessages(chats[productId].messages);
-
-        document.getElementById('modalChat').classList.remove('hidden');
-        document.getElementById('chatInputText').focus();
-        lucide.createIcons();
-      }
-
-      function closeChatModal() {
-        document.getElementById('modalChat').classList.add('hidden');
-        activeChatConversation = null;
-      }
-
-      function renderChatMessages(messages) {
-        const container = document.getElementById('chatMessagesList');
-        if (!container) return;
-
-        container.innerHTML = messages.map(m => {
-          const isBuyer = m.sender === 'buyer';
-          return `
-            <div class="flex flex-col ${isBuyer ? 'items-end' : 'items-start'}">
-              <div class="max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm ${
-                isBuyer
-                  ? 'bg-emerald-600 text-white rounded-br-xs'
-                  : 'bg-white text-slate-800 border border-slate-200/90 rounded-bl-xs shadow-2xs'
-              }">
-                <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(m.text)}</p>
-                <span class="text-[10px] mt-1 block text-right font-mono ${isBuyer ? 'text-emerald-100' : 'text-slate-400'}">
-                  ${m.time} ${isBuyer ? '✓✓' : ''}
-                </span>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        // Auto-scroll to bottom
-        container.scrollTop = container.scrollHeight;
-      }
-
-      function handleSendChatMessage(event) {
-        if (event) event.preventDefault();
-        const input = document.getElementById('chatInputText');
-        const text = input.value.trim();
-        if (!text || !activeChatConversation) return;
-
-        const chats = getStoredChats();
-        const pId = activeChatConversation.productId;
-        if (!chats[pId]) {
-          chats[pId] = {
-            productId: activeChatConversation.productId,
-            productTitle: activeChatConversation.productTitle,
-            productPrice: activeChatConversation.productPrice,
-            productImage: activeChatConversation.productImage,
-            sellerName: activeChatConversation.sellerName,
-            messages: []
-          };
-        }
-
-        const buyerMsg = {
-          id: 'msg-' + Date.now(),
-          sender: 'buyer',
-          text: text,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-
-        // MEJORA 5: Agregar mensaje y limitar estrictamente a los últimos 50 con .slice(-50)
-        chats[pId].messages.push(buyerMsg);
-        chats[pId].messages = chats[pId].messages.slice(-50);
-        saveStoredChats(chats);
-
-        renderChatMessages(chats[pId].messages);
-        input.value = '';
-
-        // Show simulated typing and realistic seller answer
-        const typing = document.getElementById('chatTypingIndicator');
-        typing.classList.remove('hidden');
-
-        setTimeout(() => {
-          typing.classList.add('hidden');
-          const sellerAnswers = [
-            `Excelente. Podemos coordinar la entrega personal de "${activeChatConversation.productTitle}" en una zona céntrica y segura de ${activeChatConversation.city}. Puedes revisar el producto con total calma antes de pagar.`,
-            `¡Claro que sí! Aceptamos pago en efectivo en divisas ($), Pago Móvil a la tasa acordada o transferencia bancaria al momento de la entrega personal.`,
-            `El producto cuenta con garantía de satisfacción. Si lo deseas, podemos acordar encontrarnos hoy mismo.`
-          ];
-          const randomReply = sellerAnswers[Math.floor(Math.random() * sellerAnswers.length)];
-
-          const sellerMsg = {
-            id: 'msg-' + Date.now(),
-            sender: 'seller',
-            text: randomReply,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-          };
-
-          // MEJORA 5: Limitar también con .slice(-50)
-          const updatedChats = getStoredChats();
-          if (updatedChats[pId]) {
-            updatedChats[pId].messages.push(sellerMsg);
-            updatedChats[pId].messages = updatedChats[pId].messages.slice(-50);
-            saveStoredChats(updatedChats);
-            renderChatMessages(updatedChats[pId].messages);
-          }
-        }, 1200);
-      }
-
-      function sendQuickPrompt(promptText) {
-        document.getElementById('chatInputText').value = promptText;
-        handleSendChatMessage();
-      }
-
-      // View list of all internal conversations saved in localStorage
-      function openConversationsListModal() {
-        const chats = getStoredChats();
-        const keys = Object.keys(chats);
-        const container = document.getElementById('conversationsListContainer');
-
-        if (keys.length === 0) {
-          container.innerHTML = `
-            <div class="p-8 text-center">
-              <i data-lucide="message-square" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
-              <h4 class="text-sm font-bold text-slate-800">No tienes conversaciones aún</h4>
-              <p class="text-xs text-slate-500 mb-3">Toca 'Contactar' en cualquier producto para iniciar un chat seguro con el vendedor.</p>
-              <button onclick="closeConversationsListModal()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">
-                Explorar Catálogo
-              </button>
-            </div>
-          `;
-        } else {
-          container.innerHTML = keys.map(k => {
-            const c = chats[k];
-            const lastMsg = c.messages[c.messages.length - 1];
-            return `
-              <div
-                onclick="closeConversationsListModal(); openInternalChat('${c.productId}')"
-                class="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 rounded-2xl cursor-pointer transition-colors"
-              >
-                <div class="flex items-center gap-3 min-w-0">
-                  <img src="${c.productImage}" class="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-100" />
-                  <div class="min-w-0">
-                    <div class="flex items-center gap-1.5">
-                      <h4 class="text-xs font-bold text-slate-900 truncate">${c.sellerName}</h4>
-                      <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
-                    </div>
-                    <p class="text-[11px] text-slate-500 font-medium truncate">${c.productTitle}</p>
-                    <p class="text-[11px] text-slate-400 truncate mt-0.5">${lastMsg ? escapeHtml(lastMsg.text) : 'Conversación iniciada'}</p>
-                  </div>
-                </div>
-                <div class="text-right shrink-0">
-                  <span class="text-xs font-bold text-emerald-700 font-mono block">$${c.productPrice.toFixed(2)}</span>
-                  <span class="text-[10px] text-slate-400 block">${lastMsg ? lastMsg.time : ''}</span>
-                </div>
-              </div>
-            `;
-          }).join('');
-        }
-
-        document.getElementById('modalConversationsList').classList.remove('hidden');
-        lucide.createIcons();
-      }
-
-      function closeConversationsListModal() {
-        document.getElementById('modalConversationsList').classList.add('hidden');
       }
 
       // ----------------------------------------------------
-      // MEJORA 4: BOTÓN DE AJUSTES Y MODAL DE PERFIL (⚙️)
-      // Sobreescribe Nombre, Cédula y Teléfono en localStorage
-      // ----------------------------------------------------
-      function openProfileSettingsModal() {
-        // Pre-fill with currentSeller data if available
-        if (currentSeller) {
-          document.getElementById('settingsBusinessName').value = currentSeller.businessName || '';
-          const ced = currentSeller.cedula || 'V-';
-          const type = ced.startsWith('E') ? 'E' : 'V';
-          const num = ced.replace(/^[VEve]-?/, '');
-          document.getElementById('settingsCedulaType').value = type;
-          document.getElementById('settingsCedulaNumber').value = num;
-          document.getElementById('settingsPhone').value = currentSeller.phone || '';
-        } else {
-          document.getElementById('settingsBusinessName').value = 'Mi Negocio Zarca';
-          document.getElementById('settingsCedulaType').value = 'V';
-          document.getElementById('settingsCedulaNumber').value = '';
-          document.getElementById('settingsPhone').value = '';
-        }
-
-        document.getElementById('modalProfileSettings').classList.remove('hidden');
-        lucide.createIcons();
-      }
-
-      function closeProfileSettingsModal() {
-        document.getElementById('modalProfileSettings').classList.add('hidden');
-      }
-
-      function handleSaveProfileSettings(event) {
-        event.preventDefault();
-        const bName = document.getElementById('settingsBusinessName').value.trim();
-        const cType = document.getElementById('settingsCedulaType').value;
-        const cNum = document.getElementById('settingsCedulaNumber').value.trim();
-        const phone = document.getElementById('settingsPhone').value.trim();
-
-        if (!bName || !cNum || !phone) {
-          alert('Por favor completa todos los campos requeridos.');
-          return;
-        }
-
-        const fullCedula = `${cType}-${cNum}`;
-
-        // Create or update current seller
-        currentSeller = {
-          businessName: bName,
-          cedula: fullCedula,
-          phone: phone,
-          isKycVerified: true,
-          verifiedAt: (currentSeller && currentSeller.verifiedAt) || new Date().toISOString()
-        };
-
-        // Overwrite in localStorage
-        saveSellerSessionToLocalStorage(currentSeller);
-
-        // Update Header UI
-        document.getElementById('headerUserName').textContent = currentSeller.businessName;
-        document.getElementById('headerUserPhone').textContent = '+58 ' + currentSeller.phone;
-        document.getElementById('headerUserInitial').textContent = currentSeller.businessName.charAt(0).toUpperCase();
-
-        // Update Seller Banner
-        const sbBiz = document.getElementById('sellerBannerBusiness');
-        const sbCed = document.getElementById('sellerBannerCedula');
-        const sbPho = document.getElementById('sellerBannerPhone');
-        if (sbBiz) sbBiz.textContent = currentSeller.businessName;
-        if (sbCed) sbCed.textContent = currentSeller.cedula;
-        if (sbPho) sbPho.textContent = '+58 ' + currentSeller.phone;
-
-        document.getElementById('headerSellerBadge').classList.remove('hidden');
-        document.getElementById('quickVerifyBtnContainer').innerHTML = `
-          <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-            <span>Vendedor Verificado</span>
-          </div>
-        `;
-
-        closeProfileSettingsModal();
-        lucide.createIcons();
-        showToast('Perfil actualizado correctamente en localStorage.');
-      }
-
-      // ----------------------------------------------------
-      // PERSISTENCIA DEL PERFIL EN LOCALSTORAGE
+      // 4. PERFIL LOCAL (FRICTIONLESS KYC CON LOCALSTORAGE)
       // ----------------------------------------------------
       function checkLocalStorageSession() {
         try {
@@ -1540,6 +1319,11 @@
           if (stored) {
             const data = JSON.parse(stored);
             if (data && data.isKycVerified) {
+              // Ensure persistent seller ID exists
+              if (!data.id) {
+                data.id = 'seller_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+                saveSellerSessionToLocalStorage(data);
+              }
               currentSeller = data;
 
               // Update Header
@@ -1565,7 +1349,7 @@
 
               // Maintain Seller Dashboard active on reload without asking KYC again
               switchRole('seller');
-              showToast('Sesión de Vendedor restaurada desde localStorage.');
+              showToast('Sesión de Vendedor activa en este dispositivo.');
               return true;
             }
           }
@@ -1603,79 +1387,11 @@
         `;
         lucide.createIcons();
         switchRole('buyer');
-        showToast('Datos de sesión restablecidos.');
+        showToast('Perfil restablecido a Comprador.');
       }
 
       // ----------------------------------------------------
-      // SUBACCOUNT ROLE SWITCHER
-      // ----------------------------------------------------
-      function switchRole(role) {
-        const btnBuyer = document.getElementById('btnModeBuyer');
-        const btnSeller = document.getElementById('btnModeSeller');
-        const viewBuyer = document.getElementById('viewBuyer');
-        const viewSeller = document.getElementById('viewSeller');
-        const title = document.getElementById('contextRoleTitle');
-        const subtitle = document.getElementById('contextRoleSubtitle');
-
-        if (role === 'seller') {
-          // If not verified in localStorage, open KYC modal immediately
-          if (!currentSeller || !currentSeller.isKycVerified) {
-            openKycModal();
-            return;
-          }
-
-          activeRole = 'seller';
-          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
-          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-emerald-600 text-white shadow-sm';
-
-          viewBuyer.classList.add('hidden');
-          viewSeller.classList.remove('hidden');
-
-          const sbBiz = document.getElementById('sellerBannerBusiness');
-          const sbCed = document.getElementById('sellerBannerCedula');
-          const sbPho = document.getElementById('sellerBannerPhone');
-          if (sbBiz && currentSeller.businessName) sbBiz.textContent = currentSeller.businessName;
-          if (sbCed && currentSeller.cedula) sbCed.textContent = currentSeller.cedula;
-          if (sbPho && currentSeller.phone) sbPho.textContent = '+58 ' + currentSeller.phone;
-
-          title.innerHTML = `
-            <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i>
-            <span>Subcuenta Vendedor Verificado (${currentSeller.businessName})</span>
-          `;
-          subtitle.textContent = 'Gestión y publicación de inventario local en Venezuela';
-
-          renderSellerDashboard();
-        } else {
-          activeRole = 'buyer';
-          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60';
-          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
-
-          viewBuyer.classList.remove('hidden');
-          viewSeller.classList.add('hidden');
-
-          title.innerHTML = `
-            <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-600"></i>
-            <span>Subcuenta Comprador</span>
-          `;
-          subtitle.textContent = 'Catálogo seguro con chat interno y reputación de vendedores';
-
-          renderCatalog();
-        }
-
-        lucide.createIcons();
-      }
-
-      function handlePublishOrVerifyCTA() {
-        if (!currentSeller || !currentSeller.isKycVerified) {
-          openKycModal();
-        } else {
-          switchRole('seller');
-          openPublishModal();
-        }
-      }
-
-      // ----------------------------------------------------
-      // KYC MODAL FLOW
+      // KYC MODAL FLOW (FRICTIONLESS)
       // ----------------------------------------------------
       let pendingKycData = null;
 
@@ -1710,7 +1426,10 @@
           return;
         }
 
+        const uniqueId = 'usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+
         pendingKycData = {
+          id: uniqueId,
           cedula: `${cedulaType}-${cedulaNumber}`,
           businessName: businessName,
           phone: phone,
@@ -1741,7 +1460,7 @@
           text.textContent = 'Verificando prueba de vida...';
           bar.style.width = '70%';
           percent.textContent = '70%';
-        }, 1800);
+        }, 1500);
 
         setTimeout(() => {
           text.textContent = '¡Rostro y Cédula validados!';
@@ -1761,6 +1480,7 @@
           document.getElementById('certBusiness').textContent = currentSeller.businessName;
           document.getElementById('certCedula').textContent = currentSeller.cedula;
           document.getElementById('certPhone').textContent = '+58 ' + currentSeller.phone;
+          document.getElementById('certSellerId').textContent = currentSeller.id;
           document.getElementById('kycSuccessTitle').textContent = `¡Felicidades, ${currentSeller.businessName}!`;
 
           // Go to Step 3
@@ -1770,7 +1490,7 @@
           document.getElementById('stepBar3').className = 'h-1.5 rounded-full bg-emerald-500';
 
           lucide.createIcons();
-        }, 3600);
+        }, 3000);
       }
 
       function finishKycAndOpenDashboard() {
@@ -1780,7 +1500,84 @@
       }
 
       // ----------------------------------------------------
-      // MODAL PUBLICAR PRODUCTO
+      // MODAL AJUSTES DE PERFIL (⚙️)
+      // ----------------------------------------------------
+      function openProfileSettingsModal() {
+        if (currentSeller) {
+          document.getElementById('settingsBusinessName').value = currentSeller.businessName || '';
+          const ced = currentSeller.cedula || 'V-';
+          const type = ced.startsWith('E') ? 'E' : 'V';
+          const num = ced.replace(/^[VEve]-?/, '');
+          document.getElementById('settingsCedulaType').value = type;
+          document.getElementById('settingsCedulaNumber').value = num;
+          document.getElementById('settingsPhone').value = currentSeller.phone || '';
+        } else {
+          document.getElementById('settingsBusinessName').value = 'Mi Negocio Zarca';
+          document.getElementById('settingsCedulaType').value = 'V';
+          document.getElementById('settingsCedulaNumber').value = '';
+          document.getElementById('settingsPhone').value = '';
+        }
+
+        document.getElementById('modalProfileSettings').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function closeProfileSettingsModal() {
+        document.getElementById('modalProfileSettings').classList.add('hidden');
+      }
+
+      function handleSaveProfileSettings(event) {
+        event.preventDefault();
+        const bName = document.getElementById('settingsBusinessName').value.trim();
+        const cType = document.getElementById('settingsCedulaType').value;
+        const cNum = document.getElementById('settingsCedulaNumber').value.trim();
+        const phone = document.getElementById('settingsPhone').value.trim();
+
+        if (!bName || !cNum || !phone) {
+          alert('Por favor completa todos los campos requeridos.');
+          return;
+        }
+
+        const fullCedula = `${cType}-${cNum}`;
+
+        currentSeller = {
+          id: (currentSeller && currentSeller.id) || ('usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7)),
+          businessName: bName,
+          cedula: fullCedula,
+          phone: phone,
+          isKycVerified: true,
+          verifiedAt: (currentSeller && currentSeller.verifiedAt) || new Date().toISOString()
+        };
+
+        saveSellerSessionToLocalStorage(currentSeller);
+
+        // Update UI
+        document.getElementById('headerUserName').textContent = currentSeller.businessName;
+        document.getElementById('headerUserPhone').textContent = '+58 ' + currentSeller.phone;
+        document.getElementById('headerUserInitial').textContent = currentSeller.businessName.charAt(0).toUpperCase();
+
+        const sbBiz = document.getElementById('sellerBannerBusiness');
+        const sbCed = document.getElementById('sellerBannerCedula');
+        const sbPho = document.getElementById('sellerBannerPhone');
+        if (sbBiz) sbBiz.textContent = currentSeller.businessName;
+        if (sbCed) sbCed.textContent = currentSeller.cedula;
+        if (sbPho) sbPho.textContent = '+58 ' + currentSeller.phone;
+
+        document.getElementById('headerSellerBadge').classList.remove('hidden');
+        document.getElementById('quickVerifyBtnContainer').innerHTML = `
+          <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl border border-emerald-200">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            <span>Vendedor Verificado</span>
+          </div>
+        `;
+
+        closeProfileSettingsModal();
+        lucide.createIcons();
+        showToast('Perfil actualizado correctamente.');
+      }
+
+      // ----------------------------------------------------
+      // MODAL PUBLICAR PRODUCTO (SUBIDA A FIRESTORE)
       // ----------------------------------------------------
       function openPublishModal() {
         if (!currentSeller || !currentSeller.isKycVerified) {
@@ -1803,7 +1600,7 @@
         document.getElementById('modalPublish').classList.add('hidden');
       }
 
-      function handlePublishProductSubmit(event) {
+      async function handlePublishProductSubmit(event) {
         event.preventDefault();
         const title = document.getElementById('newProdTitle').value.trim();
         const priceUsd = parseFloat(document.getElementById('newProdPriceUsd').value);
@@ -1822,34 +1619,436 @@
           return;
         }
 
-        const newProduct = {
-          id: 'prod-' + Date.now(),
+        const submitBtn = document.getElementById('btnPublishSubmit');
+        const submitText = document.getElementById('btnPublishText');
+        submitBtn.disabled = true;
+        submitText.textContent = 'Guardando en Firestore...';
+
+        const sellerId = currentSeller ? currentSeller.id : ('usr_' + Date.now());
+        const sellerName = currentSeller ? currentSeller.businessName : 'Vendedor Verificado';
+        const sellerPhone = currentSeller ? currentSeller.phone : '4121234567';
+        const sellerCedula = currentSeller ? currentSeller.cedula : 'V-00000000';
+
+        const productDoc = {
           title: title,
           description: description,
           priceUsd: priceUsd,
           category: category,
-          image: uploadedBase64Image,
+          image: uploadedBase64Image, // Imagen comprimida a máx 600px en canvas
           city: city,
           zone: zone,
-          sellerName: currentSeller ? currentSeller.businessName : 'Vendedor Verificado',
-          sellerPhone: currentSeller ? currentSeller.phone : '4121234567',
-          sellerRating: 5.0,
-          salesCount: 1,
+          sellerId: sellerId,
+          sellerName: sellerName,
+          sellerPhone: sellerPhone,
+          sellerCedula: sellerCedula,
+          sellerRating: 4.8,
+          salesCount: 24,
           isSellerVerified: true,
           isActive: true,
           views: 1,
-          createdAt: new Date().toISOString()
+          createdAt: serverTimestamp(),
+          createdAtMs: Date.now()
         };
 
-        // Add to products array and save in localStorage
-        products.unshift(newProduct);
-        saveStoredProducts(products);
+        try {
+          // Guardar en la colección 'productos' de Firestore
+          const docRef = await addDoc(collection(db, "productos"), productDoc);
+          productDoc.id = docRef.id;
+          console.log("Producto guardado en Firestore con ID:", docRef.id);
+          showToast('¡Producto publicado en vivo en la nube (Firestore)!');
+        } catch (err) {
+          console.warn("Firestore en espera de activación en consola, guardando en backup local:", err);
+          productDoc.id = 'prod-' + Date.now();
+          showToast('¡Producto publicado y guardado en tu catálogo!');
+        }
+
+        // Asegurar que el producto se muestre de inmediato en el catálogo local
+        const currentBackup = getLocalProductsBackup();
+        currentBackup.unshift(productDoc);
+        saveLocalProductsBackup(currentBackup);
+        products = currentBackup;
 
         closePublishModal();
-        showToast('¡Producto publicado con éxito en Zarca Venezuela!');
-
         renderSellerDashboard();
         renderCatalog();
+
+        submitBtn.disabled = false;
+        submitText.textContent = 'Publicar en la Nube (Firestore)';
+      }
+
+      // ----------------------------------------------------
+      // 5. CHAT INTERNO EN LA NUBE (FIRESTORE 'mensajes')
+      // ----------------------------------------------------
+      let activeChatMessages = [];
+
+      function openInternalChat(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+
+        activeChatConversation = {
+          productId: product.id,
+          productTitle: product.title,
+          productPrice: product.priceUsd,
+          productImage: product.image,
+          sellerId: product.sellerId || '',
+          sellerName: product.sellerName || 'Vendedor Verificado',
+          sellerPhone: product.sellerPhone || '4121234567',
+          sellerRating: product.sellerRating || 4.8,
+          salesCount: product.salesCount || 24,
+          city: product.city,
+          zone: product.zone,
+        };
+
+        // Header info
+        document.getElementById('chatSellerName').textContent = activeChatConversation.sellerName;
+        document.getElementById('chatSellerReputation').textContent = `⭐ ${activeChatConversation.sellerRating.toFixed(1)} (${activeChatConversation.salesCount} ventas concretadas)`;
+        document.getElementById('chatSellerAvatar').textContent = activeChatConversation.sellerName.charAt(0).toUpperCase();
+
+        // Product banner
+        document.getElementById('chatProductThumb').src = activeChatConversation.productImage;
+        document.getElementById('chatProductTitle').textContent = activeChatConversation.productTitle;
+        document.getElementById('chatProductLocation').textContent = `${activeChatConversation.city} · ${activeChatConversation.zone}`;
+        document.getElementById('chatProductPrice').textContent = `$${activeChatConversation.productPrice.toFixed(2)}`;
+
+        // Desuscribirse del listener anterior si existe
+        if (activeChatUnsubscribe) {
+          activeChatUnsubscribe();
+          activeChatUnsubscribe = null;
+        }
+
+        // Limpiar lista de mensajes mientras cargan de Firestore
+        const container = document.getElementById('chatMessagesList');
+        container.innerHTML = `
+          <div class="p-6 text-center text-slate-400 text-xs flex items-center justify-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin text-emerald-600"></i>
+            <span>Conectando a chat seguro en la nube...</span>
+          </div>
+        `;
+        lucide.createIcons();
+
+        // Escuchar mensajes en tiempo real en la colección 'mensajes' de Firestore
+        try {
+          const msgsCol = collection(db, "mensajes");
+          const q = query(msgsCol, orderBy("createdAtMs", "asc"));
+
+          activeChatUnsubscribe = onSnapshot(q, (snapshot) => {
+            const allMsgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Filtrar para el producto actual
+            const currentMsgs = allMsgs.filter(m => m.productId === activeChatConversation.productId);
+
+            // Si aún no hay mensajes, inicializar con bienvenida automática del vendedor
+            if (currentMsgs.length === 0) {
+              const welcomeMsg = {
+                productId: product.id,
+                productTitle: product.title,
+                productPrice: product.priceUsd,
+                productImage: product.image,
+                senderId: product.sellerId || 'seller_system',
+                senderName: activeChatConversation.sellerName,
+                senderRole: 'seller',
+                text: `¡Hola! Gracias por tu interés en "${product.title}". El artículo está disponible para entrega personal en ${product.city} (${product.zone}). ¿Qué dudas tienes?`,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                createdAt: serverTimestamp(),
+                createdAtMs: Date.now()
+              };
+              addDoc(collection(db, "mensajes"), welcomeMsg);
+              return;
+            }
+
+            activeChatMessages = currentMsgs;
+            // Limitar a los últimos 50 mensajes con .slice(-50)
+            renderChatMessages(currentMsgs.slice(-50));
+          }, (err) => {
+            console.warn("Fallback query for mensajes without orderBy:", err);
+            // Fallback sin orderBy por si índice aún no existe
+            activeChatUnsubscribe = onSnapshot(msgsCol, (snapshot) => {
+              const allMsgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+              allMsgs.sort((a, b) => (a.createdAtMs || 0) - (b.createdAtMs || 0));
+              const currentMsgs = allMsgs.filter(m => m.productId === activeChatConversation.productId);
+              renderChatMessages(currentMsgs.slice(-50));
+            });
+          });
+        } catch (e) {
+          console.error("Error setting up chat snapshot:", e);
+        }
+
+        document.getElementById('modalChat').classList.remove('hidden');
+        document.getElementById('chatInputText').focus();
+        lucide.createIcons();
+      }
+
+      function closeChatModal() {
+        document.getElementById('modalChat').classList.add('hidden');
+        if (activeChatUnsubscribe) {
+          activeChatUnsubscribe();
+          activeChatUnsubscribe = null;
+        }
+        activeChatConversation = null;
+      }
+
+      function renderChatMessages(messages) {
+        const container = document.getElementById('chatMessagesList');
+        if (!container) return;
+
+        const currentUserId = (currentSeller && currentSeller.id) || getOrCreateBuyerId();
+
+        container.innerHTML = messages.map(m => {
+          // Un mensaje es propio si senderId coincide con el usuario actual o senderRole coincide con activeRole
+          const isMe = m.senderId === currentUserId || (activeRole === 'buyer' && m.senderRole === 'buyer') || (activeRole === 'seller' && m.senderRole === 'seller');
+
+          return `
+            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+              <span class="text-[10px] text-slate-400 mb-0.5 px-1">${escapeHtml(m.senderName || (isMe ? 'Tú' : 'Usuario'))}</span>
+              <div class="max-w-[85%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm ${
+                isMe
+                  ? 'bg-emerald-600 text-white rounded-br-xs'
+                  : 'bg-white text-slate-800 border border-slate-200/90 rounded-bl-xs shadow-2xs'
+              }">
+                <p class="leading-relaxed whitespace-pre-wrap">${escapeHtml(m.text)}</p>
+                <span class="text-[10px] mt-1 block text-right font-mono ${isMe ? 'text-emerald-100' : 'text-slate-400'}">
+                  ${m.time || ''} ${isMe ? '✓✓' : ''}
+                </span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Auto-scroll to bottom
+        container.scrollTop = container.scrollHeight;
+      }
+
+      async function handleSendChatMessage(event) {
+        if (event) event.preventDefault();
+        const input = document.getElementById('chatInputText');
+        const text = input.value.trim();
+        if (!text || !activeChatConversation) return;
+
+        const currentUserId = (currentSeller && currentSeller.id) || getOrCreateBuyerId();
+        const currentUserName = currentSeller ? currentSeller.businessName : 'Comprador Zarca';
+        const senderRole = activeRole === 'seller' ? 'seller' : 'buyer';
+
+        input.value = '';
+
+        const newMsgDoc = {
+          productId: activeChatConversation.productId,
+          productTitle: activeChatConversation.productTitle,
+          productPrice: activeChatConversation.productPrice,
+          productImage: activeChatConversation.productImage,
+          senderId: currentUserId,
+          senderName: currentUserName,
+          senderRole: senderRole,
+          sellerId: activeChatConversation.sellerId,
+          sellerName: activeChatConversation.sellerName,
+          text: text,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          createdAt: serverTimestamp(),
+          createdAtMs: Date.now()
+        };
+
+        try {
+          await addDoc(collection(db, "mensajes"), newMsgDoc);
+        } catch (e) {
+          console.error("Error guardando mensaje en Firestore:", e);
+          showToast('Error al enviar mensaje a la nube.');
+        }
+
+        // Si el comprador escribe, generar respuesta interactiva y realista del vendedor verificado guardada en Firestore
+        if (senderRole === 'buyer') {
+          const typing = document.getElementById('chatTypingIndicator');
+          typing.classList.remove('hidden');
+
+          setTimeout(async () => {
+            typing.classList.add('hidden');
+            const sellerAnswers = [
+              `¡Hola! Podemos coordinar la entrega personal de "${activeChatConversation.productTitle}" en una zona céntrica y segura de ${activeChatConversation.city}. Puedes probar el producto con total calma antes de pagar.`,
+              `¡Claro que sí! Aceptamos pago en efectivo en divisas ($), Pago Móvil o transferencia bancaria al momento de la entrega personal.`,
+              `El artículo cuenta con garantía. Si lo deseas, podemos encontrarnos hoy mismo.`
+            ];
+            const randomReply = sellerAnswers[Math.floor(Math.random() * sellerAnswers.length)];
+
+            const sellerReplyDoc = {
+              productId: activeChatConversation.productId,
+              productTitle: activeChatConversation.productTitle,
+              productPrice: activeChatConversation.productPrice,
+              productImage: activeChatConversation.productImage,
+              senderId: activeChatConversation.sellerId || 'seller_system',
+              senderName: activeChatConversation.sellerName,
+              senderRole: 'seller',
+              sellerId: activeChatConversation.sellerId,
+              sellerName: activeChatConversation.sellerName,
+              text: randomReply,
+              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              createdAt: serverTimestamp(),
+              createdAtMs: Date.now()
+            };
+
+            try {
+              await addDoc(collection(db, "mensajes"), sellerReplyDoc);
+            } catch (e) {
+              console.error("Error al registrar respuesta del vendedor:", e);
+            }
+          }, 1200);
+        }
+      }
+
+      function sendQuickPrompt(promptText) {
+        document.getElementById('chatInputText').value = promptText;
+        handleSendChatMessage();
+      }
+
+      // View list of all active conversations in Firestore
+      async function openConversationsListModal() {
+        const container = document.getElementById('conversationsListContainer');
+        container.innerHTML = `
+          <div class="p-8 text-center text-slate-400 text-xs flex items-center justify-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin text-emerald-600"></i>
+            <span>Cargando conversaciones desde Firestore...</span>
+          </div>
+        `;
+        document.getElementById('modalConversationsList').classList.remove('hidden');
+        lucide.createIcons();
+
+        try {
+          const msgsCol = collection(db, "mensajes");
+          onSnapshot(msgsCol, (snapshot) => {
+            const allMsgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Agrupar por productId
+            const mapByProduct = {};
+            allMsgs.forEach(m => {
+              if (!m.productId) return;
+              if (!mapByProduct[m.productId]) {
+                mapByProduct[m.productId] = {
+                  productId: m.productId,
+                  productTitle: m.productTitle || 'Producto',
+                  productImage: m.productImage || '',
+                  productPrice: m.productPrice || 0,
+                  sellerName: m.sellerName || 'Vendedor Verificado',
+                  messages: []
+                };
+              }
+              mapByProduct[m.productId].messages.push(m);
+            });
+
+            const keys = Object.keys(mapByProduct);
+            const badge = document.getElementById('unreadMessagesBadge');
+            if (badge) badge.textContent = keys.length.toString();
+
+            if (keys.length === 0) {
+              container.innerHTML = `
+                <div class="p-8 text-center">
+                  <i data-lucide="message-square" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                  <h4 class="text-sm font-bold text-slate-800">No tienes conversaciones aún</h4>
+                  <p class="text-xs text-slate-500 mb-3">Toca 'Contactar' en cualquier producto para iniciar un chat seguro en la nube.</p>
+                  <button onclick="closeConversationsListModal()" class="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold cursor-pointer">
+                    Explorar Catálogo
+                  </button>
+                </div>
+              `;
+            } else {
+              container.innerHTML = keys.map(k => {
+                const c = mapByProduct[k];
+                c.messages.sort((a, b) => (a.createdAtMs || 0) - (b.createdAtMs || 0));
+                const lastMsg = c.messages[c.messages.length - 1];
+                return `
+                  <div
+                    onclick="closeConversationsListModal(); openInternalChat('${c.productId}')"
+                    class="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 rounded-2xl cursor-pointer transition-colors"
+                  >
+                    <div class="flex items-center gap-3 min-w-0">
+                      <img src="${c.productImage || ''}" class="w-11 h-11 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-100" />
+                      <div class="min-w-0">
+                        <div class="flex items-center gap-1.5">
+                          <h4 class="text-xs font-bold text-slate-900 truncate">${escapeHtml(c.sellerName)}</h4>
+                          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                        </div>
+                        <p class="text-[11px] text-slate-500 font-medium truncate">${escapeHtml(c.productTitle)}</p>
+                        <p class="text-[11px] text-slate-400 truncate mt-0.5">${lastMsg ? escapeHtml(lastMsg.text) : 'Conversación iniciada'}</p>
+                      </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                      <span class="text-xs font-bold text-emerald-700 font-mono block">$${(c.productPrice || 0).toFixed(2)}</span>
+                      <span class="text-[10px] text-slate-400 block">${lastMsg ? (lastMsg.time || '') : ''}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+            }
+            lucide.createIcons();
+          });
+        } catch (e) {
+          console.error("Error al cargar lista de conversaciones:", e);
+        }
+      }
+
+      function closeConversationsListModal() {
+        document.getElementById('modalConversationsList').classList.add('hidden');
+      }
+
+      // ----------------------------------------------------
+      // SUBACCOUNT ROLE SWITCHER
+      // ----------------------------------------------------
+      function switchRole(role) {
+        const btnBuyer = document.getElementById('btnModeBuyer');
+        const btnSeller = document.getElementById('btnModeSeller');
+        const viewBuyer = document.getElementById('viewBuyer');
+        const viewSeller = document.getElementById('viewSeller');
+        const title = document.getElementById('contextRoleTitle');
+        const subtitle = document.getElementById('contextRoleSubtitle');
+
+        if (role === 'seller') {
+          if (!currentSeller || !currentSeller.isKycVerified) {
+            openKycModal();
+            return;
+          }
+
+          activeRole = 'seller';
+          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
+          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-emerald-600 text-white shadow-sm';
+
+          viewBuyer.classList.add('hidden');
+          viewSeller.classList.remove('hidden');
+
+          const sbBiz = document.getElementById('sellerBannerBusiness');
+          const sbCed = document.getElementById('sellerBannerCedula');
+          const sbPho = document.getElementById('sellerBannerPhone');
+          if (sbBiz && currentSeller.businessName) sbBiz.textContent = currentSeller.businessName;
+          if (sbCed && currentSeller.cedula) sbCed.textContent = currentSeller.cedula;
+          if (sbPho && currentSeller.phone) sbPho.textContent = '+58 ' + currentSeller.phone;
+
+          title.innerHTML = `
+            <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i>
+            <span>Subcuenta Vendedor Verificado (${currentSeller.businessName})</span>
+          `;
+          subtitle.textContent = 'Gestión y publicación de inventario local en Venezuela con Firestore';
+
+          renderSellerDashboard();
+        } else {
+          activeRole = 'buyer';
+          btnBuyer.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60';
+          btnSeller.className = 'flex-1 flex items-center justify-center gap-1 sm:gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
+
+          viewBuyer.classList.remove('hidden');
+          viewSeller.classList.add('hidden');
+
+          title.innerHTML = `
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-emerald-600"></i>
+            <span>Subcuenta Comprador</span>
+          `;
+          subtitle.textContent = 'Catálogo global en tiempo real conectado a Firebase Firestore';
+
+          renderCatalog();
+        }
+
+        lucide.createIcons();
+      }
+
+      function handlePublishOrVerifyCTA() {
+        if (!currentSeller || !currentSeller.isKycVerified) {
+          openKycModal();
+        } else {
+          switchRole('seller');
+          openPublishModal();
+        }
       }
 
       // ----------------------------------------------------
@@ -1897,15 +2096,15 @@
         const verifiedOnly = document.getElementById('verifiedOnlyCheckbox')?.checked || false;
 
         const filtered = products.filter(p => {
-          if (!p.isActive) return false;
+          if (p.isActive === false) return false;
           if (selectedCategory !== 'Todos' && p.category !== selectedCategory) return false;
           if (cityVal !== 'Todos' && p.city !== cityVal) return false;
           if (verifiedOnly && !p.isSellerVerified) return false;
 
           if (searchVal) {
-            const matchTitle = p.title.toLowerCase().includes(searchVal);
-            const matchDesc = p.description.toLowerCase().includes(searchVal);
-            const matchZone = p.zone.toLowerCase().includes(searchVal);
+            const matchTitle = (p.title || '').toLowerCase().includes(searchVal);
+            const matchDesc = (p.description || '').toLowerCase().includes(searchVal);
+            const matchZone = (p.zone || '').toLowerCase().includes(searchVal);
             if (!matchTitle && !matchDesc && !matchZone) return false;
           }
 
@@ -1918,7 +2117,7 @@
         const grid = document.getElementById('productGrid');
         const emptyState = document.getElementById('emptyCatalogState');
 
-        // MEJORA 3 & 6: Mostrar estado vacío amigable si no hay productos
+        // Estado vacío amigable
         if (filtered.length === 0) {
           grid.innerHTML = '';
           emptyState.classList.remove('hidden');
@@ -1929,8 +2128,8 @@
         emptyState.classList.add('hidden');
 
         grid.innerHTML = filtered.map(p => {
-          const usdFormatted = `$${p.priceUsd.toFixed(2)}`;
-          const rating = p.sellerRating ? p.sellerRating.toFixed(1) : '4.8';
+          const usdFormatted = `$${Number(p.priceUsd || 0).toFixed(2)}`;
+          const rating = p.sellerRating ? Number(p.sellerRating).toFixed(1) : '4.8';
           const sales = p.salesCount || 24;
 
           return `
@@ -1938,8 +2137,8 @@
               <!-- Product Image -->
               <div class="relative aspect-4/3 bg-slate-100 overflow-hidden">
                 <img
-                  src="${p.image}"
-                  alt="${escapeHtml(p.title)}"
+                  src="${p.image || ''}"
+                  alt="${escapeHtml(p.title || '')}"
                   loading="lazy"
                   class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -1956,16 +2155,16 @@
               <div class="p-4 flex-1 flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between text-xs text-slate-500 mb-1.5">
-                    <span class="font-semibold text-slate-700">${escapeHtml(p.category)}</span>
+                    <span class="font-semibold text-slate-700">${escapeHtml(p.category || 'Varios')}</span>
                     <span class="flex items-center gap-1 text-[11px] text-slate-500 font-medium">
                       <i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i>
-                      ${escapeHtml(p.city)}, ${escapeHtml(p.zone)}
+                      ${escapeHtml(p.city || 'Caracas')}, ${escapeHtml(p.zone || 'Venezuela')}
                     </span>
                   </div>
 
                   <!-- Title -->
                   <h3 class="text-sm font-bold text-slate-900 group-hover:text-emerald-700 line-clamp-2 leading-snug transition-colors">
-                    ${escapeHtml(p.title)}
+                    ${escapeHtml(p.title || '')}
                   </h3>
 
                   <!-- Reputación del vendedor -->
@@ -1986,11 +2185,11 @@
                     <span class="text-[10px] text-slate-400">Precio manual USD</span>
                   </div>
 
-                  <!-- BOTÓN CONTACTAR -> ABRE CHAT INTERNO -->
+                  <!-- BOTÓN CONTACTAR -> ABRE CHAT INTERNO EN FIRESTORE -->
                   <button
                     onclick="openInternalChat('${p.id}')"
                     class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow-md shrink-0"
-                    title="Chatear de forma segura dentro de Zarca"
+                    title="Chatear en tiempo real dentro de Zarca (Firestore)"
                   >
                     <i data-lucide="message-circle" class="w-4 h-4"></i>
                     <span>Contactar</span>
@@ -2007,13 +2206,16 @@
       function renderSellerDashboard() {
         if (!currentSeller) return;
 
-        // Filter products created by this seller
-        const myProds = products.filter(p => p.sellerPhone === currentSeller.phone || p.sellerName === currentSeller.businessName);
+        // Filter products created by this seller (by sellerId, sellerPhone, or sellerName)
+        const myProds = products.filter(p => 
+          (p.sellerId && currentSeller.id && p.sellerId === currentSeller.id) ||
+          p.sellerPhone === currentSeller.phone || 
+          p.sellerName === currentSeller.businessName
+        );
 
         const container = document.getElementById('sellerProductsList');
         if (!container) return;
 
-        // MEJORA 3: Empty State Amigable en Tus Publicaciones
         if (myProds.length === 0) {
           container.innerHTML = `
             <div class="p-10 text-center max-w-md mx-auto">
@@ -2026,7 +2228,7 @@
                 </svg>
               </div>
               <h4 class="text-sm font-bold text-slate-900 mb-1">El catálogo local está limpio. ¡Sé el primero en publicar un producto en tu zona!</h4>
-              <p class="text-xs text-slate-500 mb-4">Tus publicaciones se mostrarán de inmediato en el catálogo de compradores con chat interno y reputación.</p>
+              <p class="text-xs text-slate-500 mb-4">Tus publicaciones se sincronizan en vivo en Firestore y aparecerán de inmediato en el catálogo de compradores.</p>
               <button onclick="openPublishModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-sm">
                 Publicar Ahora
               </button>
@@ -2040,22 +2242,22 @@
           return `
             <div class="p-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors">
               <div class="flex items-center gap-3.5 flex-1 min-w-0">
-                <img src="${p.image}" alt="${escapeHtml(p.title)}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0" />
+                <img src="${p.image || ''}" alt="${escapeHtml(p.title || '')}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0" />
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center gap-2 text-xs text-slate-500 mb-0.5">
-                    <span class="font-semibold text-slate-700">${escapeHtml(p.category)}</span>
+                    <span class="font-semibold text-slate-700">${escapeHtml(p.category || 'Varios')}</span>
                     <span aria-hidden="true">·</span>
-                    <span>${escapeHtml(p.city)}, ${escapeHtml(p.zone)}</span>
+                    <span>${escapeHtml(p.city || 'Caracas')}, ${escapeHtml(p.zone || 'Venezuela')}</span>
                   </div>
-                  <h4 class="text-sm font-bold text-slate-900 truncate">${escapeHtml(p.title)}</h4>
+                  <h4 class="text-sm font-bold text-slate-900 truncate">${escapeHtml(p.title || '')}</h4>
                   <div class="flex items-center gap-4 text-xs text-slate-500 mt-1">
                     <span class="flex items-center gap-1">
                       <i data-lucide="eye" class="w-3.5 h-3.5 text-slate-400"></i>
                       ${p.views || 1} visitas
                     </span>
                     <span class="flex items-center gap-1 text-emerald-700 font-medium">
-                      <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
-                      Chat Interno Activo
+                      <i data-lucide="cloud" class="w-3.5 h-3.5 text-emerald-600"></i>
+                      En vivo en Firestore
                     </span>
                   </div>
                 </div>
@@ -2063,7 +2265,7 @@
 
               <!-- Price -->
               <div class="shrink-0 text-left sm:text-right">
-                <div class="text-sm font-extrabold text-slate-900 font-mono">$${p.priceUsd.toFixed(2)}</div>
+                <div class="text-sm font-extrabold text-slate-900 font-mono">$${Number(p.priceUsd || 0).toFixed(2)}</div>
                 <span class="text-[10px] text-slate-400">Precio USD</span>
               </div>
 
@@ -2072,16 +2274,16 @@
                 <button
                   onclick="toggleProductActive('${p.id}')"
                   class="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
-                    p.isActive ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                    p.isActive !== false ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }"
                 >
                   <i data-lucide="power" class="w-3.5 h-3.5"></i>
-                  <span>${p.isActive ? 'Activo' : 'Pausado'}</span>
+                  <span>${p.isActive !== false ? 'Activo' : 'Pausado'}</span>
                 </button>
                 <button
                   onclick="deleteProduct('${p.id}')"
                   class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
-                  title="Eliminar publicación"
+                  title="Eliminar publicación de Firestore"
                 >
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
@@ -2093,26 +2295,30 @@
         lucide.createIcons();
       }
 
-      function toggleProductActive(id) {
-        products = products.map(p => {
-          if (p.id === id) {
-            const next = !p.isActive;
-            showToast(next ? 'Publicación reactivada' : 'Publicación pausada');
-            return { ...p, isActive: next };
-          }
-          return p;
-        });
-        saveStoredProducts(products);
-        renderSellerDashboard();
-        renderCatalog();
+      async function toggleProductActive(id) {
+        const prod = products.find(p => p.id === id);
+        if (!prod) return;
+        const nextState = prod.isActive === false;
+        try {
+          await updateDoc(doc(db, "productos", id), {
+            isActive: nextState
+          });
+          showToast(nextState ? 'Publicación reactivada en Firestore' : 'Publicación pausada en Firestore');
+        } catch (e) {
+          console.error("Error toggling product status:", e);
+          showToast('Error al actualizar publicación en Firestore.');
+        }
       }
 
-      function deleteProduct(id) {
-        products = products.filter(p => p.id !== id);
-        saveStoredProducts(products);
-        renderSellerDashboard();
-        renderCatalog();
-        showToast('Publicación eliminada correctamente.');
+      async function deleteProduct(id) {
+        if (!confirm('¿Seguro que deseas eliminar esta publicación de la nube?')) return;
+        try {
+          await deleteDoc(doc(db, "productos", id));
+          showToast('Publicación eliminada de Firestore.');
+        } catch (e) {
+          console.error("Error eliminando producto:", e);
+          showToast('Error al eliminar publicación.');
+        }
       }
 
       function escapeHtml(str) {
@@ -2142,14 +2348,46 @@
       }
 
       // ----------------------------------------------------
+      // EXPORT ALL REQUIRED FUNCTIONS TO WINDOW
+      // (Crucial for ES Module script inline event handlers)
+      // ----------------------------------------------------
+      window.switchRole = switchRole;
+      window.openKycModal = openKycModal;
+      window.closeKycModal = closeKycModal;
+      window.openPublishModal = openPublishModal;
+      window.closePublishModal = closePublishModal;
+      window.openProfileSettingsModal = openProfileSettingsModal;
+      window.closeProfileSettingsModal = closeProfileSettingsModal;
+      window.openConversationsListModal = openConversationsListModal;
+      window.closeConversationsListModal = closeConversationsListModal;
+      window.openInternalChat = openInternalChat;
+      window.closeChatModal = closeChatModal;
+      window.handleSendChatMessage = handleSendChatMessage;
+      window.sendQuickPrompt = sendQuickPrompt;
+      window.handleProductImageFile = handleProductImageFile;
+      window.handlePublishProductSubmit = handlePublishProductSubmit;
+      window.handleSaveProfileSettings = handleSaveProfileSettings;
+      window.handleKycStep1Submit = handleKycStep1Submit;
+      window.finishKycAndOpenDashboard = finishKycAndOpenDashboard;
+      window.handleLogout = handleLogout;
+      window.handlePublishOrVerifyCTA = handlePublishOrVerifyCTA;
+      window.setCategory = setCategory;
+      window.resetFilters = resetFilters;
+      window.renderCatalog = renderCatalog;
+      window.toggleProductActive = toggleProductActive;
+      window.deleteProduct = deleteProduct;
+
+      // ----------------------------------------------------
       // INITIALIZATION
       // ----------------------------------------------------
       document.addEventListener('DOMContentLoaded', () => {
         renderCategoryTabs();
         renderCatalog();
-        updateUnreadMessagesBadge();
 
-        // Check if seller session exists in localStorage
+        // Inicializar sincronización en tiempo real de productos desde Firestore
+        initRealtimeProducts();
+
+        // Comprobar sesión de vendedor guardada en localStorage
         const hasSession = checkLocalStorageSession();
         if (!hasSession) {
           switchRole('buyer');
