@@ -112,10 +112,6 @@
           <p class="text-xs sm:text-sm text-cyan-100/90 mt-1 max-w-xs mx-auto">
             Comercio Local Seguro con Identidad Verificada
           </p>
-          <div class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-300 bg-emerald-950/80 border border-emerald-700/50 px-3 py-1 rounded-full mt-2.5 shadow-inner">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
-            <span>Red Segura en Vivo</span>
-          </div>
         </div>
 
         <!-- Auth Card -->
@@ -313,31 +309,6 @@
               <span id="btnRegisterText">Crear Cuenta Segura</span>
             </button>
           </form>
-
-          <!-- Acceso Rápido para Pruebas / Demostración -->
-          <div class="mt-6 pt-5 border-t border-slate-800">
-            <span class="block text-[11px] font-semibold text-slate-400 text-center mb-2.5">
-              Acceso Rápido de Prueba:
-            </span>
-            <div class="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onclick="fillAndLoginDemo('vendedor')"
-                class="py-2 px-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-slate-200 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-              >
-                <i data-lucide="store" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span>Vendedor Demo</span>
-              </button>
-              <button
-                type="button"
-                onclick="fillAndLoginDemo('comprador')"
-                class="py-2 px-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-slate-200 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-              >
-                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-cyan-400"></i>
-                <span>Comprador Demo</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <p class="text-[11px] text-center text-slate-400 mt-4">
@@ -361,12 +332,7 @@
             <span class="text-slate-300 hidden sm:inline text-[11px]">Comercio Local Seguro con Identidad KYC</span>
           </div>
           <div class="flex items-center gap-3">
-            <span class="flex items-center gap-1.5 text-[11px] text-emerald-400 font-semibold bg-emerald-950/70 px-2.5 py-0.5 rounded-full border border-emerald-800/60">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
-              <span>Red Segura en Vivo</span>
-            </span>
-
-            <span class="hidden md:inline-flex items-center gap-1 text-[11px] text-slate-400">
+            <span class="inline-flex items-center gap-1 text-[11px] text-slate-400">
               <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
               <span>Cifrado Activo</span>
             </span>
@@ -411,7 +377,7 @@
             </div>
           </div>
 
-          <!-- Acciones de Usuario: Mensajes, Tasa, Perfil, Salir -->
+          <!-- Acciones de Usuario: Mensajes, Perfil, Salir -->
           <div class="flex items-center gap-1 sm:gap-2.5">
             <!-- Botón Mis Conversaciones -->
             <button
@@ -423,13 +389,6 @@
               <span class="text-xs font-bold hidden md:inline">Mensajes</span>
               <span id="unreadMessagesBadge" class="bg-emerald-600 text-white text-[9px] sm:text-[10px] font-bold rounded-full w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center">0</span>
             </button>
-
-            <!-- Tasa Referencial BCV -->
-            <div class="hidden sm:flex items-center gap-1 px-2.5 py-2 text-xs font-bold text-slate-700 bg-slate-100 rounded-xl border border-slate-200 select-none">
-              <span class="text-[10px] text-slate-500">Tasa:</span>
-              <span class="font-mono-numbers text-emerald-700 font-bold" id="headerBcvRate">54.20</span>
-              <span class="text-[10px] text-slate-500">Bs/$</span>
-            </div>
 
             <!-- Botón Mi Perfil y Ajustes -->
             <button
@@ -759,14 +718,14 @@
             </div>
           </div>
           <div class="flex items-center gap-3 text-xs text-slate-300">
-            <span class="inline-flex items-center gap-1.5 text-emerald-400 bg-emerald-950/80 border border-emerald-800/60 px-3 py-1 rounded-full text-[11px] font-semibold">
-              <span class="w-2 h-2 rounded-full bg-emerald-400 live-dot"></span>
-              Red Segura en Vivo
+            <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+              Identidad KYC Verificada
             </span>
             <span>·</span>
-            <span>Cifrado Activo</span>
+            <span class="text-slate-400 text-[11px]">Cifrado Activo</span>
             <span>·</span>
-            <span>Tasa BCV Referencial</span>
+            <span class="text-slate-400 text-[11px]">Precios en Dólares ($ USD)</span>
           </div>
         </div>
       </footer>
@@ -1282,7 +1241,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
       import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-      import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+      import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyD3BbfmdQVPfBasAGkSbzOSxArvcFP-Tt0",
@@ -1331,7 +1290,6 @@
       const VENEZUELA_STATES = Object.keys(VENEZUELA_LOCATIONS).sort();
 
       // ESTADO GLOBAL DE LA APLICACIÓN
-      const OFFICIAL_BCV_RATE = 54.20;
       let currentUser = null;
       let currentUserProfile = null;
       let currentRole = 'buyer'; // 'buyer' | 'seller'
@@ -1348,6 +1306,31 @@
       let activeChatConversation = null;
       let unsubscribeChatMessages = null;
       let unsubscribeProductsListener = null;
+
+      // Cache en memoria para perfiles de usuarios de Firestore
+      const userProfilesCache = new Map();
+
+      /**
+       * Consulta en tiempo real (getDoc) el perfil público de un usuario en Firestore
+       */
+      async function getUserProfile(uid) {
+        if (!uid) return null;
+        if (userProfilesCache.has(uid)) {
+          return userProfilesCache.get(uid);
+        }
+        try {
+          const userDocRef = doc(db, 'usuarios', uid);
+          const snap = await getDoc(userDocRef);
+          if (snap.exists()) {
+            const data = snap.data();
+            userProfilesCache.set(uid, data);
+            return data;
+          }
+        } catch (err) {
+          console.warn('Aviso obteniendo perfil de usuario:', err.message);
+        }
+        return null;
+      }
 
       // -------------------------------------------------------------
       // INICIALIZACIÓN DE SELECTORES EN CASCADA
@@ -1717,71 +1700,6 @@
         }
       };
 
-      window.fillAndLoginDemo = async function(role) {
-        const isSeller = role === 'vendedor';
-        const demoEmail = isSeller ? 'vendedor@zarca.ve' : 'comprador@zarca.ve';
-        const demoPass = 'Zarca2026!';
-
-        // Intentar login primero
-        try {
-          const userCredential = await signInWithEmailAndPassword(auth, demoEmail, demoPass);
-          await activateAuthenticatedSession(userCredential.user);
-          showToast(`Acceso exitoso como ${isSeller ? 'Vendedor' : 'Comprador'}`);
-          if (isSeller) switchRole('seller');
-          return;
-        } catch (loginErr) {
-          // Si no existe, crearlo ordenadamente
-          try {
-            const regCred = await createUserWithEmailAndPassword(auth, demoEmail, demoPass);
-            const user = regCred.user;
-            const initDoc = {
-              uid: user.uid,
-              email: demoEmail,
-              name: isSeller ? 'Inversiones Los Andes C.A.' : 'Comprador Verificado',
-              phone: '0414 1234567',
-              state: isSeller ? 'Carabobo' : 'Distrito Capital',
-              municipality: isSeller ? 'Valencia' : 'Libertador (Caracas)',
-              role: isSeller ? 'vendedor' : 'comprador',
-              isVerified: isSeller,
-              estado: isSeller ? 'verificado' : 'no_verificado',
-              businessName: isSeller ? 'Inversiones Los Andes C.A.' : '',
-              cedula: isSeller ? 'V-19876543' : '',
-              avatar: '',
-              createdAt: new Date().toISOString()
-            };
-            try {
-              await setDoc(doc(db, 'usuarios', user.uid), initDoc);
-            } catch (_) {}
-            await activateAuthenticatedSession(user, initDoc);
-            showToast(`Cuenta demo creada como ${isSeller ? 'Vendedor' : 'Comprador'}`);
-            if (isSeller) switchRole('seller');
-            return;
-          } catch (regErr) {
-            // Acceso de contingencia local
-            const mockUid = isSeller ? 'seller_demo_001' : 'buyer_demo_001';
-            const mockUser = { uid: mockUid, email: demoEmail };
-            const mockProfile = {
-              uid: mockUid,
-              email: demoEmail,
-              name: isSeller ? 'Inversiones Los Andes C.A.' : 'Comprador Verificado',
-              phone: '0414 1234567',
-              state: isSeller ? 'Carabobo' : 'Distrito Capital',
-              municipality: isSeller ? 'Valencia' : 'Libertador (Caracas)',
-              role: isSeller ? 'vendedor' : 'comprador',
-              isVerified: isSeller,
-              estado: isSeller ? 'verificado' : 'no_verificado',
-              businessName: isSeller ? 'Inversiones Los Andes C.A.' : '',
-              cedula: isSeller ? 'V-19876543' : '',
-              avatar: '',
-              createdAt: new Date().toISOString()
-            };
-            await activateAuthenticatedSession(mockUser, mockProfile);
-            showToast(`Acceso seguro activo como ${isSeller ? 'Vendedor' : 'Comprador'}`);
-            if (isSeller) switchRole('seller');
-          }
-        }
-      };
-
       // -------------------------------------------------------------
       // ACTIVACIÓN DE SESIÓN Y VINCULACIÓN AL DOM
       // -------------------------------------------------------------
@@ -1802,6 +1720,7 @@
         // Iniciar escucha del catálogo global en tiempo real
         initProductsCatalogListener();
       }
+      window.activateAuthenticatedSession = activateAuthenticatedSession;
 
       async function syncUserProfile(userObj, initialData = null) {
         try {
@@ -2197,7 +2116,6 @@
 
         grid.innerHTML = filtered.map((prod) => {
           const priceUsd = Number(prod.priceUsd) || 0;
-          const priceBs = (priceUsd * OFFICIAL_BCV_RATE).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           const isSellerVerified = Boolean(prod.isSellerVerified);
           const sellerName = prod.sellerName || 'Vendedor Zarca';
           const locationText = prod.municipality ? `${prod.municipality}, ${prod.state}` : (prod.state || 'Venezuela');
@@ -2240,24 +2158,27 @@
                 </div>
 
                 <div class="space-y-3 pt-2 border-t border-slate-100">
-                  <!-- Precios (USD y Bs. BCV) -->
-                  <div class="flex items-baseline justify-between">
+                  <!-- Precio Manual en Dólares ($ USD) -->
+                  <div class="flex items-center justify-between">
                     <div>
                       <span class="text-lg font-extrabold text-slate-950 font-mono-numbers">$${priceUsd.toFixed(2)}</span>
-                      <span class="text-[11px] text-slate-400 block font-mono-numbers">Bs. ${priceBs}</span>
+                      <span class="text-[10px] text-emerald-700 font-bold block uppercase tracking-wider">USD</span>
                     </div>
 
-                    <!-- Identidad del vendedor -->
-                    <div class="text-right">
-                      <div class="flex items-center gap-1 justify-end">
-                        <span class="text-xs font-bold text-slate-700 truncate max-w-[110px]">${sellerName}</span>
-                        ${isSellerVerified ? `
-                          <span title="Vendedor Verificado con KYC">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
-                          </span>
-                        ` : ''}
+                    <!-- Identidad Global del Vendedor (Foto y Nombre de Firestore) -->
+                    <div class="flex items-center gap-2 justify-end">
+                      <div id="seller-avatar-${prod.id}" class="w-7 h-7 rounded-lg overflow-hidden bg-emerald-100 text-emerald-900 flex items-center justify-center text-xs font-extrabold border border-emerald-300 shrink-0">
+                        <span>${(prod.sellerName || 'V').charAt(0).toUpperCase()}</span>
                       </div>
-                      <span class="text-[10px] text-slate-400">Reputación 5.0 ★</span>
+                      <div class="text-right min-w-0">
+                        <div class="flex items-center gap-1 justify-end">
+                          <span id="seller-name-${prod.id}" class="text-xs font-bold text-slate-800 truncate max-w-[100px]">${sellerName}</span>
+                          <span id="seller-badge-${prod.id}" class="${isSellerVerified ? '' : 'hidden'}" title="Vendedor Verificado con KYC">
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
+                          </span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 block">Vendedor Oficial</span>
+                      </div>
                     </div>
                   </div>
 
@@ -2285,6 +2206,37 @@
         }).join('');
 
         if (window.lucide) window.lucide.createIcons();
+
+        // Actualizar fotos de perfil y nombres globales de los vendedores desde Firestore
+        resolveSellerProfilesForFeed(filtered);
+      }
+
+      function resolveSellerProfilesForFeed(items) {
+        items.forEach((prod) => {
+          if (!prod.sellerUid) return;
+          getUserProfile(prod.sellerUid).then((profile) => {
+            if (!profile) return;
+            const avatarEl = document.getElementById(`seller-avatar-${prod.id}`);
+            const nameEl = document.getElementById(`seller-name-${prod.id}`);
+            const badgeEl = document.getElementById(`seller-badge-${prod.id}`);
+
+            if (avatarEl && profile.avatar) {
+              avatarEl.innerHTML = `<img src="${profile.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
+            } else if (avatarEl) {
+              const initial = (profile.businessName || profile.name || prod.sellerName || 'V').charAt(0).toUpperCase();
+              avatarEl.innerHTML = `<span>${initial}</span>`;
+            }
+
+            if (nameEl) {
+              nameEl.textContent = profile.businessName || profile.name || prod.sellerName || 'Vendedor Zarca';
+            }
+
+            if (badgeEl) {
+              const isVer = Boolean(profile.isVerified || profile.estado === 'verificado');
+              if (isVer) badgeEl.classList.remove('hidden');
+            }
+          });
+        });
       }
 
       function renderSellerDashboard() {
@@ -2638,12 +2590,11 @@
           return;
         }
 
-        // Generar identificador determinista de conversación
-        const sortedUsers = [currentUser.uid, prod.sellerUid].sort().join('__');
-        const conversationId = `${sortedUsers}__prod_${prod.id}`;
+        // Generar identificador de sala único (chatId) combinando y ordenando los UIDs
+        const chatId = [currentUser.uid, prod.sellerUid].sort().join('_');
 
         activeChatConversation = {
-          conversationId,
+          chatId,
           productId: prod.id,
           productTitle: prod.title,
           productPrice: prod.priceUsd,
@@ -2674,9 +2625,29 @@
         if (barTitle) barTitle.textContent = prod.title;
         if (barPrice) barPrice.textContent = `$${(Number(prod.priceUsd) || 0).toFixed(2)} USD`;
         if (barImg) barImg.src = prod.image || '';
-        if (avatarEl) avatarEl.textContent = activeChatConversation.sellerName.charAt(0).toUpperCase();
+        if (avatarEl) avatarEl.innerHTML = `<span>${activeChatConversation.sellerName.charAt(0).toUpperCase()}</span>`;
 
-        // Enlace de WhatsApp
+        // Consultar perfil global del vendedor en tiempo real (getDoc) para extraer foto y nombre oficiales
+        getUserProfile(prod.sellerUid).then((sellerProf) => {
+          if (sellerProf) {
+            if (nameEl) nameEl.textContent = sellerProf.businessName || sellerProf.name || prod.sellerName || 'Vendedor';
+            if (avatarEl) {
+              if (sellerProf.avatar) {
+                avatarEl.innerHTML = `<img src="${sellerProf.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
+              } else {
+                const initial = (sellerProf.businessName || sellerProf.name || prod.sellerName || 'V').charAt(0).toUpperCase();
+                avatarEl.innerHTML = `<span>${initial}</span>`;
+              }
+            }
+            if (shieldEl) {
+              const isVer = Boolean(sellerProf.isVerified || sellerProf.estado === 'verificado');
+              if (isVer) shieldEl.classList.remove('hidden');
+              else shieldEl.classList.add('hidden');
+            }
+          }
+        });
+
+        // Enlace de WhatsApp seguro
         if (waBtn && prod.sellerPhone) {
           const cleanPhone = prod.sellerPhone.replace(/\D/g, '');
           const msg = `Hola ${activeChatConversation.sellerName}, vi tu publicación de "${prod.title}" ($${prod.priceUsd}) en Zarca Venezuela. Me interesa coordinar entrega segura.`;
@@ -2689,8 +2660,8 @@
         const modal = document.getElementById('chatModal');
         if (modal) modal.classList.remove('hidden');
 
-        // Escuchar mensajes en tiempo real
-        subscribeToChatMessages(conversationId);
+        // Escuchar mensajes en tiempo real filtrados por chatId único
+        subscribeToChatMessages(chatId);
       };
 
       window.closeChatModal = function() {
@@ -2703,21 +2674,21 @@
         activeChatConversation = null;
       };
 
-      function subscribeToChatMessages(conversationId) {
+      function subscribeToChatMessages(chatId) {
         if (unsubscribeChatMessages) unsubscribeChatMessages();
         const container = document.getElementById('chatMessagesContainer');
         if (container) container.innerHTML = '<div class="text-center text-xs text-slate-400 py-4">Cargando mensajes seguros...</div>';
 
         try {
-          const q = query(collection(db, 'mensajes'), orderBy('createdAt', 'asc'));
+          // Filtrar en tiempo real por el chatId único de la conversación
+          const q = query(collection(db, 'mensajes'), where('chatId', '==', chatId));
           unsubscribeChatMessages = onSnapshot(q, (snapshot) => {
             const msgs = [];
             snapshot.forEach((docSnap) => {
-              const data = docSnap.data();
-              if (data.conversationId === conversationId) {
-                msgs.push({ id: docSnap.id, ...data });
-              }
+              msgs.push({ id: docSnap.id, ...docSnap.data() });
             });
+            // Ordenar en memoria por fecha para sincronización instantánea
+            msgs.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
             renderChatMessages(msgs);
           }, (err) => {
             console.warn('Aviso en escucha de chat:', err.message);
@@ -2739,9 +2710,9 @@
               <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2 border border-emerald-100">
                 <i data-lucide="shield-check" class="w-6 h-6"></i>
               </div>
-              <h5 class="text-xs font-bold text-slate-800">Canal Seguro Iniciado</h5>
+              <h5 class="text-xs font-bold text-slate-800">Canal Seguro 1 a 1 Iniciado</h5>
               <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">
-                Coordina punto de entrega, método de pago en divisas o bolívares. No compartas claves bancarias.
+                Coordina punto de entrega acordado y pago en divisas ($ USD). No compartas claves bancarias.
               </p>
             </div>
           `;
@@ -2752,9 +2723,16 @@
         container.innerHTML = messages.map((m) => {
           const isMine = currentUser && m.senderUid === currentUser.uid;
           const time = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+          const senderLabel = isMine ? 'Tú' : (m.senderName || 'Contacto');
 
           return `
             <div class="flex flex-col ${isMine ? 'items-end' : 'items-start'}">
+              <div class="flex items-center gap-1.5 mb-1 px-1">
+                <div id="chat-msg-avatar-${m.id}" class="w-4 h-4 rounded-full overflow-hidden bg-emerald-100 text-emerald-900 flex items-center justify-center text-[9px] font-bold">
+                  ${senderLabel.charAt(0).toUpperCase()}
+                </div>
+                <span class="text-[10px] font-bold text-slate-500">${senderLabel}</span>
+              </div>
               <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-xs ${
                 isMine
                   ? 'bg-emerald-600 text-white rounded-tr-xs'
@@ -2769,6 +2747,17 @@
 
         container.scrollTop = container.scrollHeight;
         if (window.lucide) window.lucide.createIcons();
+
+        // Enriquecer avatares de remitentes con Firestore
+        messages.forEach((m) => {
+          if (!m.senderUid || (currentUser && m.senderUid === currentUser.uid)) return;
+          getUserProfile(m.senderUid).then((prof) => {
+            if (prof && prof.avatar) {
+              const avEl = document.getElementById(`chat-msg-avatar-${m.id}`);
+              if (avEl) avEl.innerHTML = `<img src="${prof.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
+            }
+          });
+        });
       }
 
       window.handleSendChatMessage = async function(event) {
@@ -2780,11 +2769,11 @@
         input.value = '';
 
         const newMsgDoc = {
-          conversationId: activeChatConversation.conversationId,
-          productId: activeChatConversation.productId,
-          productTitle: activeChatConversation.productTitle,
+          chatId: activeChatConversation.chatId,
+          productId: activeChatConversation.productId || '',
+          productTitle: activeChatConversation.productTitle || '',
           senderUid: currentUser.uid,
-          senderName: currentUserProfile?.name || 'Usuario',
+          senderName: currentUserProfile?.businessName || currentUserProfile?.name || 'Usuario',
           recipientUid: activeChatConversation.sellerUid === currentUser.uid ? activeChatConversation.buyerUid : activeChatConversation.sellerUid,
           text,
           createdAt: new Date().toISOString()
@@ -2818,12 +2807,14 @@
 
         if (!list || !currentUser) return;
 
-        // Renderizar conversaciones activas
+        // Renderizar opciones de conversación
         list.innerHTML = `
-          <div class="text-center py-8 text-xs text-slate-400">
-            <i data-lucide="message-square" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
-            <p class="font-bold text-slate-700">Tus Conversaciones Seguras</p>
-            <p class="text-[11px] mt-1">Contacta a cualquier vendedor en el catálogo para iniciar un chat privado.</p>
+          <div class="text-center py-6 text-xs text-slate-400">
+            <i data-lucide="message-square" class="w-8 h-8 mx-auto mb-2 text-emerald-600"></i>
+            <p class="font-bold text-slate-800 text-sm">Tus Conversaciones Seguras 1 a 1</p>
+            <p class="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
+              Selecciona cualquier artículo del catálogo para chatear en tiempo real con el vendedor verificado.
+            </p>
           </div>
         `;
         if (window.lucide) window.lucide.createIcons();
@@ -2835,7 +2826,7 @@
       };
 
       // -------------------------------------------------------------
-      // MONITOREO DE AUTENTICACIÓN AL ARRANCAR
+      // MONITOREO DE AUTENTICACIÓN AL ARRANCAR (SIN MODOS DEMO)
       // -------------------------------------------------------------
       document.addEventListener('DOMContentLoaded', () => {
         initCascadeSelects();
@@ -2844,17 +2835,7 @@
           if (user) {
             await activateAuthenticatedSession(user);
           } else {
-            // Verificar si hay sesión local cached
-            const cached = localStorage.getItem('zarca_auth_session');
-            if (cached) {
-              try {
-                const parsed = JSON.parse(cached);
-                if (parsed.uid) {
-                  await activateAuthenticatedSession(parsed);
-                  return;
-                }
-              } catch (_) {}
-            }
+            // El usuario debe iniciar sesión o registrarse obligatoriamente
             document.getElementById('authScreen').classList.remove('hidden');
             document.getElementById('mainApp').classList.add('hidden');
           }

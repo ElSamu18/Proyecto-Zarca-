@@ -121,6 +121,12 @@ test('Self messaging blocking detects own products', async () => {
   const convId1 = generateConversationId('buyerA', 'sellerB', 'prod1');
   const convId2 = generateConversationId('sellerB', 'buyerA', 'prod1');
   assert.equal(convId1, convId2); // deterministic sorted order
+
+  const { generate1to1ChatId } = await import('./zarcaLogic.ts');
+  const chatId1 = generate1to1ChatId('user_alpha', 'user_beta');
+  const chatId2 = generate1to1ChatId('user_beta', 'user_alpha');
+  assert.equal(chatId1, 'user_alpha_user_beta');
+  assert.equal(chatId1, chatId2);
 });
 
 test('24 Venezuelan states and municipalities validation', async () => {

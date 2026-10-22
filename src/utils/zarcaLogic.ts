@@ -255,6 +255,13 @@ export function isSelfMessagingBlocked(currentUserUid: string | null | undefined
 }
 
 /**
+ * Generates deterministic 1-to-1 chat room ID for buyer and seller UIDs
+ */
+export function generate1to1ChatId(uid1: string, uid2: string): string {
+  return [uid1, uid2].sort().join('_');
+}
+
+/**
  * Generates deterministic conversation ID for buyer, seller and product
  */
 export function generateConversationId(buyerUid: string, sellerUid: string, productId: string): string {
