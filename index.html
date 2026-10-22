@@ -1547,8 +1547,7 @@
       /**
        * Función 1: loginUser(email, pass)
        * Llama exclusivamente a signInWithEmailAndPassword.
-       * Si falla, muestra error "Credenciales incorrectas o cuenta no encontrada".
-       * NUNCA crea cuenta ni llama a createUserWithEmailAndPassword.
+       * Si falla, muestra error específico y restaura el botón en finally.
        */
       async function loginUser(email, pass) {
         const btn = document.getElementById('btnLoginSubmit');
@@ -1561,50 +1560,47 @@
           showToast('Sesión iniciada correctamente.');
           await activateAuthenticatedSession(userCredential.user);
         } catch (error) {
-          console.warn('Fallo en autenticación:', error.code || error.message);
-          // Si el proveedor en consola aún no está habilitado, verificar si es cuenta demo o fallback
-          const cachedSession = localStorage.getItem('zarca_auth_session');
-          if (cachedSession && (error.code === 'auth/configuration-not-found' || error.message?.includes('configuration-not-found'))) {
-            try {
-              const parsed = JSON.parse(cachedSession);
-              if (parsed.email === email) {
-                await activateAuthenticatedSession(parsed);
-                showToast('Sesión restaurada de forma segura.');
-                return;
-              }
-            } catch (_) {}
+          console.error('Fallo en loginUser:', error);
+          if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            showAuthAlert('Credenciales incorrectas o cuenta no encontrada');
+          } else if (error.code === 'auth/invalid-email') {
+            showAuthAlert('El formato de correo no es válido');
+          } else if (error.code === 'auth/user-disabled') {
+            showAuthAlert('Esta cuenta ha sido inhabilitada');
+          } else {
+            showAuthAlert(error.message || 'Error al acceder a la cuenta');
           }
-          showAuthAlert('Credenciales incorrectas o cuenta no encontrada');
         } finally {
+          // El botón NUNCA se queda congelado
           if (btn) btn.disabled = false;
           if (btnText) btnText.textContent = 'Acceder de Forma Segura';
         }
       }
 
       /**
-       * Función 2: registerUser(email, pass, profileData)
-       * Llama exclusivamente a createUserWithEmailAndPassword.
-       * Solo esta función crea el documento inicial en la colección usuarios.
-       * Si falla porque el correo ya existe, muestra "Este correo ya está registrado".
+       * Función 2: registerUser(name, email, pass, phone, state, municipality)
+       * Llama exclusivamente a createUserWithEmailAndPassword y guarda en Firestore.
+       * Reporta el error exacto y restaura el botón en finally.
        */
-      async function registerUser(email, pass, profileData = {}) {
+      async function registerUser(name, email, pass, phone, state, municipality) {
         const btn = document.getElementById('btnRegisterSubmit');
         const btnText = document.getElementById('btnRegisterText');
         if (btn) btn.disabled = true;
         if (btnText) btnText.textContent = 'Guardando de forma segura...';
 
         try {
+          // 1. Crear credenciales en Firebase Auth
           const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
           const user = userCredential.user;
 
-          // Crear documento inicial en la colección 'usuarios'
+          // 2. Preparar documento inicial sin valores undefined (evita error en Firestore)
           const userDocData = {
             uid: user.uid,
-            email: email,
-            name: profileData.name || email.split('@')[0],
-            phone: profileData.phone || '',
-            state: profileData.state || 'Distrito Capital',
-            municipality: profileData.municipality || 'Libertador (Caracas)',
+            email: email || '',
+            name: name || (email ? email.split('@')[0] : 'Usuario'),
+            phone: phone || '',
+            state: state || 'Distrito Capital',
+            municipality: municipality || 'Libertador (Caracas)',
             role: 'comprador',
             isVerified: false,
             estado: 'no_verificado',
@@ -1612,46 +1608,31 @@
             createdAt: new Date().toISOString()
           };
 
+          // 3. Guardar documento en Firestore colección 'usuarios'
           try {
             await setDoc(doc(db, 'usuarios', user.uid), userDocData);
           } catch (docErr) {
-            console.warn('Aviso guardando perfil inicial:', docErr.message);
+            console.error('Aviso guardando perfil inicial en Firestore:', docErr);
           }
 
+          // 4. Redirección Post-Registro: Ocultar login, dar bienvenida y mostrar catálogo
           showToast('¡Cuenta creada exitosamente! Bienvenido a Zarca.');
           await activateAuthenticatedSession(user, userDocData);
+
         } catch (error) {
-          console.warn('Fallo en registro:', error.code || error.message);
+          console.error('Error detallado en registerUser:', error);
           if (error.code === 'auth/email-already-in-use') {
             showAuthAlert('Este correo ya está registrado');
           } else if (error.code === 'auth/weak-password') {
             showAuthAlert('La contraseña debe tener al menos 6 caracteres');
-          } else if (error.code === 'auth/configuration-not-found' || error.message?.includes('configuration-not-found')) {
-            // Manejo de contingencia cuando Email/Password está en proceso de activación en la consola
-            const fallbackUid = 'user_' + Date.now();
-            const fallbackUser = { uid: fallbackUid, email: email };
-            const fallbackData = {
-              uid: fallbackUid,
-              email: email,
-              name: profileData.name || email.split('@')[0],
-              phone: profileData.phone || '',
-              state: profileData.state || 'Distrito Capital',
-              municipality: profileData.municipality || 'Libertador (Caracas)',
-              role: 'comprador',
-              isVerified: false,
-              estado: 'no_verificado',
-              avatar: '',
-              createdAt: new Date().toISOString()
-            };
-            try {
-              await setDoc(doc(db, 'usuarios', fallbackUid), fallbackData);
-            } catch (_) {}
-            await activateAuthenticatedSession(fallbackUser, fallbackData);
-            showToast('Cuenta creada y asegurada localmente.');
+          } else if (error.code === 'auth/invalid-email') {
+            showAuthAlert('El formato del correo electrónico no es válido');
           } else {
-            showAuthAlert('No se pudo completar el registro. Verifica los datos.');
+            // Mostrar el mensaje exacto para depuración clara en la interfaz
+            showAuthAlert(error.message || 'Error al crear la cuenta. Intenta de nuevo.');
           }
         } finally {
+          // El botón siempre vuelve a su estado original
           if (btn) btn.disabled = false;
           if (btnText) btnText.textContent = 'Crear Cuenta Segura';
         }
@@ -1659,35 +1640,81 @@
 
       window.handleAuthLogin = async function(event) {
         event.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPassword').value;
-        if (!email || !pass) {
-          showAuthAlert('Ingresa tu correo y contraseña');
-          return;
+        const alertBox = document.getElementById('authAlert');
+        if (alertBox) alertBox.classList.add('hidden');
+
+        try {
+          const emailInput = document.getElementById('loginEmail');
+          const passInput = document.getElementById('loginPassword');
+
+          const email = emailInput ? emailInput.value.trim() : '';
+          const pass = passInput ? passInput.value : '';
+
+          if (!email || !pass) {
+            showAuthAlert('Ingresa tu correo y contraseña');
+            return;
+          }
+
+          await loginUser(email, pass);
+        } catch (err) {
+          console.error('Error inesperado en handleAuthLogin:', err);
+          showAuthAlert(err.message || 'Error inesperado al intentar acceder');
+          const btn = document.getElementById('btnLoginSubmit');
+          const btnText = document.getElementById('btnLoginText');
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.textContent = 'Acceder de Forma Segura';
         }
-        await loginUser(email, pass);
       };
 
       window.handleAuthRegister = async function(event) {
         event.preventDefault();
-        const name = document.getElementById('regName').value.trim();
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPassword').value;
-        const confirmPass = document.getElementById('regPasswordConfirm').value;
-        const phone = document.getElementById('regPhone').value.trim();
-        const state = document.getElementById('regState').value;
-        const municipality = document.getElementById('regMunicipality').value;
+        const alertBox = document.getElementById('authAlert');
+        if (alertBox) alertBox.classList.add('hidden');
 
-        if (pass !== confirmPass) {
-          showAuthAlert('Las contraseñas no coinciden');
-          return;
-        }
-        if (pass.length < 6) {
-          showAuthAlert('La contraseña debe tener mínimo 6 caracteres');
-          return;
-        }
+        try {
+          const nameInput = document.getElementById('regName');
+          const emailInput = document.getElementById('regEmail');
+          const passInput = document.getElementById('regPassword');
+          const confirmPassInput = document.getElementById('regPasswordConfirm');
+          const phoneInput = document.getElementById('regPhone');
+          const stateSelect = document.getElementById('regState');
+          const muniSelect = document.getElementById('regMunicipality');
 
-        await registerUser(email, pass, { name, phone, state, municipality });
+          const name = nameInput ? nameInput.value.trim() : '';
+          const email = emailInput ? emailInput.value.trim() : '';
+          const pass = passInput ? passInput.value : '';
+          const confirmPass = confirmPassInput ? confirmPassInput.value : '';
+          const phone = phoneInput ? phoneInput.value.trim() : '';
+          const state = stateSelect ? stateSelect.value.trim() : '';
+          const municipality = muniSelect ? muniSelect.value.trim() : '';
+
+          // 1. Verificación y validación estricta de campos obligatorios
+          if (!email || !pass || !state || !municipality) {
+            showAuthAlert('Por favor completa todos los campos requeridos (Correo, Contraseña, Estado y Municipio)');
+            return;
+          }
+
+          // 2. Validación de coincidencia de contraseñas
+          if (pass !== confirmPass) {
+            showAuthAlert('Las contraseñas no coinciden');
+            return;
+          }
+
+          // 3. Validación de longitud de contraseña
+          if (pass.length < 6) {
+            showAuthAlert('La contraseña debe tener mínimo 6 caracteres');
+            return;
+          }
+
+          await registerUser(name, email, pass, phone, state, municipality);
+        } catch (err) {
+          console.error('Error inesperado en handleAuthRegister:', err);
+          showAuthAlert(err.message || 'Error inesperado en el formulario de registro');
+          const btn = document.getElementById('btnRegisterSubmit');
+          const btnText = document.getElementById('btnRegisterText');
+          if (btn) btn.disabled = false;
+          if (btnText) btnText.textContent = 'Crear Cuenta Segura';
+        }
       };
 
       window.fillAndLoginDemo = async function(role) {
