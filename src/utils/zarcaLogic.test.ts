@@ -123,3 +123,13 @@ test('Self messaging blocking detects own products', async () => {
   assert.equal(convId1, convId2); // deterministic sorted order
 });
 
+test('24 Venezuelan states and municipalities validation', async () => {
+  const { VENEZUELA_STATES, VENEZUELA_STATES_AND_MUNICIPALITIES } = await import('./zarcaLogic.ts');
+  assert.equal(VENEZUELA_STATES.length, 24);
+  assert.ok(VENEZUELA_STATES.includes('Apure'));
+  assert.ok(VENEZUELA_STATES.includes('Distrito Capital'));
+  assert.ok(VENEZUELA_STATES.includes('Zulia'));
+  assert.ok(VENEZUELA_STATES_AND_MUNICIPALITIES['Apure'].includes('San Fernando'));
+  assert.ok(VENEZUELA_STATES_AND_MUNICIPALITIES['Distrito Capital'].includes('Libertador (Caracas)'));
+});
+

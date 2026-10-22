@@ -196,7 +196,39 @@ export function filterProducts(products: ZarcaProduct[], filters: ProductFilters
 }
 
 /**
- * Official Venezuelan Cities for Zarca Marketplace
+ * Official 24 Venezuelan States and their respective Municipalities
+ */
+export const VENEZUELA_STATES_AND_MUNICIPALITIES: Record<string, string[]> = {
+  'Amazonas': ['Alto Orinoco', 'Atabapo', 'Atures', 'Autana', 'Manapiare', 'Maroa', 'Río Negro'],
+  'Anzoátegui': ['Anaco', 'Aragua', 'Diego Bautista Urbaneja (Lechería)', 'Fernando de Peñalver', 'Francisco de Miranda', 'Francisco del Carmen Carvajal', 'Guanta', 'Guanipa', 'Independencia', 'Libertad', 'Manuel Ezequiel Bruzual', 'Pedro María Freites', 'Píritu', 'San José de Guanipa', 'San Juan de Capistrano', 'Santa Ana', 'Simón Bolívar (Barcelona)', 'Simón Rodríguez (El Tigre)', 'Sir Arthur McGregor'],
+  'Apure': ['Achaguas', 'Biruaca', 'Muñoz', 'Páez', 'Pedro Camejo', 'Rómulo Gallegos', 'San Fernando'],
+  'Aragua': ['Bolívar', 'Camatagua', 'Francisco Linares Alcántara', 'Girardot (Maracay)', 'José Ángel Lamas', 'José Félix Ribas', 'José Rafael Revenga', 'Libertador', 'Mario Briceño Iragorry', 'Ocumare de la Costa de Oro', 'San Casimiro', 'San Sebastián', 'Santiago Mariño', 'Santos Michelena', 'Sucre', 'Tovar (Colonia Tovar)', 'Urdaneta', 'Zamora'],
+  'Barinas': ['Alberto Arvelo Torrealba', 'Andrés Eloy Blanco', 'Antonio José de Sucre', 'Arismendi', 'Barinas', 'Bolívar', 'Cruz Paredes', 'Ezequiel Zamora', 'Obispos', 'Pedraza', 'Rojas', 'Sosa'],
+  'Bolívar': ['Angostura', 'Angostura del Orinoco (Ciudad Bolívar)', 'Caroní (Puerto Ordaz)', 'Cedeño', 'El Callao', 'Gran Sabana', 'Piar', 'Roscio', 'Sifontes', 'Sucre', 'Padre Pedro Chien'],
+  'Carabobo': ['Bejuma', 'Carlos Arvelo', 'Diego Ibarra', 'Guacara', 'Juan José Mora', 'Libertador', 'Los Guayos', 'Miranda', 'Montalbán', 'Naguanagua', 'Puerto Cabello', 'San Diego', 'San Joaquín', 'Valencia'],
+  'Cojedes': ['Anzoátegui', 'Tinaquillo', 'Girardot', 'Lima Blanco', 'Pao de San Juan Bautista', 'Ricaurte', 'Rómulo Gallegos', 'San Carlos', 'Santander'],
+  'Delta Amacuro': ['Antonio Díaz', 'Casacoima', 'Pedernales', 'Tucupita'],
+  'Distrito Capital': ['Libertador (Caracas)'],
+  'Falcón': ['Acosta', 'Bolívar', 'Buchivacoa', 'Cacique Manaure', 'Carirubana (Punto Fijo)', 'Colina', 'Dabajuro', 'Democracia', 'Falcón', 'Federación', 'Jacura', 'Los Taques', 'Mauroa', 'Miranda (Coro)', 'Monseñor Iturriza', 'Palmasola', 'Petit', 'Píritu', 'San Francisco', 'Silva (Tucacas)', 'Sucre', 'Tocópero', 'Unión', 'Urumaco', 'Zamora'],
+  'Guárico': ['Camaguán', 'Chaguaramas', 'El Socorro', 'Francisco de Miranda (Calabozo)', 'José Félix Ribas', 'José Tadeo Monagas', 'Juan Germán Roscio (San Juan de los Morros)', 'Julián Mellado', 'Las Mercedes', 'Leonardo Infante (Valle de la Pascua)', 'Pedro Zaraza', 'Ortiz', 'San Gerónimo de Guayabal', 'San José de Guaribe', 'Santa María de Ipire'],
+  'La Guaira': ['Vargas (La Guaira / Maiquetía / Catia La Mar)'],
+  'Lara': ['Andrés Eloy Blanco', 'Crespo', 'Iribarren (Barquisimeto)', 'Jiménez (Quíbor)', 'Morán (El Tocuyo)', 'Palavecino (Cabudare)', 'Simón Planas', 'Torres (Carora)', 'Urdaneta'],
+  'Mérida': ['Alberto Adriani (El Vigía)', 'Andrés Bello', 'Antonio Pinto Salinas', 'Aricagua', 'Arzobispo Chacón', 'Campo Elías', 'Caracciolo Parra Olmedo', 'Cardenal Quintero', 'Guaraque', 'Julio César Salas', 'Justo Briceño', 'Libertador (Mérida)', 'Miranda', 'Obispo Ramos de Lora', 'Padre Noguera', 'Pueblo Llano', 'Rangel', 'Rivas Dávila', 'Santos Marquina', 'Sucre', 'Tovar', 'Tulio Febres Cordero', 'Zea'],
+  'Miranda': ['Acevedo', 'Andrés Bello', 'Baruta', 'Brión (Higuerote)', 'Buroz', 'Carrizal', 'Chacao', 'Cristóbal Rojas (Charallave)', 'El Hatillo', 'Guaicaipuro (Los Teques)', 'Independencia', 'Lander (Ocumare del Tuy)', 'Los Salias (San Antonio)', 'Páez (Río Chico)', 'Paz Castillo', 'Pedro Gual', 'Plaza (Guarenas)', 'Simón Bolívar', 'Sucre (Petare)', 'Urdaneta (Cúa)', 'Zamora (Guatire)'],
+  'Monagas': ['Acosta', 'Aguasay', 'Bolívar', 'Caripe', 'Cedeño', 'Ezequiel Zamora', 'Libertador', 'Maturín', 'Piar', 'Punceres', 'Santa Bárbara', 'Sotillo', 'Uracoa'],
+  'Nueva Esparta': ['Antolín del Campo', 'Arismendi (La Asunción)', 'Díaz', 'García', 'Gómez', 'Maneiro (Pampatar)', 'Marcano (Juan Griego)', 'Mariño (Porlamar)', 'Península de Macanao', 'Tubores', 'Villalba (Coche)'],
+  'Portuguesa': ['Agua Blanca', 'Araure', 'Esteller', 'Guanare', 'Guanarito', 'Monseñor José Vicente de Unda', 'Ospino', 'Páez (Acarigua)', 'Papelón', 'San Genaro de Boconoíto', 'San Rafael de Onoto', 'Santa Rosalía', 'Sucre', 'Turén'],
+  'Sucre': ['Andrés Eloy Blanco', 'Andrés Mata', 'Arismendi', 'Benítez', 'Bermúdez (Carúpano)', 'Bolívar', 'Cruz Salmerón Acosta', 'Libertador', 'Mariño', 'Mejía', 'Montes', 'Ribero', 'Sucre (Cumaná)', 'Valdez (Güiria)'],
+  'Táchira': ['Andrés Bello', 'Antonio Rómulo Costa', 'Ayacucho', 'Bolívar (San Antonio)', 'Cárdenas', 'Córdoba', 'Fernández Feo', 'Francisco de Miranda', 'García de Hevia', 'Guásimos', 'Independencia', 'Jáuregui (La Grita)', 'José María Vargas', 'Junín (Rubio)', 'Libertad', 'Libertador', 'Lobatera', 'Michelena', 'Panamericano', 'Pedro María Ureña', 'San Cristóbal', 'Seboruco', 'Simón Rodríguez', 'Sucre', 'Torbes', 'Uribante', 'San Judas Tadeo'],
+  'Trujillo': ['Andrés Bello', 'Boconó', 'Bolívar', 'Candelaria', 'Carache', 'Chejendé', 'Escuque', 'José Felipe Márquez Cañizalez', 'Juan Vicente Campo Elías', 'La Ceiba', 'Miranda', 'Monte Carmelo', 'Motatán', 'Pampán', 'Pampanito', 'Rafael Rangel', 'San Rafael de Carvajal', 'Sucre', 'Trujillo', 'Urdaneta', 'Valera'],
+  'Yaracuy': ['Aristides Bastidas', 'Bolívar', 'Bruzual (Chivacoa)', 'Cocorote', 'Independencia', 'José Antonio Páez', 'La Trinidad', 'Manuel Monge', 'Nirgua', 'Peña (Yaritagua)', 'San Felipe', 'Sucre', 'Urachiche', 'Veroes'],
+  'Zulia': ['Almirante Padilla', 'Baralt', 'Cabimas', 'Catatumbo', 'Colón', 'Francisco Javier Pulgar', 'Jesús Enrique Lossada', 'Jesús María Semprún', 'La Cañada de Urdaneta', 'Lagunillas (Ciudad Ojeda)', 'Machiques de Perijá', 'Mara', 'Maracaibo', 'Miranda', 'Guajira', 'Rosario de Perijá', 'San Francisco', 'Santa Rita', 'Simón Bolívar', 'Sucre', 'Valmore Rodríguez']
+};
+
+export const VENEZUELA_STATES = Object.keys(VENEZUELA_STATES_AND_MUNICIPALITIES);
+
+/**
+ * Official Venezuelan Cities for Zarca Marketplace (backward compatibility)
  */
 export const VENEZUELAN_CITIES = [
   'San Fernando de Apure',
