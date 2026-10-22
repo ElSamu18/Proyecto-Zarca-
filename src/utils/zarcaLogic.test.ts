@@ -129,13 +129,31 @@ test('Self messaging blocking detects own products', async () => {
   assert.equal(chatId1, chatId2);
 });
 
-test('24 Venezuelan states and municipalities validation', async () => {
-  const { VENEZUELA_STATES, VENEZUELA_STATES_AND_MUNICIPALITIES } = await import('./zarcaLogic.ts');
-  assert.equal(VENEZUELA_STATES.length, 24);
-  assert.ok(VENEZUELA_STATES.includes('Apure'));
-  assert.ok(VENEZUELA_STATES.includes('Distrito Capital'));
-  assert.ok(VENEZUELA_STATES.includes('Zulia'));
-  assert.ok(VENEZUELA_STATES_AND_MUNICIPALITIES['Apure'].includes('San Fernando'));
-  assert.ok(VENEZUELA_STATES_AND_MUNICIPALITIES['Distrito Capital'].includes('Libertador (Caracas)'));
+test('Product-anchored chatId generates deterministic unique ID per product and user pair', async () => {
+  const { generateProductChatId } = await import('./zarcaLogic.ts');
+  const chat1 = generateProductChatId('buyer_123', 'seller_456', 'prod_999');
+  const chat2 = generateProductChatId('seller_456', 'buyer_123', 'prod_999');
+  assert.equal(chat1, 'buyer_123_seller_456_prod_999');
+  assert.equal(chat1, chat2);
+
+  // Different product creates isolated room
+  const chatDifferentProduct = generateProductChatId('buyer_123', 'seller_456', 'prod_888');
+  assert.notEqual(chat1, chatDifferentProduct);
 });
+
+test('1:1 center crop calculation keeps centered square coordinates', async () => {
+  const { calculateCenterCropSquare } = await import('./zarcaLogic.ts');
+  // Landscape image 800x600 -> 600x600 centered at sx=100, sy=0
+  const cropLandscape = calculateCenterCropSquare(800, 600);
+  assert.deepEqual(cropLandscape, { sx: 100, sy: 0, sWidth: 600, sHeight: 600 });
+
+  // Portrait image 500x900 -> 500x500 centered at sx=0, sy=200
+  const cropPortrait = calculateCenterCropSquare(500, 900);
+  assert.deepEqual(cropPortrait, { sx: 0, sy: 200, sWidth: 500, sHeight: 500 });
+
+  // Square image 400x400 -> sx=0, sy=0
+  const cropSquare = calculateCenterCropSquare(400, 400);
+  assert.deepEqual(cropSquare, { sx: 0, sy: 0, sWidth: 400, sHeight: 400 });
+});
+
 

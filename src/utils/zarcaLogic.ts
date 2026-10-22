@@ -262,6 +262,29 @@ export function generate1to1ChatId(uid1: string, uid2: string): string {
 }
 
 /**
+ * Generates deterministic chat ID anchored to product and participants
+ * Structure: [uid1, uid2].sort().join('_') + '_' + productId
+ */
+export function generateProductChatId(uid1: string, uid2: string, productId: string): string {
+  return `${[uid1, uid2].sort().join('_')}_${productId}`;
+}
+
+/**
+ * Calculates center square crop (1:1 aspect ratio) coordinates
+ */
+export function calculateCenterCropSquare(width: number, height: number): {
+  sx: number;
+  sy: number;
+  sWidth: number;
+  sHeight: number;
+} {
+  const minEdge = Math.min(width, height);
+  const sx = Math.max(0, Math.round((width - minEdge) / 2));
+  const sy = Math.max(0, Math.round((height - minEdge) / 2));
+  return { sx, sy, sWidth: minEdge, sHeight: minEdge };
+}
+
+/**
  * Generates deterministic conversation ID for buyer, seller and product
  */
 export function generateConversationId(buyerUid: string, sellerUid: string, productId: string): string {
