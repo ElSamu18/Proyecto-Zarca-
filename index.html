@@ -395,4 +395,589 @@
     <div id="chatModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
       <div class="w-full max-w-xl h-[90vh] sm:h-[80vh] flex flex-col bg-slate-900 text-slate-100 rounded-3xl overflow-hidden border border-cyan-900/40 shadow-2xl">
         
-        <!-- ===================================================
+        <!-- ======================================================= -->
+        <!-- REGLA 3: CABECERA MINIMALISTA (Cyan / Azul Marino)     -->
+        <!-- Deja ÚNICAMENTE: Foto 1:1 + Nombre Usuario + Volver     -->
+        <!-- ======================================================= -->
+        <header class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] px-4 py-3 border-b border-cyan-900/50 flex items-center gap-3 shrink-0">
+          <!-- 1. Botón de 'Volver atrás' hacia la bandeja de entrada -->
+          <button
+            type="button"
+            onclick="closeChatRoom()"
+            aria-label="Volver atrás"
+            class="p-2 -ml-1 text-slate-300 hover:text-white hover:bg-white/10 active:bg-white/20 rounded-full transition-colors cursor-pointer"
+          >
+            <i data-lucide="arrow-left" class="w-5 h-5 text-cyan-400"></i>
+          </button>
+
+          <!-- 2. Foto de perfil (estilo circular 1:1) -->
+          <div class="relative shrink-0">
+            <img
+              id="chatHeaderAvatar"
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+              alt="Foto de perfil"
+              class="w-10 h-10 rounded-full object-cover border-2 border-cyan-400/80 shadow-md aspect-square"
+            />
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-[#0c1d3d] rounded-full"></span>
+          </div>
+
+          <!-- 3. Nombre del usuario -->
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-1.5">
+              <h2 id="chatHeaderName" class="text-sm font-bold text-white truncate tracking-wide">
+                Carlos Silva
+              </h2>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i>
+            </div>
+            <span class="text-[11px] text-cyan-300/80 font-medium">
+              En línea · Zarca Chat
+            </span>
+          </div>
+        </header>
+
+        <!-- Barra del Producto -->
+        <div class="bg-[#0c1d3d]/60 border-b border-cyan-950 px-4 py-2 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <img id="chatProductImg" src="" alt="Producto" class="w-9 h-9 rounded-lg object-cover shrink-0 border border-cyan-800" />
+            <div class="min-w-0">
+              <p id="chatProductTitle" class="text-xs font-semibold text-slate-200 truncate"></p>
+              <p id="chatProductPrice" class="text-[11px] text-cyan-400 font-mono font-bold"></p>
+            </div>
+          </div>
+          <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/40 shrink-0">
+            Chat Seguro
+          </span>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-slate-950 to-slate-900">
+          <div class="bg-[#0c1d3d]/70 border border-cyan-900/60 rounded-2xl p-3 text-center max-w-md mx-auto my-1">
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              🛡️ <strong class="text-cyan-400">Privacidad Zarca:</strong> Acuerda siempre la entrega en lugares públicos concurridos. No compartas números ni adelantes pagos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Input de Mensaje -->
+        <form onsubmit="handleSendChatMessage(event)" class="bg-[#0c1d3d] p-3 border-t border-cyan-900/40 flex items-center gap-2">
+          <input
+            type="text"
+            id="chatInputText"
+            placeholder="Escribe un mensaje seguro..."
+            class="flex-1 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none"
+          />
+          <button
+            type="submit"
+            class="p-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl transition-all shadow-md cursor-pointer shrink-0"
+          >
+            <i data-lucide="send" class="w-4 h-4"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- BANDEJA DE CONVERSACIONES -->
+    <div id="conversationsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+      <div class="bg-[#0c1d3d] border border-cyan-900/60 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col max-h-[85vh] text-slate-100">
+        <div class="px-5 py-4 border-b border-cyan-900/40 flex items-center justify-between bg-[#061226]">
+          <h3 class="font-extrabold text-sm sm:text-base text-white">Bandeja de Conversaciones</h3>
+          <button onclick="closeConversationsModal()" class="p-1.5 rounded-full text-slate-400 hover:text-white cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div id="conversationsList" class="flex-1 overflow-y-auto p-3 space-y-2"></div>
+      </div>
+    </div>
+
+    <!-- MODAL DE DETALLE DE PRODUCTO -->
+    <div id="productDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+      <div class="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl border border-slate-200 text-slate-800 my-auto">
+        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+          <span id="detailCategory" class="text-[11px] font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2.5 py-1 rounded-md border border-cyan-200"></span>
+          <button onclick="closeProductDetailModal()" class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 aspect-4/3">
+              <img id="detailImg" src="" alt="Producto" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex flex-col justify-between">
+              <div>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 mb-3">
+                  <div class="flex items-baseline gap-2">
+                    <span id="detailPriceUsd" class="text-3xl font-extrabold text-[#0c1d3d] font-mono"></span>
+                    <span class="text-sm font-bold text-cyan-700">USD</span>
+                  </div>
+                  <p id="detailPriceBs" class="text-xs font-semibold text-slate-500 mt-0.5"></p>
+                </div>
+                <h2 id="detailTitle" class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-2"></h2>
+                <p id="detailLocation" class="text-xs text-slate-600 font-medium"></p>
+              </div>
+
+              <!-- Vendedor Privado (Sin Teléfono expuesto) -->
+              <div class="bg-gradient-to-r from-[#0c1d3d] to-[#133054] text-white p-3.5 rounded-2xl border border-cyan-900/60 mt-3 flex items-center gap-3">
+                <img id="detailSellerAvatar" src="" class="w-11 h-11 rounded-full object-cover border-2 border-cyan-400 aspect-square shrink-0" />
+                <div class="min-w-0 flex-1">
+                  <span id="detailSellerName" class="font-bold text-sm text-white block truncate"></span>
+                  <p class="text-[11px] text-cyan-300 font-medium">Vendedor Verificado KYC</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Descripción</h4>
+            <p id="detailDescription" class="text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-100"></p>
+          </div>
+
+          <!-- REGLA 2: CHAT INTERNO EXCLUSIVO (ÚNICO BOTÓN) -->
+          <button
+            type="button"
+            onclick="handleDetailChatClick()"
+            class="w-full py-3.5 px-6 bg-gradient-to-r from-cyan-600 to-cyan-500 hover:from-cyan-500 hover:to-cyan-400 text-white rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2.5 shadow-lg shadow-cyan-950/20 cursor-pointer transition-all"
+          >
+            <i data-lucide="message-square" class="w-5 h-5"></i>
+            <span>Contactar por Chat Interno</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PERFIL -->
+    <div id="profileModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+      <div class="bg-[#0c1d3d] border border-cyan-900/60 rounded-3xl w-full max-w-md overflow-hidden shadow-2xl text-slate-100 flex flex-col">
+        <div class="px-5 py-4 border-b border-cyan-900/40 flex items-center justify-between bg-[#061226]">
+          <h3 class="font-extrabold text-sm sm:text-base text-white">Perfil y Privacidad</h3>
+          <button onclick="closeProfileModal()" class="p-1.5 rounded-full text-slate-400 hover:text-white cursor-pointer">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div class="p-5 space-y-4">
+          <div class="flex items-center gap-3 bg-slate-950/60 p-3.5 rounded-2xl border border-cyan-950">
+            <div class="w-12 h-12 rounded-full bg-cyan-600 text-slate-950 font-black text-lg flex items-center justify-center aspect-square">
+              S
+            </div>
+            <div>
+              <h4 class="font-bold text-white text-sm">Samuel López</h4>
+              <p class="text-xs text-slate-400">samuel@ejemplo.com</p>
+              <span class="text-[10px] text-emerald-400 font-bold">✓ KYC Verificado</span>
+            </div>
+          </div>
+
+          <div class="bg-gradient-to-br from-[#061226] to-[#133054] border border-cyan-800/40 rounded-2xl p-4 text-xs space-y-2">
+            <div class="flex items-center gap-2 text-cyan-400 font-bold">
+              <i data-lucide="lock" class="w-4 h-4"></i>
+              <span>Blindaje de Privacidad Telefónica</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              Tu teléfono (+58 0414 9876543) solo existe internamente en la base de datos para verificación de identidad y seguridad. Jamás se muestra en productos ni a otros usuarios.
+            </p>
+          </div>
+
+          <button onclick="handleLogout()" class="w-full py-2.5 px-4 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 text-rose-300 rounded-xl text-xs font-bold cursor-pointer">
+            Cerrar Sesión Segura
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT DE LA APLICACIÓN -->
+    <script>
+      const USD_RATE = 76.50;
+      let currentUser = {
+        id: 'user-me',
+        name: 'Samuel López',
+        email: 'samuel@ejemplo.com',
+        phone: '0414 9876543',
+        state: 'Miranda',
+        municipality: 'Chacao'
+      };
+
+      let selectedProductForDetail = null;
+      let activeConversation = null;
+
+      let products = [
+        {
+          id: 'prod-1',
+          title: 'iPhone 13 128GB Midnight - Batería 89% Impecable',
+          description: 'Libre para todas las operadoras nacionales. Incluye cargador rápido original. Cero detalles cosméticos. Entrega personal en zona segura.',
+          priceUsd: 410,
+          category: 'Celulares & Tablets',
+          imageUrl: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=800&q=80',
+          state: 'Miranda',
+          municipality: 'Chacao',
+          sellerName: 'Carlos Silva',
+          sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+          isVerified: true,
+          condition: 'Como nuevo'
+        },
+        {
+          id: 'prod-2',
+          title: 'Laptop Lenovo ThinkPad T14 Gen 2 - 16GB RAM 512GB SSD',
+          description: 'Intel Core i7 11va gen, pantalla 14" FHD antirreflejo. Teclado retroiluminado, batería óptima. Se entrega con cargador Tipo-C original.',
+          priceUsd: 385,
+          category: 'Tecnología',
+          imageUrl: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80',
+          state: 'Carabobo',
+          municipality: 'Valencia',
+          sellerName: 'Andrea Mendoza',
+          sellerAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80',
+          isVerified: true,
+          condition: 'Como nuevo'
+        },
+        {
+          id: 'prod-3',
+          title: 'Generador Eléctrico Portátil Dual Fuel 3500W Silencioso',
+          description: 'Planta inversora silenciosa de 3500W. Funciona con gasolina o gas GLP. Lista para contingencias. Se entrega probada en local seguro.',
+          priceUsd: 340,
+          category: 'Herramientas',
+          imageUrl: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80',
+          state: 'Zulia',
+          municipality: 'Maracaibo',
+          sellerName: 'Inversiones Sol Zulia',
+          sellerAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+          isVerified: true,
+          condition: 'Nuevo'
+        },
+        {
+          id: 'prod-4',
+          title: 'PlayStation 5 Edición Digital + 2 Controles DualSense',
+          description: 'Consola con caja original y dos controles originales en blanco. Sin detalles. Se entrega en centro comercial concurrido.',
+          priceUsd: 480,
+          category: 'Tecnología',
+          imageUrl: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=800&q=80',
+          state: 'Anzoátegui',
+          municipality: 'Lechería',
+          sellerName: 'Miguel Ángel Gómez',
+          sellerAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+          isVerified: true,
+          condition: 'Como nuevo'
+        }
+      ];
+
+      let conversations = [
+        {
+          id: 'convo-1',
+          product: products[0],
+          sellerName: 'Carlos Silva',
+          sellerAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+          messages: [
+            { sender: 'user', text: '¡Hola Carlos! ¿El teléfono sigue disponible para entrega en Chacao?', time: '10:30 AM' },
+            { sender: 'other', text: '¡Hola! Sí, podemos coordinar en el Sambil Chacao en zona de bancos.', time: '10:32 AM' }
+          ]
+        }
+      ];
+
+      function showToast(msg) {
+        const toast = document.getElementById('toastNotification');
+        const text = document.getElementById('toastMessage');
+        text.innerText = msg;
+        toast.classList.remove('-translate-y-24', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.add('-translate-y-24', 'opacity-0');
+          toast.classList.remove('translate-y-0', 'opacity-100');
+        }, 3000);
+      }
+
+      function setAuthMode(mode) {
+        const formLogin = document.getElementById('formLogin');
+        const formRegister = document.getElementById('formRegister');
+        const tabLogin = document.getElementById('tabBtnLogin');
+        const tabRegister = document.getElementById('tabBtnRegister');
+
+        if (mode === 'login') {
+          formLogin.classList.remove('hidden');
+          formRegister.classList.add('hidden');
+          tabLogin.className = "flex-1 py-2.5 rounded-lg text-xs font-bold transition-all bg-cyan-600 text-white shadow-sm cursor-pointer";
+          tabRegister.className = "flex-1 py-2.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white cursor-pointer";
+        } else {
+          formLogin.classList.add('hidden');
+          formRegister.classList.remove('hidden');
+          tabRegister.className = "flex-1 py-2.5 rounded-lg text-xs font-bold transition-all bg-cyan-600 text-white shadow-sm cursor-pointer";
+          tabLogin.className = "flex-1 py-2.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white cursor-pointer";
+        }
+      }
+
+      function togglePasswordVisibility(id) {
+        const el = document.getElementById(id);
+        el.type = el.type === 'password' ? 'text' : 'password';
+      }
+
+      function handleAuthLogin(e) {
+        e.preventDefault();
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        renderProducts();
+        showToast('Sesión iniciada');
+        lucide.createIcons();
+      }
+
+      function handleAuthRegister(e) {
+        e.preventDefault();
+        const name = document.getElementById('regName').value;
+        if (name) currentUser.name = name;
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        document.getElementById('headerUserName').innerText = currentUser.name;
+        document.getElementById('headerAvatarText').innerText = currentUser.name.charAt(0);
+        renderProducts();
+        showToast('Cuenta creada con éxito');
+        lucide.createIcons();
+      }
+
+      function handleLogout() {
+        closeProfileModal();
+        document.getElementById('mainApp').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
+      }
+
+      function switchRole(role) {
+        const buyerBtn = document.getElementById('btnModeBuyer');
+        const sellerBtn = document.getElementById('btnModeSeller');
+        const buyerView = document.getElementById('buyerView');
+        const sellerView = document.getElementById('sellerView');
+
+        if (role === 'buyer') {
+          buyerView.classList.remove('hidden');
+          sellerView.classList.add('hidden');
+          buyerBtn.className = "flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm border border-slate-200/60 cursor-pointer";
+          sellerBtn.className = "flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer";
+        } else {
+          buyerView.classList.add('hidden');
+          sellerView.classList.remove('hidden');
+          sellerBtn.className = "flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm border border-slate-200/60 cursor-pointer";
+          buyerBtn.className = "flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer";
+        }
+        renderProducts();
+        lucide.createIcons();
+      }
+
+      // REGLAS 1 Y 2: RENDERIZADO SIN TELÉFONO Y CON CHAT EXCLUSIVO
+      function renderProducts() {
+        const grid = document.getElementById('productsGrid');
+        grid.innerHTML = '';
+
+        products.forEach(p => {
+          const card = document.createElement('div');
+          card.className = "bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all flex flex-col overflow-hidden";
+          const bsPrice = Math.round(p.priceUsd * USD_RATE).toLocaleString('es-VE');
+
+          card.innerHTML = `
+            <div class="relative aspect-4/3 w-full overflow-hidden bg-slate-100 cursor-pointer" onclick="openProductDetail('${p.id}')">
+              <img src="${p.imageUrl}" alt="${p.title}" class="w-full h-full object-cover hover:scale-105 transition-transform" />
+              <span class="absolute top-2.5 left-2.5 bg-[#0c1d3d]/90 text-cyan-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-cyan-800">
+                ${p.condition}
+              </span>
+            </div>
+            <div class="p-4 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="mb-1">
+                  <span class="text-xl font-extrabold text-[#0c1d3d] font-mono">$${p.priceUsd}</span>
+                  <span class="text-xs font-bold text-cyan-700">USD</span>
+                  <p class="text-[11px] text-slate-500 font-medium">Ref. Bs. ${bsPrice}</p>
+                </div>
+                <h3 onclick="openProductDetail('${p.id}')" class="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 hover:text-cyan-700 cursor-pointer mb-2">
+                  ${p.title}
+                </h3>
+                <div class="flex items-center justify-between text-[11px] text-slate-500 mb-3 pt-2 border-t border-slate-100">
+                  <span class="truncate">📍 ${p.municipality}, ${p.state}</span>
+                  <span class="text-cyan-700 font-semibold text-[10px]">✓ Verificado</span>
+                </div>
+              </div>
+              <!-- REGLA 2: CHAT INTERNO EXCLUSIVO (ÚNICO BOTÓN) -->
+              <button
+                type="button"
+                onclick="startChatForProduct('${p.id}')"
+                class="w-full py-2.5 px-3 bg-[#0c1d3d] hover:bg-cyan-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-all"
+              >
+                <i data-lucide="message-square" class="w-4 h-4 text-cyan-400"></i>
+                <span>Contactar por Chat Interno</span>
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+
+        lucide.createIcons();
+      }
+
+      function openProductDetail(prodId) {
+        const product = products.find(p => p.id === prodId);
+        if (!product) return;
+        selectedProductForDetail = product;
+
+        document.getElementById('detailCategory').innerText = product.category;
+        document.getElementById('detailImg').src = product.imageUrl;
+        document.getElementById('detailTitle').innerText = product.title;
+        document.getElementById('detailPriceUsd').innerText = '$' + product.priceUsd;
+        document.getElementById('detailPriceBs').innerText = 'Ref. Bs. ' + Math.round(product.priceUsd * USD_RATE).toLocaleString('es-VE');
+        document.getElementById('detailLocation').innerText = '📍 ' + product.municipality + ', ' + product.state;
+        document.getElementById('detailSellerName').innerText = product.sellerName;
+        document.getElementById('detailSellerAvatar').src = product.sellerAvatar;
+        document.getElementById('detailDescription').innerText = product.description;
+
+        document.getElementById('productDetailModal').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function closeProductDetailModal() {
+        document.getElementById('productDetailModal').classList.add('hidden');
+      }
+
+      function handleDetailChatClick() {
+        closeProductDetailModal();
+        if (selectedProductForDetail) {
+          startChatForProduct(selectedProductForDetail.id);
+        }
+      }
+
+      function startChatForProduct(prodId) {
+        const product = products.find(p => p.id === prodId);
+        if (!product) return;
+
+        let convo = conversations.find(c => c.product.id === product.id);
+        if (!convo) {
+          convo = {
+            id: 'convo-' + Date.now(),
+            product: product,
+            sellerName: product.sellerName,
+            sellerAvatar: product.sellerAvatar,
+            messages: [
+              { sender: 'user', text: `¡Hola! Me interesa "${product.title}". ¿Sigue disponible para acordar un punto seguro?`, time: 'Ahora' }
+            ]
+          };
+          conversations.unshift(convo);
+        }
+
+        activeConversation = convo;
+        openChatModalWithConversation(convo);
+      }
+
+      // REGLA 3: CABECERA MINIMALISTA
+      function openChatModalWithConversation(convo) {
+        document.getElementById('chatHeaderAvatar').src = convo.sellerAvatar;
+        document.getElementById('chatHeaderName').innerText = convo.sellerName;
+        document.getElementById('chatProductImg').src = convo.product.imageUrl;
+        document.getElementById('chatProductTitle').innerText = convo.product.title;
+        document.getElementById('chatProductPrice').innerText = '$' + convo.product.priceUsd + ' USD';
+
+        renderChatMessages();
+        document.getElementById('chatModal').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function renderChatMessages() {
+        const container = document.getElementById('chatMessagesContainer');
+        container.innerHTML = `
+          <div class="bg-[#0c1d3d]/70 border border-cyan-900/60 rounded-2xl p-3 text-center max-w-md mx-auto my-1">
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              🛡️ <strong class="text-cyan-400">Privacidad Zarca:</strong> Acuerda siempre la entrega en lugares públicos concurridos. No compartas números ni adelantes pagos.
+            </p>
+          </div>
+        `;
+
+        if (!activeConversation) return;
+
+        activeConversation.messages.forEach(m => {
+          const isUser = m.sender === 'user';
+          const div = document.createElement('div');
+          div.className = `flex flex-col ${isUser ? 'items-end' : 'items-start'}`;
+          div.innerHTML = `
+            <div class="max-w-[80%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm ${
+              isUser
+                ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white rounded-tr-none'
+                : 'bg-slate-800 text-slate-100 rounded-tl-none border border-slate-700'
+            }">
+              <p>${m.text}</p>
+            </div>
+            <span class="text-[10px] text-slate-500 mt-1 px-1">${m.time}</span>
+          `;
+          container.appendChild(div);
+        });
+
+        container.scrollTop = container.scrollHeight;
+      }
+
+      function closeChatRoom() {
+        document.getElementById('chatModal').classList.add('hidden');
+        openConversationsModal();
+      }
+
+      function handleSendChatMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById('chatInputText');
+        const text = input.value.trim();
+        if (!text || !activeConversation) return;
+
+        activeConversation.messages.push({
+          sender: 'user',
+          text: text,
+          time: 'Ahora'
+        });
+        input.value = '';
+        renderChatMessages();
+
+        setTimeout(() => {
+          activeConversation.messages.push({
+            sender: 'other',
+            text: '¡Recibido! Podemos coordinar en un punto seguro de la zona. A la orden.',
+            time: 'Ahora'
+          });
+          renderChatMessages();
+        }, 1200);
+      }
+
+      function openConversationsModal() {
+        const list = document.getElementById('conversationsList');
+        list.innerHTML = '';
+
+        conversations.forEach(c => {
+          const item = document.createElement('div');
+          item.className = "p-3 bg-slate-950/70 hover:bg-slate-900 border border-slate-800 rounded-2xl cursor-pointer flex items-center gap-3";
+          item.onclick = () => {
+            closeConversationsModal();
+            activeConversation = c;
+            openChatModalWithConversation(c);
+          };
+
+          item.innerHTML = `
+            <img src="${c.sellerAvatar}" class="w-11 h-11 rounded-full object-cover border-2 border-cyan-500/60 aspect-square" />
+            <div class="flex-1 min-w-0">
+              <span class="text-xs sm:text-sm font-bold text-white block truncate">${c.sellerName}</span>
+              <p class="text-xs text-slate-400 truncate">${c.messages[c.messages.length - 1].text}</p>
+              <span class="text-[10px] text-cyan-400 truncate block">Ref: ${c.product.title}</span>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
+          `;
+          list.appendChild(item);
+        });
+
+        document.getElementById('conversationsModal').classList.remove('hidden');
+        lucide.createIcons();
+      }
+
+      function closeConversationsModal() {
+        document.getElementById('conversationsModal').classList.add('hidden');
+      }
+
+      function openProfileModal() {
+        document.getElementById('profileModal').classList.remove('hidden');
+      }
+
+      function closeProfileModal() {
+        document.getElementById('profileModal').classList.add('hidden');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('mainApp').classList.remove('hidden');
+        renderProducts();
+        lucide.createIcons();
+      });
+    </script>
+  </body>
+</html>
