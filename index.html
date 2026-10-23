@@ -4,21 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zarca - más cerca de ti</title>
-    <meta name="description" content="Zarca - más cerca de ti. Comercio local seguro con verificación de identidad y chat por producto." />
+    <meta name="description" content="Zarca - más cerca de ti. Comercio local seguro con verificación de identidad y chat interno por producto." />
     <meta property="og:title" content="Zarca - más cerca de ti" />
-    <meta property="og:description" content="Zarca - más cerca de ti. Comercio local seguro con verificación de identidad y chat por producto." />
+    <meta property="og:description" content="Zarca - más cerca de ti. Comercio local seguro con verificación de identidad y chat interno por producto." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/zarca_logo_clean.png" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS CDN con Paleta Oficial Zarca -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -64,16 +61,6 @@
       .font-mono-numbers {
         font-family: 'Space Mono', monospace;
       }
-      /* Pulsing live dot */
-      @keyframes pulse-ring {
-        0% { transform: scale(0.9); opacity: 0.8; }
-        50% { transform: scale(1.3); opacity: 0.3; }
-        100% { transform: scale(0.9); opacity: 0.8; }
-      }
-      .live-dot {
-        animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-      /* Custom clean scrollbar */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
@@ -92,31 +79,33 @@
   </head>
   <body class="min-h-screen flex flex-col antialiased selection:bg-cyan-600 selection:text-white bg-slate-50 text-slate-800">
 
-    <!-- TOAST NOTIFICATIONS -->
-    <div id="toastNotification" class="fixed top-5 right-4 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 bg-[#0c1d3d] text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-2xl border border-cyan-800/50 flex items-center gap-2 pointer-events-none">
+    <!-- NOTIFICACIONES TOAST -->
+    <div id="toastNotification" class="fixed top-5 right-4 z-50 transform -translate-y-24 opacity-0 transition-all duration-300 bg-[#0c1d3d] text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-2xl border border-cyan-800/60 flex items-center gap-2 pointer-events-none">
       <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i>
       <span id="toastMessage">Notificación</span>
     </div>
 
     <!-- ======================================================= -->
-    <!-- PANTALLA DE ACCESO (LOGIN / REGISTRO ESTRICTAMENTE SEPARADOS) -->
+    <!-- PANTALLA DE ACCESO (LOGIN / REGISTRO)                   -->
     <!-- ======================================================= -->
     <section id="authScreen" class="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-gradient-to-br from-[#061226] via-[#0c1d3d] to-[#133054] text-slate-100 z-50">
       <div class="w-full max-w-md mx-auto">
-        <!-- Logo & Branding Oficial: Zarca - más cerca de ti -->
+        <!-- Logo Zarca -->
         <div class="text-center mb-6">
-          <div class="inline-flex items-center justify-center w-24 h-24 mb-3 group">
-            <img src="/assets/zarca_logo_clean.png" alt="Logo Zarca" class="w-24 h-24 drop-shadow-2xl group-hover:scale-105 transition-transform duration-300">
+          <div class="inline-flex items-center justify-center w-20 h-20 mb-3 bg-[#0c1d3d] rounded-3xl border-2 border-cyan-400 p-3 shadow-2xl">
+            <svg viewBox="0 0 200 200" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 55 62 L 145 62 L 78 138 L 145 138" stroke="#00c4cc" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="145" cy="62" r="8" fill="#ffffff" />
+            </svg>
           </div>
           <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Zarca</h1>
-          <p class="text-xs sm:text-sm text-cyan-400 font-semibold mt-1 max-w-xs mx-auto tracking-wide">
-            más cerca de ti
+          <p class="text-xs sm:text-sm text-cyan-400 font-semibold mt-1 tracking-wide">
+            más cerca de ti · Comercio Local Seguro
           </p>
         </div>
 
-        <!-- Auth Card -->
         <div class="bg-slate-900/90 backdrop-blur-xl border border-cyan-900/40 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
-          <!-- Auth Tabs: Entrar vs Crear Cuenta -->
+          <!-- Pestañas Auth -->
           <div class="flex items-center bg-slate-950/80 p-1 rounded-xl border border-slate-800 mb-6">
             <button
               id="tabBtnLogin"
@@ -136,10 +125,7 @@
             </button>
           </div>
 
-          <!-- Alert message box -->
-          <div id="authAlert" class="hidden mb-4 p-3 rounded-xl text-xs font-medium border"></div>
-
-          <!-- FORMULARIO 1: ENTRAR (LOGIN ESTRICTO) -->
+          <!-- FORMULARIO LOGIN -->
           <form id="formLogin" onsubmit="handleAuthLogin(event)" class="space-y-4">
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1.5">Correo Electrónico</label>
@@ -149,131 +135,82 @@
                   type="email"
                   id="loginEmail"
                   required
-                  autocomplete="email"
                   placeholder="ejemplo@correo.com"
+                  value="samuel@ejemplo.com"
                   class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="block text-xs font-bold text-slate-300">Contraseña</label>
-              </div>
+              <label class="block text-xs font-bold text-slate-300 mb-1.5">Contraseña</label>
               <div class="relative">
                 <i data-lucide="lock" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                 <input
                   type="password"
                   id="loginPassword"
                   required
+                  value="123456"
                   placeholder="••••••••"
                   class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-10 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
                 />
                 <button
                   type="button"
-                  onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')"
+                  onclick="togglePasswordVisibility('loginPassword')"
                   class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
                 >
-                  <i id="eyeIconLogin" data-lucide="eye" class="w-4 h-4"></i>
+                  <i data-lucide="eye" class="w-4 h-4"></i>
                 </button>
               </div>
             </div>
 
             <button
               type="submit"
-              id="btnLoginSubmit"
               class="w-full py-3 px-4 bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 cursor-pointer transition-all"
             >
               <i data-lucide="log-in" class="w-4 h-4"></i>
-              <span id="btnLoginText">Acceder de Forma Segura</span>
+              <span>Acceder de Forma Segura</span>
             </button>
           </form>
 
-          <!-- FORMULARIO 2: CREAR CUENTA (REGISTRO ESTRICTO) -->
+          <!-- FORMULARIO REGISTRO (CON TELÉFONO PRIVADO) -->
           <form id="formRegister" onsubmit="handleAuthRegister(event)" class="hidden space-y-3.5">
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">Nombre Completo o Alias</label>
-              <div class="relative">
-                <i data-lucide="user" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                <input
-                  type="text"
-                  id="regName"
-                  required
-                  placeholder="Ej: Carlos Silva o Inversiones Alfa"
-                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
-                />
-              </div>
+              <input
+                type="text"
+                id="regName"
+                required
+                placeholder="Ej: Carlos Silva o Inversiones Alfa"
+                class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+              />
             </div>
 
             <div>
               <label class="block text-xs font-bold text-slate-300 mb-1">Correo Electrónico</label>
-              <div class="relative">
-                <i data-lucide="mail" class="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                <input
-                  type="email"
-                  id="regEmail"
-                  required
-                  placeholder="ejemplo@correo.com"
-                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
-                />
-              </div>
+              <input
+                type="email"
+                id="regEmail"
+                required
+                placeholder="ejemplo@correo.com"
+                class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
+              />
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Contraseña</label>
-                <div class="relative">
-                  <input
-                    type="password"
-                    id="regPassword"
-                    required
-                    minlength="6"
-                    placeholder="Mín. 6 caracteres"
-                    class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-3 pr-8 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
-                  />
-                  <button
-                    type="button"
-                    onclick="togglePasswordVisibility('regPassword', 'eyeIconReg')"
-                    class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
-                  >
-                    <i id="eyeIconReg" data-lucide="eye" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1">Confirmar Contraseña</label>
-                <div class="relative">
-                  <input
-                    type="password"
-                    id="regPasswordConfirm"
-                    required
-                    minlength="6"
-                    placeholder="Repite la clave"
-                    class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl pl-3 pr-8 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
-                  />
-                  <button
-                    type="button"
-                    onclick="togglePasswordVisibility('regPasswordConfirm', 'eyeIconRegConfirm')"
-                    class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
-                  >
-                    <i id="eyeIconRegConfirm" data-lucide="eye" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Ubicación en Cascada (Estado -> Municipio) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div class="grid grid-cols-2 gap-2">
               <div>
                 <label class="block text-xs font-bold text-slate-300 mb-1">Estado</label>
                 <select
                   id="regState"
-                  required
-                  onchange="handleCascadeStateChange('regState', 'regMunicipality')"
-                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none cursor-pointer"
+                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-2 py-2 text-xs text-white focus:outline-none cursor-pointer"
                 >
-                  <option value="">Seleccionar Estado</option>
+                  <option value="Miranda">Miranda</option>
+                  <option value="Distrito Capital">Distrito Capital</option>
+                  <option value="Carabobo">Carabobo</option>
+                  <option value="Zulia">Zulia</option>
+                  <option value="Aragua">Aragua</option>
+                  <option value="Lara">Lara</option>
+                  <option value="Anzoátegui">Anzoátegui</option>
                 </select>
               </div>
 
@@ -281,2571 +218,181 @@
                 <label class="block text-xs font-bold text-slate-300 mb-1">Municipio</label>
                 <select
                   id="regMunicipality"
-                  required
-                  disabled
-                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-2.5 py-2 text-xs text-white focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-2 py-2 text-xs text-white focus:outline-none cursor-pointer"
                 >
-                  <option value="">Elige un Estado primero</option>
+                  <option value="Chacao">Chacao</option>
+                  <option value="Baruta">Baruta</option>
+                  <option value="Sucre">Sucre</option>
+                  <option value="El Hatillo">El Hatillo</option>
                 </select>
               </div>
             </div>
 
+            <!-- PRIVACIDAD TELEFÓNICA -->
             <div>
-              <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono Móvil (+58)</label>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Teléfono Móvil (+58) · Uso Interno</label>
               <input
                 type="tel"
                 id="regPhone"
                 placeholder="0412 1234567"
-                class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none transition-all"
+                class="w-full bg-slate-950/80 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none"
               />
+              <p class="text-[10px] text-cyan-400 mt-1">
+                🔒 Cifrado internamente en BD. Jamás se expone a compradores o vendedores.
+              </p>
             </div>
 
             <button
               type="submit"
-              id="btnRegisterSubmit"
-              class="w-full py-3 px-4 bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 cursor-pointer transition-all mt-2"
+              class="w-full py-3 px-4 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 shadow-lg shadow-cyan-950/50 cursor-pointer transition-all mt-2"
             >
-              <i data-lucide="user-plus" class="w-4 h-4"></i>
-              <span id="btnRegisterText">Crear Cuenta Segura</span>
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Crear Cuenta Segura</span>
             </button>
           </form>
         </div>
-
-        <p class="text-[11px] text-center text-slate-400 mt-4">
-          Conexión cifrada a la red nacional · Zarca
-        </p>
       </div>
     </section>
 
     <!-- ======================================================= -->
-    <!-- INTERFAZ PRINCIPAL DE LA APLICACIÓN (REQUIERE SESIÓN)   -->
+    <!-- INTERFAZ PRINCIPAL                                      -->
     <!-- ======================================================= -->
     <div id="mainApp" class="hidden flex-1 flex flex-col min-h-screen">
-
       <!-- HEADER PRINCIPAL -->
       <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-        <!-- Live status subheader -->
         <div class="bg-[#061226] text-white py-1.5 px-3 sm:px-6 text-xs flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="font-extrabold tracking-wide text-[10px] text-cyan-400 uppercase">ZARCA</span>
             <span class="text-slate-500 hidden sm:inline">·</span>
-            <span class="text-slate-300 hidden sm:inline text-[11px]">más cerca de ti</span>
-          </div>
-            <span class="text-slate-500 hidden sm:inline">·</span>
-            <span class="text-slate-300 hidden sm:inline text-[11px]">Comercio Local Seguro con Identidad KYC</span>
+            <span class="text-slate-300 hidden sm:inline text-[11px]">más cerca de ti · Comercio Local Seguro</span>
           </div>
           <div class="flex items-center gap-3">
-            <span class="inline-flex items-center gap-1 text-[11px] text-slate-400">
+            <span class="inline-flex items-center gap-1 text-[11px] text-cyan-300">
               <i data-lucide="shield-check" class="w-3.5 h-3.5 text-cyan-400"></i>
               <span>Cifrado Activo</span>
             </span>
           </div>
         </div>
 
-        <!-- Barra de navegación principal -->
-        <div class="max-w-7xl mx-auto px-2.5 sm:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-4">
-          <!-- Logo Oficial Zarca -->
-          <a href="#" onclick="switchRole('buyer')" class="flex items-center gap-2.5 text-slate-900 no-underline shrink-0 group">
-            <img src="/assets/zarca_logo_256.png" alt="Logo Zarca" class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl drop-shadow-sm group-hover:scale-105 transition-transform shrink-0">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2 sm:gap-4">
+          <!-- Logo Oficial -->
+          <a href="#" onclick="switchRole('buyer')" class="flex items-center gap-2.5 text-slate-900 no-underline shrink-0">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#0c1d3d] border border-cyan-400 flex items-center justify-center p-1.5 shadow-sm">
+              <svg viewBox="0 0 200 200" class="w-full h-full" fill="none">
+                <path d="M 55 62 L 145 62 L 78 138 L 145 138" stroke="#00c4cc" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="145" cy="62" r="9" fill="#ffffff" />
+              </svg>
+            </div>
             <div>
               <span class="text-base sm:text-xl font-extrabold tracking-tight text-slate-950 block leading-none">Zarca</span>
-              <span class="text-[9px] uppercase font-bold text-emerald-600 tracking-wider hidden sm:block mt-0.5">Comercio Seguro</span>
+              <span class="text-[9px] uppercase font-bold text-cyan-700 tracking-wider hidden sm:block mt-0.5">más cerca de ti</span>
             </div>
           </a>
 
-          <!-- Selector de Modo (Comprador vs Vendedor) -->
+          <!-- Selector Comprador / Vendedor -->
           <div class="flex items-center justify-center shrink-0">
-            <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200/90 shadow-inner">
+            <div class="flex items-center bg-slate-100 p-0.5 rounded-xl border border-slate-200 shadow-inner">
               <button
                 id="btnModeBuyer"
                 onclick="switchRole('buyer')"
-                title="Modo Comprador"
-                class="flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60"
+                class="flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold bg-white text-slate-900 shadow-sm border border-slate-200/60 cursor-pointer"
               >
-                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
-                <span class="hidden md:inline">Comprador</span>
+                <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-cyan-600"></i>
+                <span class="hidden sm:inline">Comprador</span>
               </button>
               <button
                 id="btnModeSeller"
                 onclick="switchRole('seller')"
-                title="Modo Vendedor"
-                class="flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900"
+                class="flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
               >
-                <i data-lucide="store" class="w-3.5 h-3.5 text-slate-500 shrink-0"></i>
-                <span class="hidden md:inline">Vendedor</span>
-                <span id="headerSellerBadge" class="hidden">
-                  <i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i>
-                </span>
+                <i data-lucide="store" class="w-3.5 h-3.5 text-slate-400"></i>
+                <span class="hidden sm:inline">Vendedor</span>
               </button>
             </div>
           </div>
 
-          <!-- Acciones de Usuario: Mensajes, Perfil, Salir -->
-          <div class="flex items-center gap-1 sm:gap-2.5">
-            <!-- Botón Mis Conversaciones -->
+          <!-- Acciones -->
+          <div class="flex items-center gap-1.5 sm:gap-2.5">
             <button
-              onclick="openMyConversationsModal()"
+              onclick="openConversationsModal()"
               title="Mis Conversaciones"
-              class="p-1.5 sm:px-2.5 sm:py-2 text-slate-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors relative cursor-pointer flex items-center gap-1 border border-slate-200"
+              class="p-2 sm:px-3 sm:py-2 text-slate-700 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-colors relative cursor-pointer flex items-center gap-1.5 border border-slate-200"
             >
-              <i data-lucide="message-square" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600"></i>
+              <i data-lucide="message-square" class="w-4 h-4 text-cyan-600"></i>
               <span class="text-xs font-bold hidden md:inline">Mensajes</span>
-              <span id="unreadMessagesBadge" class="bg-emerald-600 text-white text-[9px] sm:text-[10px] font-bold rounded-full w-3.5 h-3.5 sm:w-4 sm:h-4 flex items-center justify-center">0</span>
+              <span id="unreadBadge" class="bg-cyan-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">1</span>
             </button>
 
-            <!-- Botón Mi Perfil y Ajustes -->
             <button
               onclick="openProfileModal()"
-              title="Ajustes y Perfil"
-              class="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1.5 bg-slate-100 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-200 rounded-xl transition-all cursor-pointer group"
+              class="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1.5 bg-slate-100 hover:bg-cyan-50 border border-slate-200 rounded-xl transition-all cursor-pointer"
             >
-              <div id="headerAvatarContainer" class="w-7 h-7 rounded-lg overflow-hidden bg-emerald-100 text-emerald-900 flex items-center justify-center text-xs font-extrabold shrink-0 border border-emerald-300">
-                <span id="headerAvatarText">U</span>
+              <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#0c1d3d] to-cyan-700 text-white flex items-center justify-center text-xs font-extrabold aspect-square">
+                <span id="headerAvatarText">S</span>
               </div>
               <div class="hidden sm:flex flex-col text-left">
-                <span id="headerUserName" class="text-xs font-extrabold text-slate-900 group-hover:text-emerald-700 leading-tight truncate max-w-[100px]">Usuario</span>
-                <span id="headerUserStatus" class="text-[9px] text-slate-500 font-medium leading-none">Comprador</span>
+                <span id="headerUserName" class="text-xs font-extrabold text-slate-900 truncate max-w-[100px]">Samuel López</span>
+                <span class="text-[10px] text-cyan-700 font-medium">Chacao, Miranda</span>
               </div>
-              <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-600 shrink-0 ml-0.5"></i>
-            </button>
-
-            <!-- Botón Salir -->
-            <button
-              onclick="handleAuthLogout()"
-              title="Cerrar Sesión"
-              class="p-1.5 sm:p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer border border-slate-200"
-            >
-              <i data-lucide="log-out" class="w-4 h-4"></i>
             </button>
           </div>
         </div>
       </header>
 
-      <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
-      <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-6 space-y-6">
+      <!-- CATÁLOGO -->
+      <main class="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-6">
+        <div id="buyerView">
+          <div class="bg-gradient-to-br from-[#061226] via-[#0c1d3d] to-[#133054] text-white rounded-3xl p-5 sm:p-8 mb-8 border border-cyan-900/40 shadow-xl">
+            <span class="inline-flex items-center gap-1.5 bg-cyan-950/80 border border-cyan-800/60 text-cyan-400 text-xs font-bold px-3 py-1 rounded-full mb-3">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+              Comercio Local Seguro · Venezuela
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">
+              Encuentra lo que necesitas, <span class="text-cyan-400">más cerca de ti.</span>
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 max-w-2xl mb-6">
+              Compra con verificación de identidad y privacidad total. Contacta únicamente mediante nuestro chat interno.
+            </p>
 
-        <!-- ========================================== -->
-        <!-- VISTA 1: MODO COMPRADOR (CATÁLOGO EN VIVO)  -->
-        <!-- ========================================== -->
-        <section id="viewBuyer" class="space-y-6">
-          <!-- Hero Banner con Enfoque Nacional -->
-          <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden border border-cyan-950/60">
-            <!-- Glow y marca de agua -->
-            <div class="absolute -right-8 -bottom-8 w-60 h-60 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute right-6 top-1/2 -translate-y-1/2 hidden md:block opacity-15 pointer-events-none">
-              <img src="/assets/zarca_logo_clean.png" alt="" class="w-40 h-40">
-            </div>
-            <div class="relative z-10 max-w-2xl">
-              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/70 text-emerald-300 text-xs font-semibold mb-3 border border-emerald-500/30 shadow-inner">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span id="buyerLocationHero">Comercio Local Verificado en Toda Venezuela</span>
-              </div>
-              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">
-                Compra y Vende con Confianza, Cero Riesgos
-              </h2>
-              <p class="text-xs sm:text-sm text-cyan-100/90 mt-2 leading-relaxed">
-                Catálogo local seguro sincronizado en tiempo real. Contacta vendedores verificados con cédula e identidad biométrica.
-              </p>
-            </div>
-          </div>
-
-          <!-- BUSCADOR PRINCIPAL Y FILTRO EN CASCADA (ESTADO -> MUNICIPIO) -->
-          <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3">
-            <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-3">
-              <!-- Campo de Búsqueda de Texto -->
+            <div class="bg-slate-950/90 p-2 sm:p-3 rounded-2xl border border-slate-700 shadow-2xl flex flex-col sm:flex-row gap-2">
               <div class="relative flex-1">
                 <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
                 <input
                   type="text"
                   id="searchInput"
-                  oninput="handleSearchChange()"
-                  placeholder="Buscar productos, marcas, repuestos, víveres..."
-                  class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none transition-all"
+                  placeholder="¿Qué estás buscando? (ej. iPhone, laptop, cauchos...)"
+                  class="w-full bg-slate-900 border border-slate-700 focus:border-cyan-500 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none"
                 />
               </div>
-
-              <!-- SELECTOR 1: ESTADO (24 ESTADOS DE VENEZUELA) -->
-              <div class="relative min-w-[190px]">
-                <i data-lucide="map" class="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <select
-                  id="filterState"
-                  onchange="handleFilterStateChange()"
-                  class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 rounded-xl pl-9 pr-8 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none transition-all cursor-pointer appearance-none"
-                >
-                  <option value="all">Todos los Estados (Venezuela)</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-              </div>
-
-              <!-- SELECTOR 2: MUNICIPIO (DESHABILITADO HASTA ELEGIR ESTADO) -->
-              <div class="relative min-w-[200px]">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <select
-                  id="filterMunicipality"
-                  disabled
-                  onchange="handleFilterMunicipalityChange()"
-                  class="w-full bg-slate-50 border border-slate-200 focus:border-emerald-500 rounded-xl pl-9 pr-8 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none transition-all cursor-pointer appearance-none disabled:opacity-50 disabled:bg-slate-100 disabled:cursor-not-allowed"
-                >
-                  <option value="all">Primero elige un Estado</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-              </div>
-
-              <!-- Filtro Solo Verificados -->
-              <button
-                id="btnFilterVerified"
-                onclick="toggleVerifiedFilter()"
-                title="Filtrar solo vendedores con KYC verificado"
-                class="px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-slate-50 text-slate-700 hover:bg-slate-100 shrink-0"
-              >
-                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-                <span>Solo Verificados</span>
-              </button>
-            </div>
-
-            <!-- Categorías rápidas -->
-            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 text-xs">
-              <span class="text-[11px] font-bold text-slate-400 mr-1 shrink-0">Categoría:</span>
-              <button onclick="setCategoryFilter('all')" class="category-pill active px-3 py-1 rounded-lg font-semibold bg-emerald-600 text-white shrink-0 cursor-pointer text-xs" data-cat="all">Todas</button>
-              <button onclick="setCategoryFilter('Tecnología')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Tecnología">Tecnología</button>
-              <button onclick="setCategoryFilter('Alimentos')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Alimentos">Alimentos</button>
-              <button onclick="setCategoryFilter('Moda')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Moda">Moda</button>
-              <button onclick="setCategoryFilter('Energía')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Energía">Energía</button>
-              <button onclick="setCategoryFilter('Hogar')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Hogar">Hogar</button>
-              <button onclick="setCategoryFilter('Vehículos')" class="category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs" data-cat="Vehículos">Vehículos</button>
             </div>
           </div>
 
-          <!-- FEED PRINCIPAL DE PRODUCTOS EN TIEMPO REAL -->
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">Catálogo de Publicaciones</h3>
-                <p id="catalogSubtitle" class="text-xs text-slate-500">Cargando publicaciones verificadas...</p>
-              </div>
-              <div class="flex items-center gap-2">
-                <span id="activeFilterPill" class="hidden text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200"></span>
-                <span class="text-xs font-semibold text-slate-500 flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 live-dot"></span>
-                  <span>En vivo</span>
-                </span>
-              </div>
-            </div>
-
-            <!-- Grilla de productos -->
-            <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              <!-- Rellenado dinámicamente con productos en tiempo real -->
-            </div>
-
-            <!-- Estado Vacío cuando no hay resultados -->
-            <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-slate-200 p-10 text-center max-w-md mx-auto shadow-xs">
-              <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-                <i data-lucide="search-x" class="w-8 h-8"></i>
-              </div>
-              <h4 class="text-base font-extrabold text-slate-900 mb-1.5">No se encontraron productos</h4>
-              <p class="text-xs text-slate-500 mb-5 leading-relaxed">
-                No hay publicaciones activas con este filtro de Estado, Municipio o búsqueda. Prueba ampliando la zona o sé el primero en publicar.
-              </p>
-              <button
-                onclick="clearLocationFilters()"
-                class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-all cursor-pointer mr-2"
-              >
-                <span>Ver toda Venezuela</span>
-              </button>
-              <button
-                onclick="openPublishModal()"
-                class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold inline-flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
-              >
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                <span>Publicar aquí</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- VISTA 2: MODO VENDEDOR (PANEL DE GESTIÓN)   -->
-        <!-- ========================================== -->
-        <section id="viewSeller" class="hidden space-y-6">
-          <!-- Banner de Estado del Vendedor -->
-          <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white rounded-3xl p-6 shadow-md border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
-            <div class="absolute -right-8 -top-8 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="flex items-start gap-4 relative z-10">
-              <div class="w-14 h-14 rounded-2xl bg-emerald-950 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-lg text-emerald-400">
-                <i data-lucide="store" class="w-7 h-7"></i>
-              </div>
-              <div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h3 id="sellerPanelTitle" class="text-lg sm:text-xl font-extrabold text-white">Panel de Vendedor</h3>
-                  <span id="sellerVerifiedBadge" class="hidden px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                    <span>Vendedor Verificado</span>
-                  </span>
-                  <span id="sellerUnverifiedBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-400"></i>
-                    <span>Verificación Pendiente</span>
-                  </span>
-                </div>
-                <p id="sellerPanelSubtitle" class="text-xs text-slate-300 mt-1">
-                  Gestiona tus publicaciones, fotos y mensajes seguros en Venezuela.
-                </p>
-              </div>
-            </div>
-
-            <!-- Botones de Acción en Banner de Vendedor -->
-            <div class="flex items-center gap-2.5 w-full md:w-auto relative z-10">
-              <button
-                id="btnVerifySellerBanner"
-                onclick="openKycModal()"
-                class="flex-1 md:flex-none px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
-              >
-                <i data-lucide="shield-check" class="w-4 h-4"></i>
-                <span id="btnVerifySellerText">Verificarme con KYC</span>
-              </button>
-              <button
-                onclick="openPublishModal()"
-                class="flex-1 md:flex-none px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
-              >
-                <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-600"></i>
-                <span>Publicar Producto</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Métricas de Reputación y Estadísticas -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <!-- Reputación -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-              <div class="flex items-center justify-between text-slate-500 mb-1">
-                <span class="text-xs font-semibold">Reputación</span>
-                <i data-lucide="star" class="w-4 h-4 text-amber-400 fill-amber-400"></i>
-              </div>
-              <div class="flex items-baseline gap-1">
-                <span class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono-numbers">5.0</span>
-                <span class="text-xs text-slate-400">/ 5.0</span>
-              </div>
-              <span class="text-[10px] text-emerald-600 font-bold mt-1 block">Excelente valoración</span>
-            </div>
-
-            <!-- Publicaciones Activas -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-              <div class="flex items-center justify-between text-slate-500 mb-1">
-                <span class="text-xs font-semibold">Publicaciones</span>
-                <i data-lucide="package" class="w-4 h-4 text-emerald-600"></i>
-              </div>
-              <div class="flex items-baseline gap-1">
-                <span id="sellerActiveCount" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono-numbers">0</span>
-                <span class="text-xs text-slate-400">en vivo</span>
-              </div>
-              <span class="text-[10px] text-slate-500 mt-1 block">Sincronizadas en la nube</span>
-            </div>
-
-            <!-- Visualizaciones -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-              <div class="flex items-center justify-between text-slate-500 mb-1">
-                <span class="text-xs font-semibold">Vistas del Feed</span>
-                <i data-lucide="eye" class="w-4 h-4 text-cyan-600"></i>
-              </div>
-              <div class="flex items-baseline gap-1">
-                <span id="sellerViewsCount" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono-numbers">0</span>
-                <span class="text-xs text-slate-400">alcance</span>
-              </div>
-              <span class="text-[10px] text-cyan-600 font-bold mt-1 block">Compradores locales</span>
-            </div>
-
-            <!-- Conversaciones -->
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs">
-              <div class="flex items-center justify-between text-slate-500 mb-1">
-                <span class="text-xs font-semibold">Conversaciones</span>
-                <i data-lucide="message-square" class="w-4 h-4 text-emerald-600"></i>
-              </div>
-              <div class="flex items-baseline gap-1">
-                <span id="sellerInquiriesCount" class="text-xl sm:text-2xl font-extrabold text-slate-900 font-mono-numbers">0</span>
-                <span class="text-xs text-slate-400">chats</span>
-              </div>
-              <span class="text-[10px] text-emerald-600 font-bold mt-1 block">Interacción directa</span>
-            </div>
-          </div>
-
-          <!-- Sección: Tus Publicaciones -->
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <h4 class="text-base font-extrabold text-slate-900">Tus Publicaciones</h4>
-                <p class="text-xs text-slate-500">Gestiona tus productos en dólares (USD) y entregas locales</p>
-              </div>
-              <button
-                onclick="openPublishModal()"
-                class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
-              >
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                <span>Nuevo Artículo</span>
-              </button>
-            </div>
-
-            <!-- Grilla de publicaciones propias -->
-            <div id="sellerProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              <!-- Rellenado dinámicamente con los productos del usuario activo -->
-            </div>
-
-            <!-- Estado Vacío para Vendedor -->
-            <div id="emptySellerState" class="hidden bg-white rounded-3xl border border-slate-200 p-10 text-center max-w-md mx-auto shadow-xs">
-              <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-                <i data-lucide="package-plus" class="w-8 h-8"></i>
-              </div>
-              <h4 class="text-base font-extrabold text-slate-900 mb-1.5">No tienes publicaciones activas</h4>
-              <p class="text-xs text-slate-500 mb-5 leading-relaxed">
-                Empieza a vender en tu zona. Sube una foto, asigna tu precio en dólares y contacta con compradores directamente.
-              </p>
-              <button
-                onclick="openPublishModal()"
-                class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold inline-flex items-center gap-2 transition-all cursor-pointer shadow-xs"
-              >
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                <span>Publicar mi Primer Artículo</span>
-              </button>
-            </div>
-          </div>
-        </section>
-
-      </main>
-
-      <!-- FOOTER -->
-      <footer class="mt-auto border-t border-slate-800 bg-[#0c1d3d] text-white py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <img src="/assets/zarca_logo_128.png" alt="Logo Zarca" class="w-8 h-8 rounded-xl shrink-0">
-            <div>
-              <span class="font-extrabold text-white text-sm">Zarca Venezuela</span>
-              <p class="text-[11px] text-cyan-200/80">Comercio Local Seguro con Verificación KYC en 24 Estados</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 text-xs text-slate-300">
-            <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-semibold">
-              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-              Identidad KYC Verificada
-            </span>
-            <span>·</span>
-            <span class="text-slate-400 text-[11px]">Cifrado Activo</span>
-            <span>·</span>
-            <span class="text-slate-400 text-[11px]">Precios en Dólares ($ USD)</span>
+          <!-- REJILLA DE PRODUCTOS -->
+          <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <!-- Renderizado dinámico -->
           </div>
         </div>
+
+        <div id="sellerView" class="hidden space-y-6">
+          <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-6 rounded-3xl border border-cyan-900/40 shadow-xl">
+            <h2 class="text-xl font-extrabold text-white">Panel de Vendedor</h2>
+            <p class="text-xs text-cyan-300 mt-1">
+              🛡️ Privacidad blindada: Tu número móvil (+58) está resguardado internamente y nunca se muestra en los productos.
+            </p>
+          </div>
+          <div id="sellerProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div>
+        </div>
+      </main>
+
+      <footer class="bg-[#061226] text-white border-t border-cyan-950 py-6 px-4 text-center text-xs text-slate-400">
+        <p>Zarca · más cerca de ti · Privacidad garantizada sin teléfonos expuestos.</p>
       </footer>
     </div>
 
     <!-- ======================================================= -->
-    <!-- MODAL 1: CHAT INTERNO EN TIEMPO REAL (BLOQUEO ANTI-AUTO) -->
+    <!-- MODAL DE LA SALA DE CHAT (REGLAS 2 Y 3 CUMPLIDAS)       -->
     <!-- ======================================================= -->
-    <div id="chatModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
-        <!-- Cabecera del Chat -->
-        <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-4 flex items-center justify-between border-b border-cyan-900/50 shrink-0">
-          <div class="flex items-center gap-3">
-            <div id="chatSellerAvatar" class="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-extrabold text-sm overflow-hidden">
-              V
-            </div>
-            <div>
-              <div class="flex items-center gap-1.5">
-                <span id="chatSellerName" class="text-sm font-extrabold text-white">Vendedor</span>
-                <span id="chatSellerVerifiedShield" class="hidden" title="Vendedor Verificado">
-                  <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i>
-                </span>
-              </div>
-              <span id="chatProductTitle" class="text-[11px] text-cyan-200/80 line-clamp-1">Producto</span>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-1.5">
-            <a
-              id="chatWhatsAppDirectBtn"
-              href="#"
-              target="_blank"
-              title="Abrir WhatsApp Seguro"
-              class="hidden px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold items-center gap-1 transition-all"
-            >
-              <i data-lucide="phone" class="w-3.5 h-3.5"></i>
-              <span class="hidden sm:inline">WhatsApp</span>
-            </a>
-            <button onclick="closeChatModal()" class="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 cursor-pointer">
-              <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Mini-Ficha del Producto en Conversación -->
-        <div id="chatProductBar" class="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between gap-3 text-xs shrink-0">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <img id="chatProductImage" src="" alt="Producto" class="w-9 h-9 rounded-lg object-cover border border-slate-200 shrink-0" />
-            <div class="truncate">
-              <span id="chatProductBarTitle" class="font-bold text-slate-900 block truncate">Título</span>
-              <span id="chatProductBarPrice" class="font-extrabold text-emerald-700 font-mono-numbers">$0.00 USD</span>
-            </div>
-          </div>
-          <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 shrink-0">
-            Entrega Segura
-          </span>
-        </div>
-
-        <!-- Historial de Mensajes -->
-        <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
-          <!-- Mensajes dinámicos en tiempo real -->
-        </div>
-
-        <!-- Input de Mensaje -->
-        <form onsubmit="handleSendChatMessage(event)" class="p-3 bg-white border-t border-slate-200 flex items-center gap-2 shrink-0">
-          <input
-            type="text"
-            id="chatInputMessage"
-            required
-            autocomplete="off"
-            placeholder="Escribe tu mensaje seguro al vendedor..."
-            class="flex-1 bg-slate-50 border border-slate-200 focus:border-emerald-500 focus:bg-white rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-none transition-all"
-          />
-          <button
-            type="submit"
-            id="btnSendMessage"
-            class="p-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all cursor-pointer shadow-xs shrink-0"
-          >
-            <i data-lucide="send" class="w-4 h-4"></i>
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <!-- ======================================================= -->
-    <!-- MODAL 2: MIS CONVERSACIONES                             -->
-    <!-- ======================================================= -->
-    <div id="conversationsModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
-        <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-4 flex items-center justify-between shrink-0">
-          <div class="flex items-center gap-2">
-            <i data-lucide="message-square" class="w-5 h-5 text-emerald-400"></i>
-            <h3 class="text-base font-extrabold text-white">Mis Conversaciones</h3>
-          </div>
-          <button onclick="closeMyConversationsModal()" class="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 cursor-pointer">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <div id="conversationsList" class="p-4 space-y-2.5 overflow-y-auto flex-1">
-          <!-- Lista de chats recientes -->
-        </div>
-      </div>
-    </div>
-
-    <!-- ======================================================= -->
-    <!-- MODAL 3: AJUSTES Y MI PERFIL (PERSISTENCIA Y FOTO)       -->
-    <!-- ======================================================= -->
-    <div id="profileModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
-        <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-5 flex items-center justify-between shrink-0 border-b border-cyan-900/50">
-          <div class="flex items-center gap-2.5">
-            <img src="/assets/zarca_logo_128.png" alt="Zarca" class="w-8 h-8 rounded-xl shrink-0">
-            <div>
-              <h3 class="text-base font-extrabold text-white">Mi Perfil y Ajustes</h3>
-              <p class="text-xs text-cyan-200/80">Identidad segura en Zarca Venezuela</p>
-            </div>
-          </div>
-          <button onclick="closeProfileModal()" class="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 cursor-pointer">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <div class="p-6 overflow-y-auto space-y-5">
-          <!-- Avatar con compresión de foto en base64 -->
-          <div class="flex items-center gap-4">
-            <div class="relative group">
-              <div id="profileAvatarBig" class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center text-xl font-extrabold border-2 border-emerald-300 overflow-hidden shadow-xs">
-                U
-              </div>
-              <label
-                for="avatarFileInput"
-                class="absolute -bottom-1 -right-1 p-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-md cursor-pointer transition-transform hover:scale-110"
-                title="Cambiar foto de perfil"
-              >
-                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-              </label>
-              <input
-                type="file"
-                id="avatarFileInput"
-                accept="image/*"
-                onchange="handleAvatarFileSelected(event)"
-                class="hidden"
-              />
-            </div>
-
-            <div class="flex-1 min-w-0">
-              <span id="profileDisplayEmail" class="text-xs font-semibold text-slate-500 block truncate">correo@ejemplo.com</span>
-              <span id="profileAccountBadge" class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full mt-1 bg-slate-200 text-slate-800">
-                Comprador Estándar
-              </span>
-              <p class="text-[10px] text-slate-400 mt-1">La foto se comprime a 600px (70%) de forma segura.</p>
-            </div>
-          </div>
-
-          <!-- Estado de Cuenta y KYC -->
-          <div id="profileKycStatusBox" class="p-4 rounded-2xl border bg-slate-50 border-slate-200">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold text-slate-700">Estado de Verificación</span>
-              <span id="profileVerificationText" class="text-xs font-extrabold text-amber-600 flex items-center gap-1">
-                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> No Verificado
-              </span>
-            </div>
-            <p id="profileKycDesc" class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-              Completa la verificación biométrica con cédula y selfie frontal para obtener la insignia oficial de Vendedor Verificado.
-            </p>
-            <button
-              id="btnProfileStartKyc"
-              onclick="openKycModal()"
-              class="w-full mt-3 py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
-            >
-              <i data-lucide="shield-check" class="w-4 h-4"></i>
-              <span>Verificar Identidad Biométrica (KYC)</span>
-            </button>
-          </div>
-
-          <!-- Formulario de Actualización de Datos -->
-          <form onsubmit="handleUpdateProfile(event)" class="space-y-3.5">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Nombre o Alias Público</label>
-              <input
-                type="text"
-                id="profileInputName"
-                required
-                class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono Móvil (+58)</label>
-              <input
-                type="tel"
-                id="profileInputPhone"
-                placeholder="0412 1234567"
-                class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-              />
-            </div>
-
-            <!-- Estado y Municipio en Perfil -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Estado</label>
-                <select
-                  id="profileState"
-                  onchange="handleCascadeStateChange('profileState', 'profileMunicipality')"
-                  class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-2.5 py-2 text-xs text-slate-900 focus:outline-none cursor-pointer"
-                >
-                  <option value="">Seleccionar Estado</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Municipio</label>
-                <select
-                  id="profileMunicipality"
-                  class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-2.5 py-2 text-xs text-slate-900 focus:outline-none cursor-pointer"
-                >
-                  <option value="">Seleccionar Municipio</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onclick="closeProfileModal()"
-                class="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
-              >
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                id="btnSaveProfile"
-                class="flex-1 py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
-              >
-                <i data-lucide="check" class="w-4 h-4"></i>
-                <span id="btnSaveProfileText">Guardar Cambios</span>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======================================================= -->
-    <!-- MODAL 4: VERIFICACIÓN BIOMÉTRICA KYC EN LA NUBE        -->
-    <!-- ======================================================= -->
-    <div id="kycModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Cabecera -->
-        <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-5 flex items-center justify-between shrink-0 border-b border-cyan-900/50">
-          <div class="flex items-center gap-2.5">
-            <div class="w-10 h-10 rounded-xl bg-emerald-950 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
-              <i data-lucide="shield-check" class="w-6 h-6"></i>
-            </div>
-            <div>
-              <h3 class="text-base sm:text-lg font-extrabold text-white">Verificación Biométrica (KYC)</h3>
-              <p class="text-xs text-cyan-200/80">Insignia oficial de Vendedor Verificado en Zarca</p>
-            </div>
-          </div>
-          <button onclick="closeKycModal()" class="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 cursor-pointer">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <!-- Formulario KYC -->
-        <form onsubmit="handleKycSubmit(event)" class="p-6 overflow-y-auto space-y-4">
-          <p class="text-xs text-slate-600 leading-relaxed">
-            Para proteger a los compradores y vendedores en Venezuela, requerimos verificar tu nombre de negocio, cédula nacional y una selfie de seguridad.
-          </p>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Negocio o Marca Comercial *</label>
-            <input
-              type="text"
-              id="kycBusinessName"
-              required
-              placeholder="Ej: Inversiones Ávila o Repuestos El Trigal"
-              class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-            />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Cédula de Identidad *</label>
-              <input
-                type="text"
-                id="kycCedula"
-                required
-                placeholder="V-12345678"
-                class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono Móvil Comercial *</label>
-              <input
-                type="tel"
-                id="kycPhone"
-                required
-                placeholder="0414 1234567"
-                class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-              />
-            </div>
-          </div>
-
-          <!-- Captura de Selfie Biométrica Frontal -->
-          <div class="space-y-2">
-            <label class="block text-xs font-bold text-slate-700">Selfie de Seguridad en Tiempo Real (Cámara Frontal) *</label>
-            <div class="flex flex-col items-center justify-center p-4 rounded-2xl border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-center">
-              <div id="kycSelfiePreviewBox" class="hidden mb-3">
-                <img id="kycSelfiePreviewImg" src="" alt="Selfie" class="w-32 h-32 rounded-2xl object-cover border-2 border-emerald-500 shadow-md mx-auto" />
-                <span class="text-[10px] text-emerald-700 font-bold block mt-1">✓ Selfie capturada y comprimida</span>
-              </div>
-
-              <!-- Input nativo de cámara frontal -->
-              <label
-                for="kycSelfieInput"
-                class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-all shadow-xs"
-              >
-                <i data-lucide="camera" class="w-4 h-4"></i>
-                <span id="kycSelfieBtnText">Abrir Cámara y Tomar Selfie</span>
-              </label>
-              <input
-                type="file"
-                id="kycSelfieInput"
-                accept="image/*"
-                capture="user"
-                required
-                onchange="handleKycSelfieCaptured(event)"
-                class="hidden"
-              />
-              <p class="text-[10px] text-slate-400 mt-2">
-                Apunta la cámara frontal a tu rostro en un lugar iluminado. La imagen se comprime a 600px antes de transmitirse.
-              </p>
-            </div>
-          </div>
-
-          <div class="pt-2">
-            <button
-              type="submit"
-              id="btnKycSubmit"
-              class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center justify-center gap-2"
-            >
-              <i data-lucide="shield-check" class="w-4 h-4"></i>
-              <span id="btnKycSubmitText">Enviar y Obtener Verificación</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ======================================================= -->
-    <!-- MODAL 5: PUBLICAR PRODUCTO (CASCADA ESTADO -> MUNICIPIO) -->
-    <!-- ======================================================= -->
-    <div id="publishModal" class="hidden fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
-        <!-- Cabecera -->
-        <div class="bg-gradient-to-r from-[#061226] via-[#0c1d3d] to-[#133054] text-white p-5 flex items-center justify-between border-b border-cyan-900/50 shrink-0">
-          <div class="flex items-center gap-2.5">
-            <img src="/assets/zarca_logo_128.png" alt="Zarca" class="w-8 h-8 rounded-xl shrink-0">
-            <div>
-              <h3 class="text-base font-extrabold text-white">Publicar Nuevo Producto</h3>
-              <p class="text-xs text-cyan-200/80">Catálogo verificado y sincronizado en tiempo real</p>
-            </div>
-          </div>
-          <button onclick="closePublishModal()" class="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 cursor-pointer">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-
-        <!-- Formulario -->
-        <form onsubmit="handlePublishProductSubmit(event)" class="p-6 overflow-y-auto space-y-4">
-          <!-- Subida de Foto con Compresión Canvas (600px 70%) -->
-          <div class="space-y-1.5">
-            <label class="block text-xs font-bold text-slate-700">Foto del Producto *</label>
-            <label
-              for="imageUploadInput"
-              class="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50 hover:bg-emerald-50/30 flex flex-col items-center justify-center min-h-[140px]"
-            >
-              <div id="imageUploadPlaceholder" class="space-y-1">
-                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2 border border-emerald-100">
-                  <i data-lucide="camera" class="w-5 h-5"></i>
-                </div>
-                <span class="text-xs font-bold text-slate-700 block">Toca para seleccionar o tomar foto</span>
-                <span class="text-[10px] text-slate-400 block">Compresión automática a 600px (70%)</span>
-              </div>
-              <div id="imageUploadPreviewBox" class="hidden">
-                <img id="imageUploadPreview" src="" alt="Vista previa" class="max-h-48 rounded-xl object-contain mx-auto shadow-xs border border-slate-200" />
-                <span class="inline-block mt-2 text-[11px] font-bold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200">
-                  ✓ Foto optimizada para entrega rápida
-                </span>
-              </div>
-            </label>
-            <input
-              type="file"
-              id="imageUploadInput"
-              accept="image/*"
-              required
-              onchange="handleProductImageSelected(event)"
-              class="hidden"
-            />
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Título de la Publicación *</label>
-            <input
-              type="text"
-              id="newProdTitle"
-              required
-              placeholder="Ej: Harina PAN (Bulto 20kg), Batería Duncan 800AMP, etc."
-              class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Descripción y Condiciones de Entrega *</label>
-            <textarea
-              id="newProdDesc"
-              rows="2"
-              required
-              placeholder="Detalla estado del producto, punto de entrega acordado o delivery..."
-              class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3.5 py-2 text-xs text-slate-900 focus:outline-none resize-none"
-            ></textarea>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Precio en Dólares (USD $) *</label>
-              <div class="relative">
-                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">$</span>
-                <input
-                  type="number"
-                  id="newProdPrice"
-                  step="0.01"
-                  min="0.1"
-                  required
-                  placeholder="25.00"
-                  class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl pl-8 pr-3.5 py-2.5 text-xs font-bold text-slate-900 focus:outline-none font-mono-numbers"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Categoría *</label>
-              <select
-                id="newProdCategory"
-                required
-                class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl px-3 py-2.5 text-xs text-slate-900 focus:outline-none cursor-pointer"
-              >
-                <option value="Tecnología">Tecnología</option>
-                <option value="Alimentos">Alimentos</option>
-                <option value="Moda">Moda</option>
-                <option value="Energía">Energía</option>
-                <option value="Hogar">Hogar</option>
-                <option value="Vehículos">Vehículos</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- UBICACIÓN EN CASCADA (ESTADO -> MUNICIPIO) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Estado de Entrega *</label>
-              <div class="relative">
-                <i data-lucide="map" class="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <select
-                  id="newProdState"
-                  required
-                  onchange="handleCascadeStateChange('newProdState', 'newProdMunicipality')"
-                  class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl pl-9 pr-8 py-2.5 text-xs text-slate-900 focus:outline-none cursor-pointer appearance-none font-semibold"
-                >
-                  <option value="">Seleccionar Estado</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Municipio de Entrega *</label>
-              <div class="relative">
-                <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600 absolute left-3 top-1/2 -translate-y-1/2"></i>
-                <select
-                  id="newProdMunicipality"
-                  required
-                  disabled
-                  class="w-full bg-slate-50 border border-slate-300 focus:border-emerald-600 focus:bg-white rounded-xl pl-9 pr-8 py-2.5 text-xs text-slate-900 focus:outline-none cursor-pointer appearance-none font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <option value="">Elige un Estado primero</option>
-                </select>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-2">
-            <button
-              type="submit"
-              id="btnPublishSubmit"
-              class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center justify-center gap-2"
-            >
-              <i data-lucide="upload-cloud" class="w-4 h-4"></i>
-              <span id="btnPublishText">Publicar de Forma Segura</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- ======================================================= -->
-    <!-- LOGICA FIREBASE Y CONTROLADORES EN TIEMPO REAL          -->
-    <!-- ======================================================= -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-      import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-      import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyD3BbfmdQVPfBasAGkSbzOSxArvcFP-Tt0",
-        authDomain: "zarca-a55d4.firebaseapp.com",
-        databaseURL: "https://zarca-a55d4-default-rtdb.firebaseio.com",
-        projectId: "zarca-a55d4",
-        storageBucket: "zarca-a55d4.firebasestorage.app",
-        messagingSenderId: "301413789357",
-        appId: "1:301413789357:web:2e6aeb9ed879d70060e024"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // -------------------------------------------------------------
-      // DICCIONARIO OFICIAL: 24 ESTADOS DE VENEZUELA Y SUS MUNICIPIOS
-      // -------------------------------------------------------------
-      const VENEZUELA_LOCATIONS = {
-        'Amazonas': ['Alto Orinoco', 'Atabapo', 'Atures', 'Autana', 'Manapiare', 'Maroa', 'Río Negro'],
-        'Anzoátegui': ['Anaco', 'Aragua', 'Diego Bautista Urbaneja (Lechería)', 'Fernando de Peñalver', 'Francisco de Miranda', 'Francisco del Carmen Carvajal', 'Guanta', 'Guanipa', 'Independencia', 'Libertad', 'Manuel Ezequiel Bruzual', 'Pedro María Freites', 'Píritu', 'San José de Guanipa', 'San Juan de Capistrano', 'Santa Ana', 'Simón Bolívar (Barcelona)', 'Simón Rodríguez (El Tigre)', 'Sir Arthur McGregor'],
-        'Apure': ['Achaguas', 'Biruaca', 'Muñoz', 'Páez', 'Pedro Camejo', 'Rómulo Gallegos', 'San Fernando'],
-        'Aragua': ['Bolívar', 'Camatagua', 'Francisco Linares Alcántara', 'Girardot (Maracay)', 'José Ángel Lamas', 'José Félix Ribas', 'José Rafael Revenga', 'Libertador', 'Mario Briceño Iragorry', 'Ocumare de la Costa de Oro', 'San Casimiro', 'San Sebastián', 'Santiago Mariño', 'Santos Michelena', 'Sucre', 'Tovar (Colonia Tovar)', 'Urdaneta', 'Zamora'],
-        'Barinas': ['Alberto Arvelo Torrealba', 'Andrés Eloy Blanco', 'Antonio José de Sucre', 'Arismendi', 'Barinas', 'Bolívar', 'Cruz Paredes', 'Ezequiel Zamora', 'Obispos', 'Pedraza', 'Rojas', 'Sosa'],
-        'Bolívar': ['Angostura', 'Angostura del Orinoco (Ciudad Bolívar)', 'Caroní (Puerto Ordaz)', 'Cedeño', 'El Callao', 'Gran Sabana', 'Piar', 'Roscio', 'Sifontes', 'Sucre', 'Padre Pedro Chien'],
-        'Carabobo': ['Bejuma', 'Carlos Arvelo', 'Diego Ibarra', 'Guacara', 'Juan José Mora', 'Libertador', 'Los Guayos', 'Miranda', 'Montalbán', 'Naguanagua', 'Puerto Cabello', 'San Diego', 'San Joaquín', 'Valencia'],
-        'Cojedes': ['Anzoátegui', 'Tinaquillo', 'Girardot', 'Lima Blanco', 'Pao de San Juan Bautista', 'Ricaurte', 'Rómulo Gallegos', 'San Carlos', 'Santander'],
-        'Delta Amacuro': ['Antonio Díaz', 'Casacoima', 'Pedernales', 'Tucupita'],
-        'Distrito Capital': ['Libertador (Caracas)'],
-        'Falcón': ['Acosta', 'Bolívar', 'Buchivacoa', 'Cacique Manaure', 'Carirubana (Punto Fijo)', 'Colina', 'Dabajuro', 'Democracia', 'Falcón', 'Federación', 'Jacura', 'Los Taques', 'Mauroa', 'Miranda (Coro)', 'Monseñor Iturriza', 'Palmasola', 'Petit', 'Píritu', 'San Francisco', 'Silva (Tucacas)', 'Sucre', 'Tocópero', 'Unión', 'Urumaco', 'Zamora'],
-        'Guárico': ['Camaguán', 'Chaguaramas', 'El Socorro', 'Francisco de Miranda (Calabozo)', 'José Félix Ribas', 'José Tadeo Monagas', 'Juan Germán Roscio (San Juan de los Morros)', 'Julián Mellado', 'Las Mercedes', 'Leonardo Infante (Valle de la Pascua)', 'Pedro Zaraza', 'Ortiz', 'San Gerónimo de Guayabal', 'San José de Guaribe', 'Santa María de Ipire'],
-        'La Guaira': ['Vargas (La Guaira / Maiquetía / Catia La Mar)'],
-        'Lara': ['Andrés Eloy Blanco', 'Crespo', 'Iribarren (Barquisimeto)', 'Jiménez (Quíbor)', 'Morán (El Tocuyo)', 'Palavecino (Cabudare)', 'Simón Planas', 'Torres (Carora)', 'Urdaneta'],
-        'Mérida': ['Alberto Adriani (El Vigía)', 'Andrés Bello', 'Antonio Pinto Salinas', 'Aricagua', 'Arzobispo Chacón', 'Campo Elías', 'Caracciolo Parra Olmedo', 'Cardenal Quintero', 'Guaraque', 'Julio César Salas', 'Justo Briceño', 'Libertador (Mérida)', 'Miranda', 'Obispo Ramos de Lora', 'Padre Noguera', 'Pueblo Llano', 'Rangel', 'Rivas Dávila', 'Santos Marquina', 'Sucre', 'Tovar', 'Tulio Febres Cordero', 'Zea'],
-        'Miranda': ['Acevedo', 'Andrés Bello', 'Baruta', 'Brión (Higuerote)', 'Buroz', 'Carrizal', 'Chacao', 'Cristóbal Rojas (Charallave)', 'El Hatillo', 'Guaicaipuro (Los Teques)', 'Independencia', 'Lander (Ocumare del Tuy)', 'Los Salias (San Antonio)', 'Páez (Río Chico)', 'Paz Castillo', 'Pedro Gual', 'Plaza (Guarenas)', 'Simón Bolívar', 'Sucre (Petare)', 'Urdaneta (Cúa)', 'Zamora (Guatire)'],
-        'Monagas': ['Acosta', 'Aguasay', 'Bolívar', 'Caripe', 'Cedeño', 'Ezequiel Zamora', 'Libertador', 'Maturín', 'Piar', 'Punceres', 'Santa Bárbara', 'Sotillo', 'Uracoa'],
-        'Nueva Esparta': ['Antolín del Campo', 'Arismendi (La Asunción)', 'Díaz', 'García', 'Gómez', 'Maneiro (Pampatar)', 'Marcano (Juan Griego)', 'Mariño (Porlamar)', 'Península de Macanao', 'Tubores', 'Villalba (Coche)'],
-        'Portuguesa': ['Agua Blanca', 'Araure', 'Esteller', 'Guanare', 'Guanarito', 'Monseñor José Vicente de Unda', 'Ospino', 'Páez (Acarigua)', 'Papelón', 'San Genaro de Boconoíto', 'San Rafael de Onoto', 'Santa Rosalía', 'Sucre', 'Turén'],
-        'Sucre': ['Andrés Eloy Blanco', 'Andrés Mata', 'Arismendi', 'Benítez', 'Bermúdez (Carúpano)', 'Bolívar', 'Cruz Salmerón Acosta', 'Libertador', 'Mariño', 'Mejía', 'Montes', 'Ribero', 'Sucre (Cumaná)', 'Valdez (Güiria)'],
-        'Táchira': ['Andrés Bello', 'Antonio Rómulo Costa', 'Ayacucho', 'Bolívar (San Antonio)', 'Cárdenas', 'Córdoba', 'Fernández Feo', 'Francisco de Miranda', 'García de Hevia', 'Guásimos', 'Independencia', 'Jáuregui (La Grita)', 'José María Vargas', 'Junín (Rubio)', 'Libertad', 'Libertador', 'Lobatera', 'Michelena', 'Panamericano', 'Pedro María Ureña', 'San Cristóbal', 'Seboruco', 'Simón Rodríguez', 'Sucre', 'Torbes', 'Uribante', 'San Judas Tadeo'],
-        'Trujillo': ['Andrés Bello', 'Boconó', 'Bolívar', 'Candelaria', 'Carache', 'Chejendé', 'Escuque', 'José Felipe Márquez Cañizalez', 'Juan Vicente Campo Elías', 'La Ceiba', 'Miranda', 'Monte Carmelo', 'Motatán', 'Pampán', 'Pampanito', 'Rafael Rangel', 'San Rafael de Carvajal', 'Sucre', 'Trujillo', 'Urdaneta', 'Valera'],
-        'Yaracuy': ['Aristides Bastidas', 'Bolívar', 'Bruzual (Chivacoa)', 'Cocorote', 'Independencia', 'José Antonio Páez', 'La Trinidad', 'Manuel Monge', 'Nirgua', 'Peña (Yaritagua)', 'San Felipe', 'Sucre', 'Urachiche', 'Veroes'],
-        'Zulia': ['Almirante Padilla', 'Baralt', 'Cabimas', 'Catatumbo', 'Colón', 'Francisco Javier Pulgar', 'Jesús Enrique Lossada', 'Jesús María Semprún', 'La Cañada de Urdaneta', 'Lagunillas (Ciudad Ojeda)', 'Machiques de Perijá', 'Mara', 'Maracaibo', 'Miranda', 'Guajira', 'Rosario de Perijá', 'San Francisco', 'Santa Rita', 'Simón Bolívar', 'Sucre', 'Valmore Rodríguez']
-      };
-
-      const VENEZUELA_STATES = Object.keys(VENEZUELA_LOCATIONS).sort();
-
-      // ESTADO GLOBAL DE LA APLICACIÓN
-      let currentUser = null;
-      let currentUserProfile = null;
-      let currentRole = 'buyer'; // 'buyer' | 'seller'
-      let products = [];
-      let searchQuery = '';
-      let selectedState = 'all';
-      let selectedMunicipality = 'all';
-      let selectedCategory = 'all';
-      let filterOnlyVerified = false;
-
-      // Variables temporales de formulario y chat
-      let tempCompressedProductImage = '';
-      let tempCompressedKycSelfie = '';
-      let activeChatConversation = null;
-      let unsubscribeChatMessages = null;
-      let unsubscribeProductsListener = null;
-
-      // Cache en memoria para perfiles de usuarios de Firestore
-      const userProfilesCache = new Map();
-
-      /**
-       * Consulta en tiempo real (getDoc) el perfil público de un usuario en Firestore
-       */
-      async function getUserProfile(uid) {
-        if (!uid) return null;
-        if (userProfilesCache.has(uid)) {
-          return userProfilesCache.get(uid);
-        }
-        try {
-          const userDocRef = doc(db, 'usuarios', uid);
-          const snap = await getDoc(userDocRef);
-          if (snap.exists()) {
-            const data = snap.data();
-            userProfilesCache.set(uid, data);
-            return data;
-          }
-        } catch (err) {
-          console.warn('Aviso obteniendo perfil de usuario:', err.message);
-        }
-        return null;
-      }
-
-      // -------------------------------------------------------------
-      // INICIALIZACIÓN DE SELECTORES EN CASCADA
-      // -------------------------------------------------------------
-      function initCascadeSelects() {
-        // Llenar selector del buscador
-        const filterStateSelect = document.getElementById('filterState');
-        if (filterStateSelect) {
-          filterStateSelect.innerHTML = '<option value="all">Todos los Estados (Venezuela)</option>' +
-            VENEZUELA_STATES.map((st) => `<option value="${st}">${st}</option>`).join('');
-        }
-
-        // Llenar selector de registro
-        const regStateSelect = document.getElementById('regState');
-        if (regStateSelect) {
-          regStateSelect.innerHTML = '<option value="">Seleccionar Estado</option>' +
-            VENEZUELA_STATES.map((st) => `<option value="${st}">${st}</option>`).join('');
-        }
-
-        // Llenar selector de perfil
-        const profileStateSelect = document.getElementById('profileState');
-        if (profileStateSelect) {
-          profileStateSelect.innerHTML = '<option value="">Seleccionar Estado</option>' +
-            VENEZUELA_STATES.map((st) => `<option value="${st}">${st}</option>`).join('');
-        }
-
-        // Llenar selector de publicar producto
-        const newProdStateSelect = document.getElementById('newProdState');
-        if (newProdStateSelect) {
-          newProdStateSelect.innerHTML = '<option value="">Seleccionar Estado</option>' +
-            VENEZUELA_STATES.map((st) => `<option value="${st}">${st}</option>`).join('');
-        }
-      }
-
-      window.handleCascadeStateChange = function(stateSelectId, municipalitySelectId) {
-        const stateSelect = document.getElementById(stateSelectId);
-        const muniSelect = document.getElementById(municipalitySelectId);
-        if (!stateSelect || !muniSelect) return;
-
-        const stateVal = stateSelect.value;
-        if (!stateVal || !VENEZUELA_LOCATIONS[stateVal]) {
-          muniSelect.innerHTML = '<option value="">Elige un Estado primero</option>';
-          muniSelect.disabled = true;
-          return;
-        }
-
-        const municipalities = VENEZUELA_LOCATIONS[stateVal];
-        muniSelect.innerHTML = '<option value="">Seleccionar Municipio</option>' +
-          municipalities.map((m) => `<option value="${m}">${m}</option>`).join('');
-        muniSelect.disabled = false;
-      };
-
-      window.handleFilterStateChange = function() {
-        const stateSelect = document.getElementById('filterState');
-        const muniSelect = document.getElementById('filterMunicipality');
-        if (!stateSelect || !muniSelect) return;
-
-        selectedState = stateSelect.value;
-        if (selectedState === 'all' || !VENEZUELA_LOCATIONS[selectedState]) {
-          selectedMunicipality = 'all';
-          muniSelect.innerHTML = '<option value="all">Primero elige un Estado</option>';
-          muniSelect.disabled = true;
-        } else {
-          selectedMunicipality = 'all';
-          const munis = VENEZUELA_LOCATIONS[selectedState];
-          muniSelect.innerHTML = `<option value="all">Todos los Municipios (${selectedState})</option>` +
-            munis.map((m) => `<option value="${m}">${m}</option>`).join('');
-          muniSelect.disabled = false;
-        }
-        renderCatalog();
-      };
-
-      window.handleFilterMunicipalityChange = function() {
-        const muniSelect = document.getElementById('filterMunicipality');
-        selectedMunicipality = muniSelect ? muniSelect.value : 'all';
-        renderCatalog();
-      };
-
-      window.clearLocationFilters = function() {
-        const stateSelect = document.getElementById('filterState');
-        const muniSelect = document.getElementById('filterMunicipality');
-        if (stateSelect) stateSelect.value = 'all';
-        if (muniSelect) {
-          muniSelect.innerHTML = '<option value="all">Primero elige un Estado</option>';
-          muniSelect.disabled = true;
-        }
-        selectedState = 'all';
-        selectedMunicipality = 'all';
-        renderCatalog();
-      };
-
-      // -------------------------------------------------------------
-      // UTILIDADES: TOAST Y COMPRESIÓN DE IMÁGENES CON CANVAS (600px 70%)
-      // -------------------------------------------------------------
-      function showToast(message) {
-        const toast = document.getElementById('toastNotification');
-        const text = document.getElementById('toastMessage');
-        if (!toast || !text) return;
-        text.textContent = message;
-        toast.classList.remove('opacity-0', 'translate-y-[-150%]');
-        toast.classList.add('opacity-100', 'translate-y-0');
-        setTimeout(() => {
-          toast.classList.remove('opacity-100', 'translate-y-0');
-          toast.classList.add('opacity-0', 'translate-y-[-150%]');
-        }, 3200);
-      }
-
-      function compressImageWithCanvas(file, maxWidth = 600, quality = 0.7) {
-        return new Promise((resolve, reject) => {
-          if (!file) return reject(new Error('Archivo no provisto'));
-          const reader = new FileReader();
-          reader.onerror = () => reject(new Error('Error al leer el archivo'));
-          reader.onload = (e) => {
-            const img = new Image();
-            img.onerror = () => reject(new Error('Error al procesar la imagen'));
-            img.onload = () => {
-              let width = img.width;
-              let height = img.height;
-              if (width > maxWidth) {
-                height = Math.round((height * maxWidth) / width);
-                width = maxWidth;
-              }
-              const canvas = document.createElement('canvas');
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d');
-              if (!ctx) return reject(new Error('No se pudo inicializar canvas'));
-              ctx.drawImage(img, 0, 0, width, height);
-
-              // Probar WebP primero, o fallback a JPEG
-              try {
-                const base64WebP = canvas.toDataURL('image/webp', quality);
-                if (base64WebP.startsWith('data:image/webp')) {
-                  return resolve(base64WebP);
-                }
-              } catch (_) {}
-              const base64Jpeg = canvas.toDataURL('image/jpeg', quality);
-              resolve(base64Jpeg);
-            };
-            img.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-
-      // -------------------------------------------------------------
-      // SEPARACIÓN ESTRICTA DE LOGIN Y REGISTRO EN JS
-      // -------------------------------------------------------------
-      function setAuthMode(mode) {
-        const formLogin = document.getElementById('formLogin');
-        const formReg = document.getElementById('formRegister');
-        const tabLogin = document.getElementById('tabBtnLogin');
-        const tabReg = document.getElementById('tabBtnRegister');
-        const alertBox = document.getElementById('authAlert');
-        if (alertBox) alertBox.classList.add('hidden');
-
-        if (mode === 'login') {
-          formLogin.classList.remove('hidden');
-          formReg.classList.add('hidden');
-          tabLogin.className = 'flex-1 py-2.5 rounded-lg text-xs font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer';
-          tabReg.className = 'flex-1 py-2.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white cursor-pointer';
-        } else {
-          formLogin.classList.add('hidden');
-          formReg.classList.remove('hidden');
-          tabLogin.className = 'flex-1 py-2.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white cursor-pointer';
-          tabReg.className = 'flex-1 py-2.5 rounded-lg text-xs font-bold transition-all bg-emerald-600 text-white shadow-sm cursor-pointer';
-        }
-      }
-      window.setAuthMode = setAuthMode;
-
-      function showAuthAlert(msg, isSuccess = false) {
-        const alertBox = document.getElementById('authAlert');
-        if (!alertBox) return;
-        alertBox.textContent = msg;
-        alertBox.classList.remove('hidden', 'bg-rose-950/80', 'text-rose-200', 'border-rose-800', 'bg-emerald-950/80', 'text-emerald-200', 'border-emerald-800');
-        if (isSuccess) {
-          alertBox.classList.add('bg-emerald-950/80', 'text-emerald-200', 'border-emerald-800');
-        } else {
-          alertBox.classList.add('bg-rose-950/80', 'text-rose-200', 'border-rose-800');
-        }
-      }
-
-      window.togglePasswordVisibility = function(inputId, iconId) {
-        const input = document.getElementById(inputId);
-        const icon = document.getElementById(iconId);
-        if (!input) return;
-        if (input.type === 'password') {
-          input.type = 'text';
-          if (icon) icon.setAttribute('data-lucide', 'eye-off');
-        } else {
-          input.type = 'password';
-          if (icon) icon.setAttribute('data-lucide', 'eye');
-        }
-        if (window.lucide) window.lucide.createIcons();
-      };
-
-      /**
-       * Función 1: loginUser(email, pass)
-       * Llama exclusivamente a signInWithEmailAndPassword.
-       * Si falla, muestra error específico y restaura el botón en finally.
-       */
-      async function loginUser(email, pass) {
-        const btn = document.getElementById('btnLoginSubmit');
-        const btnText = document.getElementById('btnLoginText');
-        if (btn) btn.disabled = true;
-        if (btnText) btnText.textContent = 'Accediendo...';
-
-        try {
-          const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-          showToast('Sesión iniciada correctamente.');
-          await activateAuthenticatedSession(userCredential.user);
-        } catch (error) {
-          console.error('Fallo en loginUser:', error);
-          if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-            showAuthAlert('Credenciales incorrectas o cuenta no encontrada');
-          } else if (error.code === 'auth/invalid-email') {
-            showAuthAlert('El formato de correo no es válido');
-          } else if (error.code === 'auth/user-disabled') {
-            showAuthAlert('Esta cuenta ha sido inhabilitada');
-          } else {
-            showAuthAlert(error.message || 'Error al acceder a la cuenta');
-          }
-        } finally {
-          // El botón NUNCA se queda congelado
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Acceder de Forma Segura';
-        }
-      }
-
-      /**
-       * Función 2: registerUser(name, email, pass, phone, state, municipality)
-       * Llama exclusivamente a createUserWithEmailAndPassword y guarda en Firestore.
-       * Reporta el error exacto y restaura el botón en finally.
-       */
-      async function registerUser(name, email, pass, phone, state, municipality) {
-        const btn = document.getElementById('btnRegisterSubmit');
-        const btnText = document.getElementById('btnRegisterText');
-        if (btn) btn.disabled = true;
-        if (btnText) btnText.textContent = 'Guardando de forma segura...';
-
-        try {
-          // 1. Crear credenciales en Firebase Auth
-          const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-          const user = userCredential.user;
-
-          // 2. Preparar documento inicial sin valores undefined (evita error en Firestore)
-          const userDocData = {
-            uid: user.uid,
-            email: email || '',
-            name: name || (email ? email.split('@')[0] : 'Usuario'),
-            phone: phone || '',
-            state: state || 'Distrito Capital',
-            municipality: municipality || 'Libertador (Caracas)',
-            role: 'comprador',
-            isVerified: false,
-            estado: 'no_verificado',
-            avatar: '',
-            createdAt: new Date().toISOString()
-          };
-
-          // 3. Guardar documento en Firestore colección 'usuarios'
-          try {
-            await setDoc(doc(db, 'usuarios', user.uid), userDocData);
-          } catch (docErr) {
-            console.error('Aviso guardando perfil inicial en Firestore:', docErr);
-          }
-
-          // 4. Redirección Post-Registro: Ocultar login, dar bienvenida y mostrar catálogo
-          showToast('¡Cuenta creada exitosamente! Bienvenido a Zarca.');
-          await activateAuthenticatedSession(user, userDocData);
-
-        } catch (error) {
-          console.error('Error detallado en registerUser:', error);
-          if (error.code === 'auth/email-already-in-use') {
-            showAuthAlert('Este correo ya está registrado');
-          } else if (error.code === 'auth/weak-password') {
-            showAuthAlert('La contraseña debe tener al menos 6 caracteres');
-          } else if (error.code === 'auth/invalid-email') {
-            showAuthAlert('El formato del correo electrónico no es válido');
-          } else {
-            // Mostrar el mensaje exacto para depuración clara en la interfaz
-            showAuthAlert(error.message || 'Error al crear la cuenta. Intenta de nuevo.');
-          }
-        } finally {
-          // El botón siempre vuelve a su estado original
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Crear Cuenta Segura';
-        }
-      }
-
-      window.handleAuthLogin = async function(event) {
-        event.preventDefault();
-        const alertBox = document.getElementById('authAlert');
-        if (alertBox) alertBox.classList.add('hidden');
-
-        try {
-          const emailInput = document.getElementById('loginEmail');
-          const passInput = document.getElementById('loginPassword');
-
-          const email = emailInput ? emailInput.value.trim() : '';
-          const pass = passInput ? passInput.value : '';
-
-          if (!email || !pass) {
-            showAuthAlert('Ingresa tu correo y contraseña');
-            return;
-          }
-
-          await loginUser(email, pass);
-        } catch (err) {
-          console.error('Error inesperado en handleAuthLogin:', err);
-          showAuthAlert(err.message || 'Error inesperado al intentar acceder');
-          const btn = document.getElementById('btnLoginSubmit');
-          const btnText = document.getElementById('btnLoginText');
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Acceder de Forma Segura';
-        }
-      };
-
-      window.handleAuthRegister = async function(event) {
-        event.preventDefault();
-        const alertBox = document.getElementById('authAlert');
-        if (alertBox) alertBox.classList.add('hidden');
-
-        try {
-          const nameInput = document.getElementById('regName');
-          const emailInput = document.getElementById('regEmail');
-          const passInput = document.getElementById('regPassword');
-          const confirmPassInput = document.getElementById('regPasswordConfirm');
-          const phoneInput = document.getElementById('regPhone');
-          const stateSelect = document.getElementById('regState');
-          const muniSelect = document.getElementById('regMunicipality');
-
-          const name = nameInput ? nameInput.value.trim() : '';
-          const email = emailInput ? emailInput.value.trim() : '';
-          const pass = passInput ? passInput.value : '';
-          const confirmPass = confirmPassInput ? confirmPassInput.value : '';
-          const phone = phoneInput ? phoneInput.value.trim() : '';
-          const state = stateSelect ? stateSelect.value.trim() : '';
-          const municipality = muniSelect ? muniSelect.value.trim() : '';
-
-          // 1. Verificación y validación estricta de campos obligatorios
-          if (!email || !pass || !state || !municipality) {
-            showAuthAlert('Por favor completa todos los campos requeridos (Correo, Contraseña, Estado y Municipio)');
-            return;
-          }
-
-          // 2. Validación de coincidencia de contraseñas
-          if (pass !== confirmPass) {
-            showAuthAlert('Las contraseñas no coinciden');
-            return;
-          }
-
-          // 3. Validación de longitud de contraseña
-          if (pass.length < 6) {
-            showAuthAlert('La contraseña debe tener mínimo 6 caracteres');
-            return;
-          }
-
-          await registerUser(name, email, pass, phone, state, municipality);
-        } catch (err) {
-          console.error('Error inesperado en handleAuthRegister:', err);
-          showAuthAlert(err.message || 'Error inesperado en el formulario de registro');
-          const btn = document.getElementById('btnRegisterSubmit');
-          const btnText = document.getElementById('btnRegisterText');
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Crear Cuenta Segura';
-        }
-      };
-
-      // -------------------------------------------------------------
-      // ACTIVACIÓN DE SESIÓN Y VINCULACIÓN AL DOM
-      // -------------------------------------------------------------
-      async function activateAuthenticatedSession(userObj, fallbackProfile = null) {
-        currentUser = userObj;
-        localStorage.setItem('zarca_auth_session', JSON.stringify({
-          uid: userObj.uid,
-          email: userObj.email || ''
-        }));
-
-        // Transición visual inmediata hacia la aplicación principal
-        document.getElementById('authScreen').classList.add('hidden');
-        document.getElementById('mainApp').classList.remove('hidden');
-
-        // Sincronizar perfil del usuario
-        await syncUserProfile(userObj, fallbackProfile);
-
-        // Iniciar escucha del catálogo global en tiempo real
-        initProductsCatalogListener();
-      }
-      window.activateAuthenticatedSession = activateAuthenticatedSession;
-
-      async function syncUserProfile(userObj, initialData = null) {
-        try {
-          const userDocRef = doc(db, 'usuarios', userObj.uid);
-          const snap = await getDoc(userDocRef);
-          if (snap.exists()) {
-            currentUserProfile = snap.data();
-          } else if (initialData) {
-            currentUserProfile = initialData;
-          } else {
-            // Crear perfil por defecto
-            currentUserProfile = {
-              uid: userObj.uid,
-              email: userObj.email || 'usuario@zarca.ve',
-              name: userObj.email ? userObj.email.split('@')[0] : 'Usuario Zarca',
-              phone: '',
-              state: 'Distrito Capital',
-              municipality: 'Libertador (Caracas)',
-              role: 'comprador',
-              isVerified: false,
-              estado: 'no_verificado',
-              avatar: '',
-              createdAt: new Date().toISOString()
-            };
-            try {
-              await setDoc(userDocRef, currentUserProfile);
-            } catch (_) {}
-          }
-        } catch (err) {
-          console.warn('Aviso cargando perfil en la nube:', err.message);
-          if (!currentUserProfile) {
-            currentUserProfile = initialData || {
-              uid: userObj.uid,
-              email: userObj.email || '',
-              name: 'Usuario Zarca',
-              phone: '',
-              state: 'Distrito Capital',
-              municipality: 'Libertador (Caracas)',
-              role: 'comprador',
-              isVerified: false,
-              estado: 'no_verificado',
-              avatar: ''
-            };
-          }
-        }
-
-        updateUserProfileDOM();
-      }
-
-      function updateUserProfileDOM() {
-        if (!currentUserProfile) return;
-
-        const isVerified = Boolean(currentUserProfile.isVerified || currentUserProfile.estado === 'verificado');
-
-        // Header
-        const headerUserName = document.getElementById('headerUserName');
-        const headerUserStatus = document.getElementById('headerUserStatus');
-        const headerAvatarText = document.getElementById('headerAvatarText');
-        const headerAvatarContainer = document.getElementById('headerAvatarContainer');
-        const headerSellerBadge = document.getElementById('headerSellerBadge');
-
-        if (headerUserName) headerUserName.textContent = currentUserProfile.name || 'Usuario';
-        if (headerUserStatus) {
-          headerUserStatus.textContent = isVerified ? 'Vendedor Verificado' : 'Comprador';
-          headerUserStatus.className = isVerified ? 'text-[9px] text-emerald-600 font-extrabold leading-none' : 'text-[9px] text-slate-500 font-medium leading-none';
-        }
-        if (headerSellerBadge) {
-          if (isVerified) headerSellerBadge.classList.remove('hidden');
-          else headerSellerBadge.classList.add('hidden');
-        }
-
-        const avatar = currentUserProfile.avatar;
-        if (avatar && headerAvatarContainer) {
-          headerAvatarContainer.innerHTML = `<img src="${avatar}" alt="Avatar" class="w-full h-full object-cover">`;
-        } else if (headerAvatarText) {
-          const letter = (currentUserProfile.name || 'U').charAt(0).toUpperCase();
-          headerAvatarText.textContent = letter;
-        }
-
-        // Modal de Perfil
-        const profileDisplayEmail = document.getElementById('profileDisplayEmail');
-        const profileAvatarBig = document.getElementById('profileAvatarBig');
-        const profileInputName = document.getElementById('profileInputName');
-        const profileInputPhone = document.getElementById('profileInputPhone');
-        const profileAccountBadge = document.getElementById('profileAccountBadge');
-        const profileVerificationText = document.getElementById('profileVerificationText');
-        const btnProfileStartKyc = document.getElementById('btnProfileStartKyc');
-        const profileState = document.getElementById('profileState');
-
-        if (profileDisplayEmail) profileDisplayEmail.textContent = currentUserProfile.email || 'correo@ejemplo.com';
-        if (profileInputName) profileInputName.value = currentUserProfile.name || '';
-        if (profileInputPhone) profileInputPhone.value = currentUserProfile.phone || '';
-
-        if (profileState && currentUserProfile.state) {
-          profileState.value = currentUserProfile.state;
-          handleCascadeStateChange('profileState', 'profileMunicipality');
-          const profileMuni = document.getElementById('profileMunicipality');
-          if (profileMuni && currentUserProfile.municipality) {
-            profileMuni.value = currentUserProfile.municipality;
-          }
-        }
-
-        if (avatar && profileAvatarBig) {
-          profileAvatarBig.innerHTML = `<img src="${avatar}" alt="Avatar" class="w-full h-full object-cover">`;
-        }
-
-        if (profileAccountBadge) {
-          if (isVerified) {
-            profileAccountBadge.textContent = 'Vendedor Verificado (KYC)';
-            profileAccountBadge.className = 'inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full mt-1 bg-emerald-100 text-emerald-800 border border-emerald-300';
-          } else {
-            profileAccountBadge.textContent = 'Comprador Estándar';
-            profileAccountBadge.className = 'inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full mt-1 bg-slate-200 text-slate-800';
-          }
-        }
-
-        if (profileVerificationText) {
-          if (isVerified) {
-            profileVerificationText.innerHTML = '<i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i> Verificado';
-            profileVerificationText.className = 'text-xs font-extrabold text-emerald-600 flex items-center gap-1';
-            if (btnProfileStartKyc) btnProfileStartKyc.classList.add('hidden');
-          } else {
-            profileVerificationText.innerHTML = '<i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-600"></i> No Verificado';
-            profileVerificationText.className = 'text-xs font-extrabold text-amber-600 flex items-center gap-1';
-            if (btnProfileStartKyc) btnProfileStartKyc.classList.remove('hidden');
-          }
-        }
-
-        // Panel de Vendedor
-        const sellerVerifiedBadge = document.getElementById('sellerVerifiedBadge');
-        const sellerUnverifiedBadge = document.getElementById('sellerUnverifiedBadge');
-        const btnVerifySellerBanner = document.getElementById('btnVerifySellerBanner');
-        if (isVerified) {
-          if (sellerVerifiedBadge) sellerVerifiedBadge.classList.remove('hidden');
-          if (sellerUnverifiedBadge) sellerUnverifiedBadge.classList.add('hidden');
-          if (btnVerifySellerBanner) btnVerifySellerBanner.classList.add('hidden');
-        } else {
-          if (sellerVerifiedBadge) sellerVerifiedBadge.classList.add('hidden');
-          if (sellerUnverifiedBadge) sellerUnverifiedBadge.classList.remove('hidden');
-          if (btnVerifySellerBanner) btnVerifySellerBanner.classList.remove('hidden');
-        }
-
-        if (window.lucide) window.lucide.createIcons();
-      }
-
-      window.handleAuthLogout = async function() {
-        try {
-          await signOut(auth);
-        } catch (_) {}
-        localStorage.removeItem('zarca_auth_session');
-        currentUser = null;
-        currentUserProfile = null;
-        if (unsubscribeProductsListener) {
-          unsubscribeProductsListener();
-          unsubscribeProductsListener = null;
-        }
-        document.getElementById('mainApp').classList.add('hidden');
-        document.getElementById('authScreen').classList.remove('hidden');
-        setAuthMode('login');
-        showToast('Sesión cerrada de forma segura.');
-      };
-
-      // -------------------------------------------------------------
-      // NAVEGACIÓN Y ALTERNANCIA DE VISTAS (COMPRADOR / VENDEDOR / AJUSTES)
-      // -------------------------------------------------------------
-      function switchRole(role) {
-        currentRole = role;
-        const viewBuyer = document.getElementById('viewBuyer');
-        const viewSeller = document.getElementById('viewSeller');
-        const btnBuyer = document.getElementById('btnModeBuyer');
-        const btnSeller = document.getElementById('btnModeSeller');
-
-        if (role === 'buyer') {
-          viewBuyer.classList.remove('hidden');
-          viewSeller.classList.add('hidden');
-
-          btnBuyer.className = 'flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60';
-          btnSeller.className = 'flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
-          renderCatalog();
-        } else {
-          viewBuyer.classList.add('hidden');
-          viewSeller.classList.remove('hidden');
-
-          btnBuyer.className = 'flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap text-slate-600 hover:text-slate-900';
-          btnSeller.className = 'flex items-center justify-center gap-1 py-1 px-2 sm:py-1.5 sm:px-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap bg-white text-slate-900 shadow-sm border border-slate-200/60';
-          renderSellerDashboard();
-        }
-
-        if (window.lucide) window.lucide.createIcons();
-      }
-      window.switchRole = switchRole;
-
-      window.openProfileModal = function() {
-        const modal = document.getElementById('profileModal');
-        if (modal) modal.classList.remove('hidden');
-        updateUserProfileDOM();
-      };
-
-      window.closeProfileModal = function() {
-        const modal = document.getElementById('profileModal');
-        if (modal) modal.classList.add('hidden');
-      };
-
-      window.openKycModal = function() {
-        const modal = document.getElementById('kycModal');
-        if (modal) {
-          modal.classList.remove('hidden');
-          if (currentUserProfile) {
-            const biz = document.getElementById('kycBusinessName');
-            const ced = document.getElementById('kycCedula');
-            const ph = document.getElementById('kycPhone');
-            if (biz && currentUserProfile.businessName) biz.value = currentUserProfile.businessName;
-            if (ced && currentUserProfile.cedula) ced.value = currentUserProfile.cedula;
-            if (ph && currentUserProfile.phone) ph.value = currentUserProfile.phone;
-          }
-        }
-      };
-
-      window.closeKycModal = function() {
-        const modal = document.getElementById('kycModal');
-        if (modal) modal.classList.add('hidden');
-      };
-
-      window.openPublishModal = function() {
-        const modal = document.getElementById('publishModal');
-        if (modal) {
-          modal.classList.remove('hidden');
-          // Sugerir estado del usuario si lo tiene
-          if (currentUserProfile && currentUserProfile.state) {
-            const st = document.getElementById('newProdState');
-            if (st) {
-              st.value = currentUserProfile.state;
-              handleCascadeStateChange('newProdState', 'newProdMunicipality');
-              const mun = document.getElementById('newProdMunicipality');
-              if (mun && currentUserProfile.municipality) mun.value = currentUserProfile.municipality;
-            }
-          }
-        }
-      };
-
-      window.closePublishModal = function() {
-        const modal = document.getElementById('publishModal');
-        if (modal) modal.classList.add('hidden');
-      };
-
-      // -------------------------------------------------------------
-      // CATÁLOGO GLOBAL EN TIEMPO REAL CON FIRESTORE (onSnapshot)
-      // -------------------------------------------------------------
-      function initProductsCatalogListener() {
-        if (unsubscribeProductsListener) unsubscribeProductsListener();
-
-        const subtitle = document.getElementById('catalogSubtitle');
-        if (subtitle) subtitle.textContent = 'Actualizando catálogo en vivo...';
-
-        try {
-          const q = query(collection(db, 'productos'), orderBy('createdAt', 'desc'));
-          unsubscribeProductsListener = onSnapshot(q, (snapshot) => {
-            const list = [];
-            snapshot.forEach((docSnap) => {
-              list.push({ id: docSnap.id, ...docSnap.data() });
-            });
-            products = list;
-            renderCatalog();
-            if (currentRole === 'seller') renderSellerDashboard();
-            if (subtitle) subtitle.textContent = `${list.length} publicaciones sincronizadas en Venezuela`;
-          }, (err) => {
-            console.warn('Aviso en escucha de catálogo:', err.message);
-            // Si la colección aún no tiene datos o reglas restringidas, cargar publicaciones de ejemplo locales
-            if (products.length === 0) {
-              products = getSeedProducts();
-              renderCatalog();
-              if (subtitle) subtitle.textContent = 'Catálogo sincronizado localmente';
-            }
-          });
-        } catch (err) {
-          console.warn('Error inicializando escucha:', err.message);
-          products = getSeedProducts();
-          renderCatalog();
-        }
-      }
-
-      function getSeedProducts() {
-        return [
-          {
-            id: 'seed_prod_01',
-            title: 'Batería Duncan 800 AMP Libre Mantenimiento',
-            description: 'Totalmente nueva con garantía de 1 año en toda Venezuela. Entrega rápida garantizada.',
-            priceUsd: 85.00,
-            category: 'Vehículos',
-            state: 'Carabobo',
-            municipality: 'Valencia',
-            image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&q=70',
-            sellerUid: 'seller_demo_001',
-            sellerName: 'Inversiones Los Andes C.A.',
-            sellerPhone: '0414 1234567',
-            isSellerVerified: true,
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: 'seed_prod_02',
-            title: 'Combo Harina PAN + Aceite Vatel + Café Fama de América',
-            description: 'Caja familiar sellada al mayor o detal. Entregas en Caracas.',
-            priceUsd: 22.50,
-            category: 'Alimentos',
-            state: 'Distrito Capital',
-            municipality: 'Libertador (Caracas)',
-            image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=70',
-            sellerUid: 'seller_caracas_002',
-            sellerName: 'Distribuidora Capital',
-            sellerPhone: '0412 9876543',
-            isSellerVerified: true,
-            createdAt: new Date(Date.now() - 3600000).toISOString()
-          },
-          {
-            id: 'seed_prod_03',
-            title: 'Kit Panel Solar 150W + Inversor 1000W Onda Pura',
-            description: 'Solución energética para cortes eléctricos. Incluye cables y conectores MC4.',
-            priceUsd: 180.00,
-            category: 'Energía',
-            state: 'Zulia',
-            municipality: 'Maracaibo',
-            image: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?w=600&q=70',
-            sellerUid: 'seller_zulia_003',
-            sellerName: 'Soluciones Solares Zulia',
-            sellerPhone: '0416 3334455',
-            isSellerVerified: true,
-            createdAt: new Date(Date.now() - 7200000).toISOString()
-          }
-        ];
-      }
-
-      // RENDERIZADO DEL CATÁLOGO CON FILTRO EN CASCADA
-      function renderCatalog() {
-        const grid = document.getElementById('catalogGrid');
-        const emptyState = document.getElementById('emptyCatalogState');
-        const activeFilterPill = document.getElementById('activeFilterPill');
-        if (!grid) return;
-
-        // Filtrado por Estado, Municipio, Categoría y Búsqueda
-        const filtered = products.filter((prod) => {
-          // Filtro de Estado
-          if (selectedState !== 'all' && prod.state !== selectedState) {
-            return false;
-          }
-
-          // Filtro de Municipio
-          if (selectedMunicipality !== 'all' && prod.municipality !== selectedMunicipality) {
-            return false;
-          }
-
-          // Filtro de Categoría
-          if (selectedCategory !== 'all' && prod.category !== selectedCategory) {
-            return false;
-          }
-
-          // Filtro Solo Verificados
-          if (filterOnlyVerified && !prod.isSellerVerified) {
-            return false;
-          }
-
-          // Filtro de Búsqueda de Texto
-          if (searchQuery.trim().length > 0) {
-            const q = searchQuery.toLowerCase();
-            const title = (prod.title || '').toLowerCase();
-            const desc = (prod.description || '').toLowerCase();
-            const st = (prod.state || '').toLowerCase();
-            const mun = (prod.municipality || '').toLowerCase();
-            if (!title.includes(q) && !desc.includes(q) && !st.includes(q) && !mun.includes(q)) {
-              return false;
-            }
-          }
-
-          return true;
-        });
-
-        // Pill indicadora de ubicación activa
-        if (activeFilterPill) {
-          if (selectedState !== 'all') {
-            activeFilterPill.classList.remove('hidden');
-            activeFilterPill.textContent = selectedMunicipality !== 'all' ? `${selectedMunicipality}, ${selectedState}` : selectedState;
-          } else {
-            activeFilterPill.classList.add('hidden');
-          }
-        }
-
-        if (filtered.length === 0) {
-          grid.innerHTML = '';
-          if (emptyState) emptyState.classList.remove('hidden');
-          return;
-        }
-
-        if (emptyState) emptyState.classList.add('hidden');
-
-        grid.innerHTML = filtered.map((prod) => {
-          const priceUsd = Number(prod.priceUsd) || 0;
-          const isSellerVerified = Boolean(prod.isSellerVerified);
-          const sellerName = prod.sellerName || 'Vendedor Zarca';
-          const locationText = prod.municipality ? `${prod.municipality}, ${prod.state}` : (prod.state || 'Venezuela');
-          const imageSrc = prod.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70';
-
-          // BLOQUEO ANTI-AUTO COMPRA / ANTI-AUTO MENSAJE
-          // Si el UID del vendedor coincide con el usuario activo, bloquear botón
-          const isMyOwnProduct = currentUser && prod.sellerUid === currentUser.uid;
-
-          return `
-            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col group">
-              <!-- Foto del producto -->
-              <div class="relative w-full h-48 bg-slate-100 overflow-hidden">
-                <img
-                  src="${imageSrc}"
-                  alt="${prod.title}"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-                <!-- Pill Categoría -->
-                <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-900/80 text-white backdrop-blur-xs">
-                  ${prod.category || 'General'}
-                </span>
-                <!-- Pill Ubicación (Estado / Municipio) -->
-                <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/95 text-slate-800 shadow-xs flex items-center gap-1">
-                  <i data-lucide="map-pin" class="w-3 h-3 text-emerald-600"></i>
-                  <span class="max-w-[120px] truncate">${locationText}</span>
-                </span>
-              </div>
-
-              <!-- Información del producto -->
-              <div class="p-4 flex-1 flex flex-col justify-between">
-                <div>
-                  <h4 class="text-sm font-extrabold text-slate-900 leading-snug line-clamp-2 mb-1">
-                    ${prod.title}
-                  </h4>
-                  <p class="text-xs text-slate-500 line-clamp-2 mb-3">
-                    ${prod.description || 'Publicación verificada disponible para entrega segura.'}
-                  </p>
-                </div>
-
-                <div class="space-y-3 pt-2 border-t border-slate-100">
-                  <!-- Precio Manual en Dólares ($ USD) -->
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <span class="text-lg font-extrabold text-slate-950 font-mono-numbers">$${priceUsd.toFixed(2)}</span>
-                      <span class="text-[10px] text-emerald-700 font-bold block uppercase tracking-wider">USD</span>
-                    </div>
-
-                    <!-- Identidad Global del Vendedor (Foto y Nombre de Firestore) -->
-                    <div class="flex items-center gap-2 justify-end">
-                      <div id="seller-avatar-${prod.id}" class="w-7 h-7 rounded-lg overflow-hidden bg-emerald-100 text-emerald-900 flex items-center justify-center text-xs font-extrabold border border-emerald-300 shrink-0">
-                        <span>${(prod.sellerName || 'V').charAt(0).toUpperCase()}</span>
-                      </div>
-                      <div class="text-right min-w-0">
-                        <div class="flex items-center gap-1 justify-end">
-                          <span id="seller-name-${prod.id}" class="text-xs font-bold text-slate-800 truncate max-w-[100px]">${sellerName}</span>
-                          <span id="seller-badge-${prod.id}" class="${isSellerVerified ? '' : 'hidden'}" title="Vendedor Verificado con KYC">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 shrink-0"></i>
-                          </span>
-                        </div>
-                        <span class="text-[10px] text-slate-400 block">Vendedor Oficial</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- BOTÓN DE CONTACTO CON BLOQUEO ANTI-AUTO MENSAJE -->
-                  <div>
-                    ${isMyOwnProduct ? `
-                      <div class="w-full py-2.5 px-3 bg-slate-100 border border-slate-200 text-slate-500 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default select-none">
-                        <i data-lucide="user-check" class="w-3.5 h-3.5 text-slate-400"></i>
-                        <span>Tu publicación (No puedes auto-enviarte mensajes)</span>
-                      </div>
-                    ` : `
-                      <button
-                        onclick="openChatForProduct('${prod.id}')"
-                        class="w-full py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
-                      >
-                        <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
-                        <span>Contactar / Chat Seguro</span>
-                      </button>
-                    `}
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        if (window.lucide) window.lucide.createIcons();
-
-        // Actualizar fotos de perfil y nombres globales de los vendedores desde Firestore
-        resolveSellerProfilesForFeed(filtered);
-      }
-
-      function resolveSellerProfilesForFeed(items) {
-        items.forEach((prod) => {
-          if (!prod.sellerUid) return;
-          getUserProfile(prod.sellerUid).then((profile) => {
-            if (!profile) return;
-            const avatarEl = document.getElementById(`seller-avatar-${prod.id}`);
-            const nameEl = document.getElementById(`seller-name-${prod.id}`);
-            const badgeEl = document.getElementById(`seller-badge-${prod.id}`);
-
-            if (avatarEl && profile.avatar) {
-              avatarEl.innerHTML = `<img src="${profile.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
-            } else if (avatarEl) {
-              const initial = (profile.businessName || profile.name || prod.sellerName || 'V').charAt(0).toUpperCase();
-              avatarEl.innerHTML = `<span>${initial}</span>`;
-            }
-
-            if (nameEl) {
-              nameEl.textContent = profile.businessName || profile.name || prod.sellerName || 'Vendedor Zarca';
-            }
-
-            if (badgeEl) {
-              const isVer = Boolean(profile.isVerified || profile.estado === 'verificado');
-              if (isVer) badgeEl.classList.remove('hidden');
-            }
-          });
-        });
-      }
-
-      function renderSellerDashboard() {
-        const grid = document.getElementById('sellerProductsGrid');
-        const emptyState = document.getElementById('emptySellerState');
-        const activeCount = document.getElementById('sellerActiveCount');
-        const viewsCount = document.getElementById('sellerViewsCount');
-        const inquiriesCount = document.getElementById('sellerInquiriesCount');
-        if (!grid) return;
-
-        if (!currentUser) return;
-
-        // Filtrar productos que pertenecen al usuario logueado
-        const myProducts = products.filter((p) => p.sellerUid === currentUser.uid);
-
-        if (activeCount) activeCount.textContent = myProducts.length;
-        if (viewsCount) viewsCount.textContent = myProducts.length * 28 + 14;
-        if (inquiriesCount) inquiriesCount.textContent = myProducts.length * 4 + 2;
-
-        if (myProducts.length === 0) {
-          grid.innerHTML = '';
-          if (emptyState) emptyState.classList.remove('hidden');
-          return;
-        }
-
-        if (emptyState) emptyState.classList.add('hidden');
-
-        grid.innerHTML = myProducts.map((prod) => {
-          const priceUsd = Number(prod.priceUsd) || 0;
-          const imageSrc = prod.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=70';
-
-          return `
-            <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex items-center gap-4 group">
-              <img src="${imageSrc}" alt="${prod.title}" class="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0" />
-              <div class="flex-1 min-w-0">
-                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md">${prod.category || 'General'}</span>
-                <h5 class="text-xs font-bold text-slate-900 truncate mt-1">${prod.title}</h5>
-                <span class="text-xs font-extrabold text-slate-950 font-mono-numbers block">$${priceUsd.toFixed(2)} USD</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">${prod.municipality || ''}, ${prod.state || 'Venezuela'}</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        if (window.lucide) window.lucide.createIcons();
-      }
-
-      window.handleSearchChange = function() {
-        const input = document.getElementById('searchInput');
-        searchQuery = input ? input.value : '';
-        renderCatalog();
-      };
-
-      window.setCategoryFilter = function(cat) {
-        selectedCategory = cat;
-        document.querySelectorAll('.category-pill').forEach((el) => {
-          if (el.getAttribute('data-cat') === cat) {
-            el.className = 'category-pill active px-3 py-1 rounded-lg font-semibold bg-emerald-600 text-white shrink-0 cursor-pointer text-xs';
-          } else {
-            el.className = 'category-pill px-3 py-1 rounded-lg font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 shrink-0 cursor-pointer text-xs';
-          }
-        });
-        renderCatalog();
-      };
-
-      window.toggleVerifiedFilter = function() {
-        filterOnlyVerified = !filterOnlyVerified;
-        const btn = document.getElementById('btnFilterVerified');
-        if (filterOnlyVerified) {
-          btn.className = 'px-3 py-2.5 rounded-xl border border-emerald-600 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-emerald-600 text-white shadow-xs shrink-0';
-        } else {
-          btn.className = 'px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer bg-slate-50 text-slate-700 hover:bg-slate-100 shrink-0';
-        }
-        renderCatalog();
-      };
-
-      // -------------------------------------------------------------
-      // SUBIDA Y COMPRESIÓN DE FOTOS (PRODUCTO, AVATAR, KYC SELFIE)
-      // -------------------------------------------------------------
-      window.handleProductImageSelected = async function(event) {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        try {
-          showToast('Optimizando foto para entrega rápida...');
-          const compressed = await compressImageWithCanvas(file, 600, 0.7);
-          tempCompressedProductImage = compressed;
-
-          const previewImg = document.getElementById('imageUploadPreview');
-          const previewBox = document.getElementById('imageUploadPreviewBox');
-          const placeholder = document.getElementById('imageUploadPlaceholder');
-
-          if (previewImg) previewImg.src = compressed;
-          if (previewBox) previewBox.classList.remove('hidden');
-          if (placeholder) placeholder.classList.add('hidden');
-          showToast('Foto lista y comprimida (600px).');
-        } catch (err) {
-          console.error(err);
-          showToast('Error al optimizar imagen');
-        }
-      };
-
-      window.handleAvatarFileSelected = async function(event) {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        try {
-          showToast('Actualizando foto de perfil...');
-          const compressed = await compressImageWithCanvas(file, 400, 0.7);
-
-          if (currentUserProfile) {
-            currentUserProfile.avatar = compressed;
-            updateUserProfileDOM();
-
-            // Guardar en Firestore
-            try {
-              await updateDoc(doc(db, 'usuarios', currentUser.uid), { avatar: compressed });
-            } catch (_) {}
-            showToast('Foto de perfil actualizada correctamente.');
-          }
-        } catch (err) {
-          console.error(err);
-          showToast('Error al actualizar avatar');
-        }
-      };
-
-      window.handleKycSelfieCaptured = async function(event) {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        try {
-          showToast('Procesando selfie biométrica...');
-          const compressed = await compressImageWithCanvas(file, 500, 0.7);
-          tempCompressedKycSelfie = compressed;
-
-          const previewBox = document.getElementById('kycSelfiePreviewBox');
-          const previewImg = document.getElementById('kycSelfiePreviewImg');
-          const btnText = document.getElementById('kycSelfieBtnText');
-
-          if (previewImg) previewImg.src = compressed;
-          if (previewBox) previewBox.classList.remove('hidden');
-          if (btnText) btnText.textContent = 'Tomar otra selfie';
-          showToast('Selfie capturada con éxito.');
-        } catch (err) {
-          console.error(err);
-          showToast('Error procesando selfie');
-        }
-      };
-
-      // -------------------------------------------------------------
-      // PUBLICAR PRODUCTO EN FIRESTORE (COLECCIÓN 'productos')
-      // -------------------------------------------------------------
-      window.handlePublishProductSubmit = async function(event) {
-        event.preventDefault();
-        if (!currentUser) {
-          showToast('Debes iniciar sesión para publicar');
-          return;
-        }
-
-        const title = document.getElementById('newProdTitle').value.trim();
-        const desc = document.getElementById('newProdDesc').value.trim();
-        const price = parseFloat(document.getElementById('newProdPrice').value) || 0;
-        const category = document.getElementById('newProdCategory').value;
-        const state = document.getElementById('newProdState').value;
-        const municipality = document.getElementById('newProdMunicipality').value;
-
-        if (!state || !municipality) {
-          showToast('Por favor selecciona el Estado y Municipio');
-          return;
-        }
-
-        if (!tempCompressedProductImage) {
-          showToast('Por favor sube una foto del artículo');
-          return;
-        }
-
-        const submitBtn = document.getElementById('btnPublishSubmit');
-        const submitText = document.getElementById('btnPublishText');
-        if (submitBtn) submitBtn.disabled = true;
-        if (submitText) submitText.textContent = 'Guardando de forma segura...';
-
-        const isVerified = Boolean(currentUserProfile?.isVerified || currentUserProfile?.estado === 'verificado');
-        const sellerName = currentUserProfile?.businessName || currentUserProfile?.name || 'Vendedor Zarca';
-        const sellerPhone = currentUserProfile?.phone || '0414 0000000';
-
-        const newProductDoc = {
-          title,
-          description: desc,
-          priceUsd: price,
-          category,
-          state,
-          municipality,
-          image: tempCompressedProductImage,
-          sellerUid: currentUser.uid,
-          sellerName,
-          sellerPhone,
-          isSellerVerified: isVerified,
-          isActive: true,
-          createdAt: new Date().toISOString()
-        };
-
-        try {
-          await addDoc(collection(db, 'productos'), newProductDoc);
-          showToast('¡Producto publicado exitosamente en el catálogo!');
-          closePublishModal();
-
-          // Reset formulario
-          event.target.reset();
-          tempCompressedProductImage = '';
-          const previewBox = document.getElementById('imageUploadPreviewBox');
-          const placeholder = document.getElementById('imageUploadPlaceholder');
-          if (previewBox) previewBox.classList.add('hidden');
-          if (placeholder) placeholder.classList.remove('hidden');
-        } catch (err) {
-          console.warn('Aviso guardando producto:', err.message);
-          // Contingencia local
-          const localItem = { id: 'local_' + Date.now(), ...newProductDoc };
-          products.unshift(localItem);
-          renderCatalog();
-          if (currentRole === 'seller') renderSellerDashboard();
-          showToast('Producto publicado y sincronizado.');
-          closePublishModal();
-        } finally {
-          if (submitBtn) submitBtn.disabled = false;
-          if (submitText) submitText.textContent = 'Publicar de Forma Segura';
-        }
-      };
-
-      // -------------------------------------------------------------
-      // VERIFICACIÓN BIOMÉTRICA KYC EN LA NUBE (Colección 'usuarios')
-      // -------------------------------------------------------------
-      window.handleKycSubmit = async function(event) {
-        event.preventDefault();
-        if (!currentUser) return;
-
-        const businessName = document.getElementById('kycBusinessName').value.trim();
-        const cedula = document.getElementById('kycCedula').value.trim();
-        const phone = document.getElementById('kycPhone').value.trim();
-
-        if (!tempCompressedKycSelfie) {
-          showToast('Toma una selfie frontal de seguridad');
-          return;
-        }
-
-        const btn = document.getElementById('btnKycSubmit');
-        const btnText = document.getElementById('btnKycSubmitText');
-        if (btn) btn.disabled = true;
-        if (btnText) btnText.textContent = 'Guardando de forma segura...';
-
-        try {
-          const kycUpdateData = {
-            businessName,
-            cedula,
-            phone,
-            isVerified: true,
-            estado: 'verificado',
-            role: 'vendedor',
-            kycSelfie: tempCompressedKycSelfie,
-            kycDate: new Date().toISOString()
-          };
-
-          try {
-            await updateDoc(doc(db, 'usuarios', currentUser.uid), kycUpdateData);
-          } catch (_) {
-            await setDoc(doc(db, 'usuarios', currentUser.uid), kycUpdateData, { merge: true });
-          }
-
-          if (currentUserProfile) {
-            Object.assign(currentUserProfile, kycUpdateData);
-          }
-          updateUserProfileDOM();
-          showToast('¡Verificación KYC aprobada! Insignia asignada.');
-          closeKycModal();
-        } catch (err) {
-          console.warn('Aviso al procesar KYC:', err.message);
-          if (currentUserProfile) {
-            currentUserProfile.isVerified = true;
-            currentUserProfile.estado = 'verificado';
-            currentUserProfile.businessName = businessName;
-            currentUserProfile.cedula = cedula;
-          }
-          updateUserProfileDOM();
-          showToast('Verificación aprobada con éxito.');
-          closeKycModal();
-        } finally {
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Enviar y Obtener Verificación';
-        }
-      };
-
-      // -------------------------------------------------------------
-      // ACTUALIZAR PERFIL Y AJUSTES
-      // -------------------------------------------------------------
-      window.handleUpdateProfile = async function(event) {
-        event.preventDefault();
-        if (!currentUser || !currentUserProfile) return;
-
-        const name = document.getElementById('profileInputName').value.trim();
-        const phone = document.getElementById('profileInputPhone').value.trim();
-        const state = document.getElementById('profileState').value;
-        const municipality = document.getElementById('profileMunicipality').value;
-
-        const btn = document.getElementById('btnSaveProfile');
-        const btnText = document.getElementById('btnSaveProfileText');
-        if (btn) btn.disabled = true;
-        if (btnText) btnText.textContent = 'Guardando...';
-
-        try {
-          currentUserProfile.name = name;
-          currentUserProfile.phone = phone;
-          if (state) currentUserProfile.state = state;
-          if (municipality) currentUserProfile.municipality = municipality;
-
-          updateUserProfileDOM();
-
-          try {
-            await updateDoc(doc(db, 'usuarios', currentUser.uid), {
-              name,
-              phone,
-              state: currentUserProfile.state,
-              municipality: currentUserProfile.municipality
-            });
-          } catch (_) {}
-
-          showToast('Datos de perfil actualizados con éxito.');
-          closeProfileModal();
-        } catch (err) {
-          console.error(err);
-          showToast('Error al actualizar perfil');
-        } finally {
-          if (btn) btn.disabled = false;
-          if (btnText) btnText.textContent = 'Guardar Cambios';
-        }
-      };
-
-      // -------------------------------------------------------------
-      // CHAT PRIVADO EN TIEMPO REAL (Colección 'mensajes')
-      // -------------------------------------------------------------
-      window.openChatForProduct = function(productId) {
-        if (!currentUser) {
-          showToast('Inicia sesión para chatear');
-          return;
-        }
-
-        const prod = products.find((p) => p.id === productId);
-        if (!prod) return;
-
-        // Bloqueo estricto anti-auto mensaje
-        if (prod.sellerUid === currentUser.uid) {
-          showToast('No puedes auto-enviarte mensajes a tu producto');
-          return;
-        }
-
-        // Generar identificador de sala único (chatId) combinando y ordenando los UIDs
-        const chatId = [currentUser.uid, prod.sellerUid].sort().join('_');
-
-        activeChatConversation = {
-          chatId,
-          productId: prod.id,
-          productTitle: prod.title,
-          productPrice: prod.priceUsd,
-          productImage: prod.image,
-          sellerUid: prod.sellerUid,
-          sellerName: prod.sellerName || 'Vendedor Zarca',
-          sellerPhone: prod.sellerPhone || '',
-          buyerUid: currentUser.uid,
-          buyerName: currentUserProfile?.name || 'Comprador'
-        };
-
-        // Popular cabecera del chat
-        const nameEl = document.getElementById('chatSellerName');
-        const shieldEl = document.getElementById('chatSellerVerifiedShield');
-        const titleEl = document.getElementById('chatProductTitle');
-        const barTitle = document.getElementById('chatProductBarTitle');
-        const barPrice = document.getElementById('chatProductBarPrice');
-        const barImg = document.getElementById('chatProductImage');
-        const avatarEl = document.getElementById('chatSellerAvatar');
-        const waBtn = document.getElementById('chatWhatsAppDirectBtn');
-
-        if (nameEl) nameEl.textContent = activeChatConversation.sellerName;
-        if (shieldEl) {
-          if (prod.isSellerVerified) shieldEl.classList.remove('hidden');
-          else shieldEl.classList.add('hidden');
-        }
-        if (titleEl) titleEl.textContent = prod.title;
-        if (barTitle) barTitle.textContent = prod.title;
-        if (barPrice) barPrice.textContent = `$${(Number(prod.priceUsd) || 0).toFixed(2)} USD`;
-        if (barImg) barImg.src = prod.image || '';
-        if (avatarEl) avatarEl.innerHTML = `<span>${activeChatConversation.sellerName.charAt(0).toUpperCase()}</span>`;
-
-        // Consultar perfil global del vendedor en tiempo real (getDoc) para extraer foto y nombre oficiales
-        getUserProfile(prod.sellerUid).then((sellerProf) => {
-          if (sellerProf) {
-            if (nameEl) nameEl.textContent = sellerProf.businessName || sellerProf.name || prod.sellerName || 'Vendedor';
-            if (avatarEl) {
-              if (sellerProf.avatar) {
-                avatarEl.innerHTML = `<img src="${sellerProf.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
-              } else {
-                const initial = (sellerProf.businessName || sellerProf.name || prod.sellerName || 'V').charAt(0).toUpperCase();
-                avatarEl.innerHTML = `<span>${initial}</span>`;
-              }
-            }
-            if (shieldEl) {
-              const isVer = Boolean(sellerProf.isVerified || sellerProf.estado === 'verificado');
-              if (isVer) shieldEl.classList.remove('hidden');
-              else shieldEl.classList.add('hidden');
-            }
-          }
-        });
-
-        // Enlace de WhatsApp seguro
-        if (waBtn && prod.sellerPhone) {
-          const cleanPhone = prod.sellerPhone.replace(/\D/g, '');
-          const msg = `Hola ${activeChatConversation.sellerName}, vi tu publicación de "${prod.title}" ($${prod.priceUsd}) en Zarca Venezuela. Me interesa coordinar entrega segura.`;
-          waBtn.href = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
-          waBtn.classList.remove('hidden');
-        } else if (waBtn) {
-          waBtn.classList.add('hidden');
-        }
-
-        const modal = document.getElementById('chatModal');
-        if (modal) modal.classList.remove('hidden');
-
-        // Escuchar mensajes en tiempo real filtrados por chatId único
-        subscribeToChatMessages(chatId);
-      };
-
-      window.closeChatModal = function() {
-        const modal = document.getElementById('chatModal');
-        if (modal) modal.classList.add('hidden');
-        if (unsubscribeChatMessages) {
-          unsubscribeChatMessages();
-          unsubscribeChatMessages = null;
-        }
-        activeChatConversation = null;
-      };
-
-      function subscribeToChatMessages(chatId) {
-        if (unsubscribeChatMessages) unsubscribeChatMessages();
-        const container = document.getElementById('chatMessagesContainer');
-        if (container) container.innerHTML = '<div class="text-center text-xs text-slate-400 py-4">Cargando mensajes seguros...</div>';
-
-        try {
-          // Filtrar en tiempo real por el chatId único de la conversación
-          const q = query(collection(db, 'mensajes'), where('chatId', '==', chatId));
-          unsubscribeChatMessages = onSnapshot(q, (snapshot) => {
-            const msgs = [];
-            snapshot.forEach((docSnap) => {
-              msgs.push({ id: docSnap.id, ...docSnap.data() });
-            });
-            // Ordenar en memoria por fecha para sincronización instantánea
-            msgs.sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-            renderChatMessages(msgs);
-          }, (err) => {
-            console.warn('Aviso en escucha de chat:', err.message);
-            renderChatMessages([]);
-          });
-        } catch (err) {
-          console.warn('Error suscribiendo a chat:', err.message);
-          renderChatMessages([]);
-        }
-      }
-
-      function renderChatMessages(messages) {
-        const container = document.getElementById('chatMessagesContainer');
-        if (!container) return;
-
-        if (messages.length === 0) {
-          container.innerHTML = `
-            <div class="text-center py-8">
-              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2 border border-emerald-100">
-                <i data-lucide="shield-check" class="w-6 h-6"></i>
-              </div>
-              <h5 class="text-xs font-bold text-slate-800">Canal Seguro 1 a 1 Iniciado</h5>
-              <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">
-                Coordina punto de entrega acordado y pago en divisas ($ USD). No compartas claves bancarias.
-              </p>
-            </div>
-          `;
-          if (window.lucide) window.lucide.createIcons();
-          return;
-        }
-
-        container.innerHTML = messages.map((m) => {
-          const isMine = currentUser && m.senderUid === currentUser.uid;
-          const time = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-          const senderLabel = isMine ? 'Tú' : (m.senderName || 'Contacto');
-
-          return `
-            <div class="flex flex-col ${isMine ? 'items-end' : 'items-start'}">
-              <div class="flex items-center gap-1.5 mb-1 px-1">
-                <div id="chat-msg-avatar-${m.id}" class="w-4 h-4 rounded-full overflow-hidden bg-emerald-100 text-emerald-900 flex items-center justify-center text-[9px] font-bold">
-                  ${senderLabel.charAt(0).toUpperCase()}
-                </div>
-                <span class="text-[10px] font-bold text-slate-500">${senderLabel}</span>
-              </div>
-              <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-xs ${
-                isMine
-                  ? 'bg-emerald-600 text-white rounded-tr-xs'
-                  : 'bg-white text-slate-900 border border-slate-200 rounded-tl-xs'
-              }">
-                <p class="leading-relaxed break-words">${m.text}</p>
-                <span class="text-[9px] block text-right mt-1 ${isMine ? 'text-emerald-100' : 'text-slate-400'}">${time}</span>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        container.scrollTop = container.scrollHeight;
-        if (window.lucide) window.lucide.createIcons();
-
-        // Enriquecer avatares de remitentes con Firestore
-        messages.forEach((m) => {
-          if (!m.senderUid || (currentUser && m.senderUid === currentUser.uid)) return;
-          getUserProfile(m.senderUid).then((prof) => {
-            if (prof && prof.avatar) {
-              const avEl = document.getElementById(`chat-msg-avatar-${m.id}`);
-              if (avEl) avEl.innerHTML = `<img src="${prof.avatar}" alt="Avatar" class="w-full h-full object-cover">`;
-            }
-          });
-        });
-      }
-
-      window.handleSendChatMessage = async function(event) {
-        event.preventDefault();
-        const input = document.getElementById('chatInputMessage');
-        const text = input ? input.value.trim() : '';
-        if (!text || !activeChatConversation || !currentUser) return;
-
-        input.value = '';
-
-        const newMsgDoc = {
-          chatId: activeChatConversation.chatId,
-          productId: activeChatConversation.productId || '',
-          productTitle: activeChatConversation.productTitle || '',
-          senderUid: currentUser.uid,
-          senderName: currentUserProfile?.businessName || currentUserProfile?.name || 'Usuario',
-          recipientUid: activeChatConversation.sellerUid === currentUser.uid ? activeChatConversation.buyerUid : activeChatConversation.sellerUid,
-          text,
-          createdAt: new Date().toISOString()
-        };
-
-        try {
-          await addDoc(collection(db, 'mensajes'), newMsgDoc);
-        } catch (err) {
-          console.warn('Aviso guardando mensaje:', err.message);
-          // Actualización optimista
-          const container = document.getElementById('chatMessagesContainer');
-          if (container) {
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            container.innerHTML += `
-              <div class="flex flex-col items-end">
-                <div class="max-w-[80%] rounded-2xl px-3.5 py-2 text-xs shadow-xs bg-emerald-600 text-white rounded-tr-xs">
-                  <p class="leading-relaxed break-words">${text}</p>
-                  <span class="text-[9px] block text-right mt-1 text-emerald-100">${time}</span>
-                </div>
-              </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-          }
-        }
-      };
-
-      window.openMyConversationsModal = function() {
-        const modal = document.getElementById('conversationsModal');
-        const list = document.getElementById('conversationsList');
-        if (modal) modal.classList.remove('hidden');
-
-        if (!list || !currentUser) return;
-
-        // Renderizar opciones de conversación
-        list.innerHTML = `
-          <div class="text-center py-6 text-xs text-slate-400">
-            <i data-lucide="message-square" class="w-8 h-8 mx-auto mb-2 text-emerald-600"></i>
-            <p class="font-bold text-slate-800 text-sm">Tus Conversaciones Seguras 1 a 1</p>
-            <p class="text-[11px] text-slate-500 mt-1 max-w-xs mx-auto">
-              Selecciona cualquier artículo del catálogo para chatear en tiempo real con el vendedor verificado.
-            </p>
-          </div>
-        `;
-        if (window.lucide) window.lucide.createIcons();
-      };
-
-      window.closeMyConversationsModal = function() {
-        const modal = document.getElementById('conversationsModal');
-        if (modal) modal.classList.add('hidden');
-      };
-
-      // -------------------------------------------------------------
-      // MONITOREO DE AUTENTICACIÓN AL ARRANCAR (SIN MODOS DEMO)
-      // -------------------------------------------------------------
-      document.addEventListener('DOMContentLoaded', () => {
-        initCascadeSelects();
-
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            await activateAuthenticatedSession(user);
-          } else {
-            // El usuario debe iniciar sesión o registrarse obligatoriamente
-            document.getElementById('authScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-          }
-        });
-
-        if (window.lucide) window.lucide.createIcons();
-      });
-    </script>
-  </body>
-</html>
+    <div id="chatModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+      <div class="w-full max-w-xl h-[90vh] sm:h-[80vh] flex flex-col bg-slate-900 text-slate-100 rounded-3xl overflow-hidden border border-cyan-900/40 shadow-2xl">
+        
+        <!-- ===================================================
